@@ -1,0 +1,40 @@
+APEX FINAL REFERENCE DESIGN — VALIDATION
+Date: 2026-08-22
+
+Checks completed in artifact environment:
+- 83 TS/TSX implementation files parsed/transpiled successfully with TypeScript 5.8.3.
+- Targeted public-site TypeScript type-check passed using local framework stubs to validate internal APEX types/props.
+- 0 missing internal @/ or relative imports.
+- 15 Next.js page routes found.
+- 0 duplicate route collisions.
+- shared/en.json valid JSON.
+- shared/ar.json valid JSON.
+- package.json valid JSON.
+- shared/globals.css brace balance passed (1373 blocks).
+- Exactly one reusable components directory exists: app/components.
+- app/loading.tsx is absent; the public loading page is removed.
+- AP_DotField canvas context uses a non-null typed alias for Linux/Vercel strict type checking.
+
+Public routes checked:
+/
+/solutions
+/industries
+/method
+/products
+/blogs
+/careers
+/admin
+/admin/login
+/admin/site
+/admin/products
+/admin/blogs
+/admin/careers
+/admin/media
+/admin/settings
+
+Environment limitation:
+- Full npm install / next build could not be executed because npm registry access is unavailable/times out in the artifact container.
+- Run these locally before pushing production:
+  npm.cmd install
+  npm.cmd run typecheck
+  npm.cmd run build

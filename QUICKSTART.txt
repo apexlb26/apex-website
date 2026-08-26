@@ -1,0 +1,40 @@
+APEX FINAL REFERENCE DESIGN — QUICKSTART
+
+1) Extract the ZIP into Downloads.
+
+2) From PowerShell, run:
+
+cd "C:\Users\charlie\Downloads\APEX-FINAL-REFERENCE-DESIGN"
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+& ".\APPLY_TO_EXISTING_REPO.ps1" "C:\Users\charlie\Downloads\APEX-Ultra-Website-ULTRA"
+
+3) Test the real Git repo:
+
+cd "C:\Users\charlie\Downloads\APEX-Ultra-Website-ULTRA"
+$env:Path="C:\Program Files\nodejs;$env:Path"
+Remove-Item -Recurse -Force ".next" -ErrorAction SilentlyContinue
+npm.cmd install
+npm.cmd run typecheck
+npm.cmd run build
+npm.cmd run dev
+
+4) Open:
+
+http://localhost:3000
+http://localhost:3000/solutions
+http://localhost:3000/industries
+http://localhost:3000/method
+http://localhost:3000/blogs
+http://localhost:3000/careers
+http://localhost:3000/admin
+
+5) When clean, stop dev server with Ctrl+C and push:
+
+git status
+git add -A
+git commit -m "Implement APEX reference design across public site"
+git push origin main
+
+Development admin:
+admin@apex.local
+apex-dev

@@ -1,0 +1,11 @@
+APEX Clickable 3D Stack Upgrade
+
+Hero architecture visual now uses three clickable SVG layers:
+- Systems Architecture -> /solutions
+- Integration Layer -> /solutions#integration
+- Data Layer -> /solutions#data
+
+The design is rendered as code/SVG rather than a static image so it stays sharp, responsive, keyboard accessible, and interactive.
+The layers lift subtly on hover/focus and use the existing restrained white/teal APEX palette.
+No spinning ring animation is used.
+Solution cards now expose matching anchor IDs for deep links.

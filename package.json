@@ -1,0 +1,32 @@
+{
+  "name": "apex-digital-systems",
+  "version": "3.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node server.mjs",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.mjs",
+    "typecheck": "tsc --noEmit",
+    "dev:next": "next dev",
+    "start:next": "next start",
+    "mail:test": "node scripts/send-test-email.mjs"
+  },
+  "dependencies": {
+    "next": "15.5.21",
+    "nodemailer": "^9.0.5",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/nodemailer": "^8.0.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5"
+  }
+}
