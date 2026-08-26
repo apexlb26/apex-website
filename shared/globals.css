@@ -1814,10 +1814,10 @@ body { color: var(--ap-ref-ink); background: #fff; }
 .ap-sol-modal-outcome-grid b{display:block;margin-top:6px;color:#10283a;font-size:10.5px;line-height:1.25;font-weight:760}
 .ap-sol-modal-outcome-grid p{margin:5px 0 0;color:#627886;font-size:9.5px;line-height:1.45}
 .ap-sol-modal-actions{display:flex;justify-content:flex-end;gap:12px;padding-top:20px}
-.ap-sol-modal-primary,.ap-sol-modal-secondary{min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:12px;border-radius:4px;padding:0 28px;font-size:11px;font-weight:760;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s,background .15s}
-.ap-sol-modal-primary{border:1px solid #008b81;background:linear-gradient(135deg,#008f85,#008175);color:#fff;min-width:175px}
-.ap-sol-modal-secondary{border:1px solid #008b81;background:#fff;color:#143147;min-width:205px}
-.ap-sol-modal-primary svg,.ap-sol-modal-secondary svg{width:14px;height:14px}
+.ap-sol-modal-primary,.ap-sol-modal-secondary{min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:4px;padding:0 20px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s,background .15s}
+.ap-sol-modal-primary{border:1px solid #008b81;background:linear-gradient(135deg,#008f85,#008175);color:#fff;min-width:160px}
+.ap-sol-modal-secondary{border:1px solid #008b81;background:#fff;color:#143147;min-width:200px}
+.ap-sol-modal-primary svg,.ap-sol-modal-secondary svg{width:13px;height:13px}
 .ap-sol-modal-primary:hover,.ap-sol-modal-secondary:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(0,123,113,.10)}
 @keyframes apSolModalFade{from{opacity:0}to{opacity:1}}
 @keyframes apSolModalEnter{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
