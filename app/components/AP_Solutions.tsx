@@ -1,6 +1,7 @@
 import type { SolutionItem, SolutionsContent } from "@/shared/types";
 import Link from "next/link";
 import AP_Icon from "@/app/components/AP_Icon";
+import { AP_SolutionModalTrigger } from "@/app/components/AP_SolutionModal";
 
 /*
  * No media queries. Rows are `flex flex-wrap`; children carry a flex-basis plus
@@ -76,10 +77,10 @@ function SolutionsPage({ content, embedded = false }: { content: SolutionsConten
               </span>
               <h2 className="ap-sol-copy relative mt-[clamp(8px,1.8vh,20px)] w-[min(300px,58%)] text-[clamp(18px,min(2.1vw,3.4vh),30px)] font-bold leading-[1.16] tracking-[-0.02em] [overflow-wrap:normal]">{featured.title}</h2>
               <p className="ap-sol-copy relative mt-3 w-[min(300px,58%)] text-[clamp(11px,1.6vh,13px)] leading-[1.6] text-white/85">{featured.body}</p>
-              <Link href="/#contact" className={`${exploreRow} ap-sol-copy relative w-fit text-white`}>
+              <AP_SolutionModalTrigger solutionKey={featured.key} className={`${exploreRow} ap-sol-copy relative w-fit cursor-pointer border-0 bg-transparent p-0 text-left text-white`}>
                 <span>{explore}</span>
                 <span className={`${arrowDisc} bg-white/20`}><AP_Icon name="arrow-right" className="h-4 w-4" /></span>
-              </Link>
+              </AP_SolutionModalTrigger>
             </article>
           )}
 
@@ -103,10 +104,10 @@ function SolutionsPage({ content, embedded = false }: { content: SolutionsConten
                   <p className="mt-2 text-[clamp(11px,1.6vh,12.5px)] leading-[1.5] text-hx-copy">{item.body}</p>
                 </div>
               </div>
-              <Link href="/#contact" className={`${exploreRow} text-sx-teal hover:text-sx-tealDark`}>
+              <AP_SolutionModalTrigger solutionKey={item.key} className={`${exploreRow} w-fit cursor-pointer border-0 bg-transparent p-0 text-left text-sx-teal hover:text-sx-tealDark`}>
                 <span>{explore}</span>
                 <span className={`${arrowDisc} bg-sx-teal text-white`}><AP_Icon name="arrow-right" className="h-3.5 w-3.5" /></span>
-              </Link>
+              </AP_SolutionModalTrigger>
             </article>
           ))}
         </div>

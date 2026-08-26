@@ -1755,3 +1755,88 @@ body { color: var(--ap-ref-ink); background: #fff; }
   .ap-sol-mask { display: none; }
   .ap-sol-copy { width: auto; max-width: 100%; }
 }
+
+/* ================================================================
+   Solution capability modals — matched to approved 26 Aug artwork
+   ================================================================ */
+.ap-sol-modal-overlay{
+  position:fixed;inset:0;z-index:10000;display:grid;place-items:center;isolation:isolate;
+  padding:24px;background:rgba(23,38,45,.68);backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);animation:apSolModalFade .16s ease-out both;
+}
+.ap-sol-modal{
+  width:min(900px,94vw);max-height:min(800px,92vh);overflow:hidden;
+  border-radius:24px;background:#fff;color:#0b2233;
+  box-shadow:0 28px 80px rgba(8,27,37,.30),0 2px 8px rgba(8,27,37,.12);
+  animation:apSolModalEnter .20s cubic-bezier(.2,.8,.2,1) both;
+}
+.ap-sol-modal-head{
+  position:relative;min-height:122px;overflow:hidden;display:flex;align-items:center;
+  padding:24px 30px;background:linear-gradient(105deg,#00675f 0%,#006e68 46%,#005a62 100%);color:white;
+}
+.ap-sol-modal-title-wrap{position:relative;z-index:2;display:flex;align-items:center;gap:24px;min-width:0;padding-right:48px}
+.ap-sol-modal-icon{
+  width:68px;height:68px;flex:0 0 68px;display:grid;place-items:center;border-radius:18px;
+  color:white;background:linear-gradient(145deg,#11b49e,#087a71);border:1px solid rgba(255,255,255,.34);
+  box-shadow:0 0 30px rgba(22,217,188,.20),inset 0 1px 0 rgba(255,255,255,.24);
+}
+.ap-sol-modal-icon svg{width:34px;height:34px;stroke-width:2}
+.ap-sol-modal-head h2{margin:0;font-size:clamp(27px,3vw,38px);line-height:1.08;letter-spacing:-.035em;font-weight:760;color:#fff}
+.ap-sol-modal-close{
+  position:absolute;z-index:4;right:26px;top:20px;width:40px;height:40px;border:0;background:transparent;color:#fff;
+  display:grid;place-items:center;cursor:pointer;font:300 38px/1 Arial,sans-serif;opacity:.94;transition:opacity .15s,transform .15s;
+}
+.ap-sol-modal-close:hover{opacity:1;transform:scale(1.06)}
+.ap-sol-modal-head-lines{position:absolute;right:-16px;top:-28px;width:360px;height:180px;opacity:.18;pointer-events:none;transform:rotate(-7deg)}
+.ap-sol-modal-head-lines i{position:absolute;right:-30px;width:330px;height:130px;border:1px solid rgba(125,239,222,.55);border-left-color:transparent;border-bottom-color:transparent;border-radius:50%}
+.ap-sol-modal-head-lines i:nth-child(1){top:12px}.ap-sol-modal-head-lines i:nth-child(2){top:27px;right:-42px}.ap-sol-modal-head-lines i:nth-child(3){top:43px;right:-54px}.ap-sol-modal-head-lines i:nth-child(4){top:59px;right:-66px}
+.ap-sol-modal-body{max-height:calc(min(800px,92vh) - 122px);overflow-y:auto;padding:24px 32px 26px}
+.ap-sol-modal-intro{margin:0;padding:0 0 20px;border-bottom:1px solid #d9e1e5;color:#20374a;font-size:15px;line-height:1.55;font-weight:450}
+.ap-sol-modal-details{display:grid;grid-template-columns:.78fr 1.22fr;gap:28px;padding:20px 0 16px;border-bottom:1px solid #d9e1e5}
+.ap-sol-modal-details h3,.ap-sol-modal-outcomes h3{margin:0;color:#0b2233;font-size:18px;line-height:1.2;font-weight:760;letter-spacing:-.02em}
+.ap-sol-modal-includes{padding-right:26px;border-right:1px solid #d9e1e5}
+.ap-sol-modal-includes ul{list-style:none;margin:15px 0 0;padding:0;display:grid;gap:14px}
+.ap-sol-modal-includes li{display:grid;grid-template-columns:20px 1fr;align-items:start;gap:10px;color:#31495a;font-size:12.5px;line-height:1.45}
+.ap-sol-check{width:18px;height:18px;border:1.5px solid #07968b;border-radius:50%;display:grid;place-items:center;color:#07968b;margin-top:1px}
+.ap-sol-check svg{width:11px;height:11px;stroke-width:2.3}
+.ap-sol-modal-case-list{margin-top:12px;display:grid;gap:8px}
+.ap-sol-modal-case-list article{min-height:53px;display:grid;grid-template-columns:42px 1fr;align-items:center;gap:12px;padding:8px 12px;border:1px solid #cfe1e2;border-radius:10px;background:#fff;box-shadow:0 1px 2px rgba(11,34,51,.02)}
+.ap-sol-case-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#e4f4f1;color:#008c82}
+.ap-sol-case-icon svg{width:19px;height:19px}
+.ap-sol-modal-case-list strong{display:block;color:#10283a;font-size:12px;line-height:1.3;font-weight:760}
+.ap-sol-modal-case-list p{margin:2px 0 0;color:#667b89;font-size:10.5px;line-height:1.35}
+.ap-sol-modal-outcomes{padding-top:16px}
+.ap-sol-modal-outcome-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.ap-sol-modal-outcome-grid article{min-height:112px;display:grid;grid-template-columns:54px 1fr;align-items:center;gap:12px;padding:15px 14px;border:1px solid #cce0df;border-radius:10px;background:linear-gradient(135deg,#f8fdfc,#eef8f6)}
+.ap-sol-outcome-icon{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#dcefeb;color:#008b80}
+.ap-sol-outcome-icon svg{width:26px;height:26px}
+.ap-sol-outcome-value{display:block;color:#00786f;font-size:21px;line-height:1;font-weight:820;letter-spacing:-.025em}
+.ap-sol-modal-outcome-grid b{display:block;margin-top:6px;color:#10283a;font-size:10.5px;line-height:1.25;font-weight:760}
+.ap-sol-modal-outcome-grid p{margin:5px 0 0;color:#627886;font-size:9.5px;line-height:1.45}
+.ap-sol-modal-actions{display:flex;justify-content:flex-end;gap:12px;padding-top:20px}
+.ap-sol-modal-primary,.ap-sol-modal-secondary{min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:12px;border-radius:4px;padding:0 28px;font-size:11px;font-weight:760;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s,background .15s}
+.ap-sol-modal-primary{border:1px solid #008b81;background:linear-gradient(135deg,#008f85,#008175);color:#fff;min-width:175px}
+.ap-sol-modal-secondary{border:1px solid #008b81;background:#fff;color:#143147;min-width:205px}
+.ap-sol-modal-primary svg,.ap-sol-modal-secondary svg{width:14px;height:14px}
+.ap-sol-modal-primary:hover,.ap-sol-modal-secondary:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(0,123,113,.10)}
+@keyframes apSolModalFade{from{opacity:0}to{opacity:1}}
+@keyframes apSolModalEnter{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+
+@media(max-width:760px){
+  .ap-sol-modal-overlay{padding:12px;align-items:end}
+  .ap-sol-modal{width:100%;max-height:94vh;border-radius:20px 20px 0 0}
+  .ap-sol-modal-head{min-height:94px;padding:18px 20px}
+  .ap-sol-modal-title-wrap{gap:14px;padding-right:34px}
+  .ap-sol-modal-icon{width:52px;height:52px;flex-basis:52px;border-radius:14px}.ap-sol-modal-icon svg{width:27px;height:27px}
+  .ap-sol-modal-head h2{font-size:24px}.ap-sol-modal-close{right:12px;top:10px}
+  .ap-sol-modal-body{max-height:calc(94vh - 94px);padding:18px 18px 22px}
+  .ap-sol-modal-intro{text-align:left;font-size:13px;line-height:1.55;padding-bottom:16px}
+  .ap-sol-modal-details{grid-template-columns:1fr;gap:20px;padding:17px 0}
+  .ap-sol-modal-includes{padding-right:0;padding-bottom:18px;border-right:0;border-bottom:1px solid #d9e1e5}
+  .ap-sol-modal-details h3,.ap-sol-modal-outcomes h3{text-align:left;font-size:17px}
+  .ap-sol-modal-outcome-grid{grid-template-columns:1fr}
+  .ap-sol-modal-outcome-grid article{min-height:94px;grid-template-columns:48px 1fr}
+  .ap-sol-outcome-icon{width:42px;height:42px}.ap-sol-outcome-icon svg{width:23px;height:23px}
+  .ap-sol-modal-actions{display:grid;grid-template-columns:1fr;padding-top:18px}
+  .ap-sol-modal-primary,.ap-sol-modal-secondary{width:100%;min-width:0}
+}
