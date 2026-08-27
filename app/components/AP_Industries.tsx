@@ -13,7 +13,7 @@ const INDUSTRY_IMAGE_FALLBACKS: Record<string, string> = {
   environment: "/api/assets/industries/public-environmental-systems.png",
 };
 
-export default function AP_Industries({ content, mark, standalone = false, embedded = false }: { content: IndustriesContent; mark?: string; standalone?: boolean; embedded?: boolean }) {
+export default function AP_Industries({ content, standalone = false, embedded = false }: { content: IndustriesContent; standalone?: boolean; embedded?: boolean }) {
   const shell = "mx-auto w-[min(1640px,86%)]";
   const eyebrow = "block text-[10px] font-extrabold uppercase leading-tight tracking-[0.14em] text-hx-cyanInk";
   const ctaLink = "mt-2 inline-flex items-center gap-2 text-[10.5px] font-extrabold uppercase tracking-[0.08em] text-hx-cyanInk transition-colors hover:text-[#00897E] [&_svg]:h-[13px] [&_svg]:w-[13px]";
