@@ -1,0 +1,22 @@
+APEX industries + case study update
+27 August 2026
+
+Implemented from the supplied approved references:
+
+1. Industries imagery
+- Education uses the supplied Learning Progress image.
+- Service Operations uses the supplied field-service schedule image.
+- Public & Environmental Systems uses the supplied environmental monitoring image.
+- Images are stored as real website assets under shared/assets/industries.
+- Fallback image mapping is also built into AP_Industries so the visuals remain present if CMS content omits image URLs.
+
+2. Industries layout polish
+- Kept Education and Service Operations in the two-card top row.
+- Kept Public & Environmental Systems as the wide card below.
+- Increased the photo share of each card to better match the approved screenshot.
+
+3. Case study typography
+- Increased the left-side TutWithUs headline, body, fact titles, fact copy, icons, and CTA.
+- The copy column now vertically fills the case-study section more effectively instead of leaving large empty top/bottom space.
+
+4. Existing solution modal work preserved.

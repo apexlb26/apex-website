@@ -578,8 +578,7 @@
           "Admin Automation",
           "AI Guidance Systems"
         ],
-        "image": "",
-        "imageAlt": ""
+        "image": "/api/assets/industries/education.png"
       },
       {
         "key": "service",
@@ -592,8 +591,7 @@
           "Customer Journey Automation",
           "CRM & Operations"
         ],
-        "image": "",
-        "imageAlt": ""
+        "image": "/api/assets/industries/service-operations.png"
       },
       {
         "key": "environment",
@@ -606,8 +604,7 @@
           "Data Intelligence",
           "Workflow Coordination"
         ],
-        "image": "",
-        "imageAlt": ""
+        "image": "/api/assets/industries/public-environmental-systems.png"
       }
     ],
     "learnMoreLabel": "Learn more",

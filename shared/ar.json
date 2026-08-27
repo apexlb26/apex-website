@@ -578,8 +578,7 @@
           "مساعدة تعليمية بالذكاء الاصطناعي",
           "أنظمة العمليات"
         ],
-        "image": "",
-        "imageAlt": ""
+        "image": "/api/assets/industries/education.png"
       },
       {
         "key": "service",
@@ -592,8 +591,7 @@
           "أتمتة رحلة العميل",
           "إدارة العملاء والعمليات"
         ],
-        "image": "",
-        "imageAlt": ""
+        "image": "/api/assets/industries/service-operations.png"
       },
       {
         "key": "environment",
@@ -606,8 +604,7 @@
           "ذكاء البيانات",
           "تنسيق سير العمل"
         ],
-        "image": "",
-        "imageAlt": ""
+        "image": "/api/assets/industries/public-environmental-systems.png"
       }
     ],
     "learnMoreLabel": "اعرف المزيد",

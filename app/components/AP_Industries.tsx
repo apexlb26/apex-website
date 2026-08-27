@@ -7,7 +7,13 @@ import AP_Icon from "@/app/components/AP_Icon";
 import AP_IndustryVisual from "@/app/components/AP_IndustryVisual";
 import AP_IndustriesGlobe from "@/app/components/AP_IndustriesGlobe";
 
-export default function AP_Industries({ content, standalone = false, embedded = false, mark }: { content: IndustriesContent; standalone?: boolean; embedded?: boolean; mark?: string }) {
+const INDUSTRY_IMAGE_FALLBACKS: Record<string, string> = {
+  education: "/api/assets/industries/education.png",
+  service: "/api/assets/industries/service-operations.png",
+  environment: "/api/assets/industries/public-environmental-systems.png",
+};
+
+export default function AP_Industries({ content, standalone = false, embedded = false }: { content: IndustriesContent; standalone?: boolean; embedded?: boolean }) {
   const shell = "mx-auto w-[min(1640px,86%)]";
   const eyebrow = "block text-[10px] font-extrabold uppercase leading-tight tracking-[0.14em] text-hx-cyanInk";
   const ctaLink = "mt-2 inline-flex items-center gap-2 text-[10.5px] font-extrabold uppercase tracking-[0.08em] text-hx-cyanInk transition-colors hover:text-[#00897E] [&_svg]:h-[13px] [&_svg]:w-[13px]";
@@ -47,13 +53,17 @@ export default function AP_Industries({ content, standalone = false, embedded = 
       </span>
     );
 
-    const photo = (item: typeof content.items[number], className: string) => (
-      <div className={`overflow-hidden rounded-[20px] bg-sx-mint ${className}`}>
-        <div className="h-full w-full [&>img]:h-full [&>img]:w-full [&>img]:object-cover [&>svg]:h-full [&>svg]:w-full">
-          {item.image ? <img src={item.image} alt={item.imageAlt || item.title} /> : <AP_IndustryVisual type={item.key} />}
+    const photo = (item: typeof content.items[number], className: string) => {
+      const image = item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key];
+      return (
+        <div className={`relative overflow-hidden rounded-[20px] border border-sx-line bg-white ${className}`}>
+          <div className="absolute inset-0 bg-[linear-gradient(145deg,#f8fbfb,#eef8f6)]" aria-hidden="true" />
+          <div className="relative h-full w-full [&>img]:h-full [&>img]:w-full [&>img]:object-contain [&>img]:object-center [&>svg]:h-full [&>svg]:w-full">
+            {image ? <img src={image} alt={item.title} loading="lazy" decoding="async" /> : <AP_IndustryVisual type={item.key} />}
+          </div>
         </div>
-      </div>
-    );
+      );
+    };
 
     return (
       <section id="industries" className="bg-sx-page pb-[clamp(2.5rem,5vw,4rem)] pt-[clamp(0.9rem,1.6vw,1.5rem)]">
@@ -85,8 +95,8 @@ export default function AP_Industries({ content, standalone = false, embedded = 
                 className="flex min-w-[min(440px,100%)] flex-1 basis-[calc(50%-10px)] flex-col rounded-[24px] border border-sx-line bg-white p-6 shadow-[0_14px_34px_rgba(1,54,65,.06)]"
               >
                 {chip(item.number)}
-                <div className="mt-4 flex flex-1 flex-wrap items-stretch gap-5">
-                  <div className="flex min-w-[min(280px,100%)] flex-[1.6] basis-[58%] gap-4">
+                <div className="mt-4 grid flex-1 items-center gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(240px,0.95fr)]">
+                  <div className="flex min-w-0 gap-4">
                     {tile(item.icon)}
                     <div className="flex min-w-0 flex-1 flex-col">
                       <h2 className="text-[clamp(16px,1.35vw,20px)] font-bold leading-[1.2] tracking-[-0.01em] text-hx-ink [overflow-wrap:normal]">{item.title}</h2>
@@ -96,7 +106,7 @@ export default function AP_Industries({ content, standalone = false, embedded = 
                       <div className="mt-auto">{exploreLink}</div>
                     </div>
                   </div>
-                  {photo(item, "min-h-[190px] min-w-[min(170px,100%)] flex-1 basis-[32%]")}
+                  {photo(item, "aspect-[4/3] w-full self-center")}
                 </div>
               </article>
             ))}
@@ -110,15 +120,15 @@ export default function AP_Industries({ content, standalone = false, embedded = 
               className="mt-5 flex flex-col rounded-[24px] border border-sx-line bg-white p-6 shadow-[0_14px_34px_rgba(1,54,65,.06)]"
             >
               {chip(item.number)}
-              <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-5">
+              <div className="mt-4 grid items-center gap-6 lg:grid-cols-[84px_minmax(0,1.2fr)_minmax(210px,0.9fr)_minmax(320px,390px)]">
                 {tile(item.icon)}
-                <div className="min-w-[min(260px,100%)] flex-[1.4] basis-[30%]">
+                <div className="min-w-0">
                   <h2 className="text-[clamp(16px,1.35vw,20px)] font-bold leading-[1.2] tracking-[-0.01em] text-hx-ink [overflow-wrap:normal]">{item.title}</h2>
                   <p className="mt-2.5 text-[12px] leading-[1.6] text-hx-copy">{item.body}</p>
                   {exploreLink}
                 </div>
-                <div className="min-w-[min(210px,100%)] flex-1 basis-[20%]">{checklist(item.bullets)}</div>
-                {photo(item, "min-h-[150px] min-w-[min(240px,100%)] flex-[1.2] basis-[30%]")}
+                <div className="min-w-0">{checklist(item.bullets)}</div>
+                {photo(item, "aspect-[4/3] w-full justify-self-end")}
               </div>
             </article>
           ))}
@@ -159,7 +169,9 @@ export default function AP_Industries({ content, standalone = false, embedded = 
           {content.items.map((item) => (
             <article key={item.key} className="flex min-w-[min(200px,100%)] flex-1 basis-[calc(25%-16px)] flex-col overflow-hidden rounded-xl border border-hx-line bg-white transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(11,34,51,.08)]">
               <div className="h-[132px] w-full shrink-0 overflow-hidden bg-hx-tint [&>svg]:h-full [&>svg]:w-full">
-                {item.image ? <img src={item.image} alt={item.title} className="h-full w-full object-cover" /> : <AP_IndustryVisual type={item.key} />}
+                {(item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key]) ? (
+                  <img src={item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key]} alt={item.title} className="h-full w-full object-cover object-center" />
+                ) : <AP_IndustryVisual type={item.key} />}
               </div>
               <div className="flex flex-1 flex-col p-4">
                 <AP_Icon name={item.icon} className="h-[22px] w-[22px] shrink-0 text-hx-cyan" />

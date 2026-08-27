@@ -1,0 +1,10 @@
+APEX solution modal stacking fix
+
+Problem:
+The capability modal was mounted inside each solution card. Cards use CSS transforms on hover, which creates a containing/stacking context for fixed descendants. That caused the modal to be positioned/clipped relative to a card and allowed sibling cards to render above it.
+
+Fix:
+- Render the open modal into document.body with React createPortal().
+- Keep the overlay position: fixed at the viewport level.
+- Raise modal overlay z-index to 10000 and isolate its stacking context.
+- Existing modal visuals/content/interactions remain unchanged.
