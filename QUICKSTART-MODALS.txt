@@ -1,0 +1,27 @@
+1) Extract this folder anywhere in Downloads.
+
+2) Apply it into your existing local Git repo:
+
+   cd "C:\Users\charlie\Downloads\APEX-SOLUTIONS-MODALS-EXACT"
+   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+   & ".\APPLY_TO_EXISTING_REPO.ps1" "C:\Users\charlie\Downloads\APEX-Ultra-Website-ULTRA"
+
+3) Test:
+
+   cd "C:\Users\charlie\Downloads\APEX-Ultra-Website-ULTRA"
+   npm.cmd install
+   npm.cmd run typecheck
+   npm.cmd run build
+   npm.cmd run dev
+
+4) Open:
+   http://localhost:3000/solutions
+
+5) Click Explore capability on all six cards.
+
+6) Push to testing branch only after approval:
+
+   git branch
+   git add -A
+   git commit -m "Add approved solution capability modals"
+   git push origin testing

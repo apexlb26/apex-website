@@ -10,24 +10,24 @@ export default function AP_CaseStudy({ content }: { content: CaseStudyContent })
   return (
     <section id="case-studies" className="border-b border-hx-line bg-white py-[clamp(2rem,4vw,3.5rem)]">
       <div className={`${shell} flex flex-wrap items-center gap-x-[clamp(2rem,4vw,4rem)] gap-y-8`}>
-        <div className="min-w-[min(320px,100%)] flex-1 basis-[42%]">
-          <span className="block text-[10px] font-extrabold uppercase leading-tight tracking-[0.14em] text-hx-cyanInk">{content.eyebrow}</span>
-          <h2 className="mt-3 text-[clamp(24px,2.3vw,32px)] font-bold leading-[1.18] tracking-[-0.02em] text-hx-ink">{content.headline}</h2>
-          <p className="mt-4 max-w-[520px] text-[12.5px] leading-[1.7] text-hx-copy">{content.body}</p>
+        <div className="flex min-w-[min(320px,100%)] flex-1 basis-[42%] self-stretch flex-col justify-center py-[clamp(0.25rem,1vw,0.9rem)]">
+          <span className="block text-[11px] font-extrabold uppercase leading-tight tracking-[0.14em] text-hx-cyanInk">{content.eyebrow}</span>
+          <h2 className="mt-4 max-w-[620px] text-[clamp(30px,3vw,44px)] font-bold leading-[1.1] tracking-[-0.032em] text-hx-ink">{content.headline}</h2>
+          <p className="mt-5 max-w-[590px] text-[clamp(13.5px,1.02vw,15.5px)] leading-[1.72] text-hx-copy">{content.body}</p>
 
-          <div className="mt-6 flex flex-wrap gap-y-4">
+          <div className="mt-8 flex flex-wrap gap-y-5">
             {content.facts.map((fact) => (
-              <div key={fact.title} className="flex min-w-[min(160px,32%)] flex-1 basis-1/3 items-start gap-2.5 border-l border-hx-line px-3 first:border-l-0 first:pl-0">
-                <AP_Icon name={fact.icon} className="mt-0.5 h-[20px] w-[20px] shrink-0 text-hx-cyan" />
+              <div key={fact.title} className="flex min-w-[min(175px,32%)] flex-1 basis-1/3 items-start gap-3 border-l border-hx-line px-4 first:border-l-0 first:pl-0">
+                <AP_Icon name={fact.icon} className="mt-0.5 h-[23px] w-[23px] shrink-0 text-hx-cyan" />
                 <div className="min-w-0">
-                  <strong className="block text-[12px] font-bold text-hx-ink">{fact.title}</strong>
-                  <small className="mt-1 block text-[11px] leading-[1.45] text-hx-copy">{fact.body}</small>
+                  <strong className="block text-[13.5px] font-bold text-hx-ink">{fact.title}</strong>
+                  <small className="mt-1.5 block text-[12.25px] leading-[1.52] text-hx-copy">{fact.body}</small>
                 </div>
               </div>
             ))}
           </div>
 
-          <AP_CaseStudyButton className="mt-6 inline-flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.08em] text-hx-cyanInk transition-colors hover:text-[#00897E] [&_svg]:h-[13px] [&_svg]:w-[13px]">
+          <AP_CaseStudyButton className="mt-8 inline-flex items-center gap-2.5 text-[12px] font-extrabold uppercase tracking-[0.08em] text-hx-cyanInk transition-colors hover:text-[#00897E] [&_svg]:h-[14px] [&_svg]:w-[14px]">
             {content.cta} <AP_Icon name="arrow-right" />
           </AP_CaseStudyButton>
         </div>

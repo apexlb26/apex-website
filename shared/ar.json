@@ -203,7 +203,8 @@
           "منصات التعلم",
           "مساعدة تعليمية بالذكاء الاصطناعي",
           "أنظمة العمليات"
-        ]
+        ],
+        "image": "/api/assets/industries/education.png"
       },
       {
         "key": "service",
@@ -215,7 +216,8 @@
           "الحجز والجدولة",
           "أتمتة رحلة العميل",
           "إدارة العملاء والعمليات"
-        ]
+        ],
+        "image": "/api/assets/industries/service-operations.png"
       },
       {
         "key": "environment",
@@ -227,7 +229,8 @@
           "المراقبة البيئية",
           "ذكاء البيانات",
           "تنسيق سير العمل"
-        ]
+        ],
+        "image": "/api/assets/industries/public-environmental-systems.png"
       }
     ],
     "learnMoreLabel": "اعرف المزيد",

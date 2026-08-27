@@ -1,0 +1,7 @@
+APEX Industries Image Display Fix
+
+- Education and Service Operations now display supplied 4:3 images at their native aspect ratio.
+- object-fit changed from cover to contain so UI panels and image edges are not cut off.
+- Top cards use an explicit responsive grid so the image receives enough horizontal space.
+- Public & Environmental Systems now has a controlled 4:3 image column instead of allowing the natural image height to stretch the whole card.
+- Existing solution modal and case-study changes are preserved.

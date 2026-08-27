@@ -203,7 +203,8 @@
           "Learning Platforms",
           "Admin Automation",
           "AI Guidance Systems"
-        ]
+        ],
+        "image": "/api/assets/industries/education.png"
       },
       {
         "key": "service",
@@ -215,7 +216,8 @@
           "Booking & Scheduling",
           "Customer Journey Automation",
           "CRM & Operations"
-        ]
+        ],
+        "image": "/api/assets/industries/service-operations.png"
       },
       {
         "key": "environment",
@@ -227,7 +229,8 @@
           "Environmental Monitoring",
           "Data Intelligence",
           "Workflow Coordination"
-        ]
+        ],
+        "image": "/api/assets/industries/public-environmental-systems.png"
       }
     ],
     "learnMoreLabel": "Learn more",
