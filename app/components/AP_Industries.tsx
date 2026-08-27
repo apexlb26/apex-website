@@ -14,7 +14,7 @@ const INDUSTRY_IMAGE_FALLBACKS: Record<string, string> = {
   environment: "/api/assets/industries/public-environmental-systems.png",
 };
 
-export default function AP_Industries({ content, mark, standalone = false, embedded = false }: { content: IndustriesContent; mark?: string; standalone?: boolean; embedded?: boolean }) {
+export default function AP_Industries({ content, standalone = false, embedded = false }: { content: IndustriesContent; standalone?: boolean; embedded?: boolean }) {
   const shell = "mx-auto w-[min(1640px,86%)]";
   const eyebrow = "block text-[10px] font-extrabold uppercase leading-tight tracking-[0.14em] text-hx-cyanInk";
   const ctaLink = "mt-2 inline-flex items-center gap-2 text-[10.5px] font-extrabold uppercase tracking-[0.08em] text-hx-cyanInk transition-colors hover:text-[#00897E] [&_svg]:h-[13px] [&_svg]:w-[13px]";
@@ -60,9 +60,7 @@ export default function AP_Industries({ content, mark, standalone = false, embed
         <div className={`relative overflow-hidden rounded-[20px] border border-sx-line bg-white ${className}`}>
           <div className="absolute inset-0 bg-[linear-gradient(145deg,#f8fbfb,#eef8f6)]" aria-hidden="true" />
           <div className="relative h-full w-full [&>img]:h-full [&>img]:w-full [&>img]:object-contain [&>img]:object-center [&>svg]:h-full [&>svg]:w-full">
-            {image
-              ? <Image src={image} alt={item.title} fill loading="lazy" sizes="(max-width: 900px) 100vw, 50vw" className="object-contain object-center" />
-              : <AP_IndustryVisual type={item.key} />}
+            {image ? <img src={image} alt={item.title} loading="lazy" decoding="async" /> : <AP_IndustryVisual type={item.key} />}
           </div>
         </div>
       );
@@ -171,9 +169,9 @@ export default function AP_Industries({ content, mark, standalone = false, embed
         <div className="flex min-w-[min(560px,100%)] flex-[2.6] basis-[72%] flex-wrap gap-4">
           {content.items.map((item) => (
             <article key={item.key} className="flex min-w-[min(200px,100%)] flex-1 basis-[calc(25%-16px)] flex-col overflow-hidden rounded-xl border border-hx-line bg-white transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(11,34,51,.08)]">
-              <div className="relative h-[132px] w-full shrink-0 overflow-hidden bg-hx-tint [&>svg]:h-full [&>svg]:w-full">
+              <div className="h-[132px] w-full shrink-0 overflow-hidden bg-hx-tint [&>svg]:h-full [&>svg]:w-full">
                 {(item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key]) ? (
-                  <Image src={item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key]} alt={item.title} fill loading="lazy" sizes="(max-width: 768px) 50vw, 25vw" className="object-cover object-center" />
+                  <img src={item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key]} alt={item.title} className="h-full w-full object-cover object-center" />
                 ) : <AP_IndustryVisual type={item.key} />}
               </div>
               <div className="flex flex-1 flex-col p-4">
