@@ -38,7 +38,7 @@ export default function AP_Method({ content, standalone = false }: { content: Me
               <strong className="mt-4 block text-[14px] font-bold text-hx-ink">{step.title}</strong>
               <p className="mt-2 max-w-[210px] text-[11px] leading-[1.5] text-hx-copy">{step.body}</p>
               <Link href="/method" className="mt-3 inline-flex items-center gap-1.5 text-[10.5px] font-bold text-hx-cyanInk hover:text-[#00897E]">
-                <span>{content.stepCta ?? "Learn more"}</span><AP_Icon name="arrow-right" className="h-3 w-3" />
+                <span>{content.stepCta ?? ""}</span><AP_Icon name="arrow-right" className="h-3 w-3" />
               </Link>
             </li>
           ))}

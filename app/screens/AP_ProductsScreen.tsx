@@ -7,9 +7,9 @@ export default async function AP_ProductsScreen() {
   const { data } = await getCmsContent("en");
   return (
     <>
-      <AP_Header nav={data.nav} activePath="/products" />
+      <AP_Header cta={data.meta.headerCta ?? ""} logo={data.meta.logo} logoAlt={data.meta.logoAlt} nav={data.nav} activePath="/products" />
       <AP_ProductsSections />
-      <AP_Footer nav={data.nav} content={data.footer} social={data.social} />
+      <AP_Footer logo={data.meta.logo} logoAlt={data.meta.logoAlt} nav={data.nav} content={data.footer} social={data.social} />
     </>
   );
 }

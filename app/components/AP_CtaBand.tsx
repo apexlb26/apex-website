@@ -5,7 +5,7 @@ import AP_ContactLink from "@/app/components/AP_ContactLink";
 /* No media queries: one wrapping flex row. */
 const shell = "mx-auto w-[min(1640px,86%)]";
 
-export default function AP_CtaBand({ content }: { content: MethodContent }) {
+export default function AP_CtaBand({ content, mark = "/api/assets/logo/apex-mark.svg" }: { content: MethodContent; mark?: string }) {
   return (
     <section className="bg-white py-[clamp(1.5rem,3vw,2.5rem)]">
       <div className={shell}>
@@ -13,11 +13,11 @@ export default function AP_CtaBand({ content }: { content: MethodContent }) {
           <span aria-hidden="true" className="ap-px-dots pointer-events-none absolute inset-y-0 left-[55%] right-0 opacity-40" />
 
           <span className="relative z-[1] grid h-[62px] w-[62px] shrink-0 place-items-center rounded-xl bg-white/70">
-            <Image src="/api/assets/logo/apex-mark.svg" alt="" width={40} height={32} />
+            <Image src={mark} alt="" width={40} height={32} />
           </span>
 
           <h2 className="relative z-[1] min-w-[min(300px,100%)] flex-1 text-[clamp(20px,2vw,28px)] font-bold leading-[1.22] tracking-[-0.02em] text-hx-ink">
-            {content.ctaTitle}<br />{content.ctaBodyLead ?? "your business can"} <span className="text-hx-cyanInk">{content.ctaHighlight}</span>
+            {content.ctaTitle}<br />{content.ctaBodyLead ?? ""} <span className="text-hx-cyanInk">{content.ctaHighlight}</span>
           </h2>
 
           <div className="relative z-[1] flex min-w-[min(280px,100%)] flex-1 flex-col items-start gap-3">

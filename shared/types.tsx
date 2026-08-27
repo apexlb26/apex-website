@@ -62,6 +62,19 @@ export type SolutionItem = {
   body: string;
 };
 
+export type SolutionUseCase = { icon: AP_IconName; title: string; body: string };
+export type SolutionOutcome = { icon: AP_IconName; value: string; title: string; body: string };
+
+/** Everything the "Explore capability" dialog shows, per solution. */
+export type SolutionDetail = {
+  title: string;
+  icon: AP_IconName;
+  intro: string;
+  includes: string[];
+  useCases: SolutionUseCase[];
+  outcomes: SolutionOutcome[];
+};
+
 export type SolutionsContent = {
   pageEyebrow?: string;
   pageTitle?: string;
@@ -70,6 +83,13 @@ export type SolutionsContent = {
   pageBody?: string;
   pageItems?: SolutionItem[];
   exploreLabel?: string;
+  detailIncludesLabel?: string;
+  detailUseCasesLabel?: string;
+  detailOutcomesLabel?: string;
+  detailPrimaryCta?: string;
+  detailSecondaryCta?: string;
+  detailCloseLabel?: string;
+  details?: Record<string, SolutionDetail>;
   eyebrow: string;
   title: string;
   body: string;
@@ -127,6 +147,8 @@ export type CaseFact = {
   body: string;
 };
 
+export type CaseOutcome = { icon: AP_IconName; title: string; body: string };
+
 export type CaseStudyContent = {
   eyebrow: string;
   title: string;
@@ -140,6 +162,17 @@ export type CaseStudyContent = {
   facts: CaseFact[];
   modalTitle: string;
   modalBody: string;
+  /* Everything else the case-study dialog shows. */
+  outcomes?: CaseOutcome[];
+  scopeLabel?: string;
+  needLabel?: string;
+  deliveredLabel?: string;
+  mattersLabel?: string;
+  referenceLabel?: string;
+  referenceSuffix?: string;
+  referenceNote?: string;
+  modalPrimaryCta?: string;
+  modalCloseCta?: string;
   projectScope: string;
   businessNeed: string;
   delivered: string;
@@ -180,6 +213,9 @@ export type FooterColumn = {
 };
 
 export type FooterContent = {
+  subscribePlaceholder?: string;
+  subscribeCta?: string;
+  subscribeSending?: string;
   legal: string;
   tagline?: string;
   body?: string;
@@ -219,7 +255,42 @@ export type ProductStat = {
   label: string;
 };
 
+export type MockTile = { label: string; value: string; tag: string };
+export type MockCategory = { label: string; value: string; w: string };
+export type MockActivity = { title: string; meta: string; tone: string };
+export type MockSummary = { label: string; value: string; tone?: string };
+
+/**
+ * The decorative product console and workflow preview. Presentational, but the
+ * wording is still visible to visitors, so it is authored here rather than in code.
+ */
+export type ProductMockContent = {
+  consoleTitle: string;
+  activityTitle: string;
+  categoriesTitle: string;
+  recentTitle: string;
+  legendCompleted: string;
+  legendInProgress: string;
+  tiles: MockTile[];
+  categories: MockCategory[];
+  activity: MockActivity[];
+  appName: string;
+  appSubtitle: string;
+  nav: string[];
+  flowTitle: string;
+  statusLabel: string;
+  saveLabel: string;
+  publishLabel: string;
+  tabs: string[];
+  startLabel: string;
+  flowNodes: string[];
+  summaryTitle: string;
+  todayLabel: string;
+  summary: MockSummary[];
+};
+
 export type ProductsPageContent = {
+  mock?: ProductMockContent;
   eyebrow: string;
   title: string;
   highlight: string;
@@ -449,6 +520,13 @@ export type CareersPageContent = {
 };
 
 export type SiteMeta = {
+  /** Label on the header call-to-action button. */
+  headerCta?: string;
+  /** Wordmark used in the header and footer. */
+  logo?: string;
+  /** Square mark used in the CTA band and the industries globe. */
+  logoMark?: string;
+  logoAlt?: string;
   title: string;
   description: string;
 };

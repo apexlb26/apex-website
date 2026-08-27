@@ -22,7 +22,7 @@ const arrowDisc = "grid h-8 w-8 shrink-0 place-items-center rounded-full transit
 function SolutionsPage({ content, embedded = false }: { content: SolutionsContent; embedded?: boolean }) {
   const items: SolutionItem[] = content.pageItems?.length ? content.pageItems : content.items;
   const [featured, ...rest] = items;
-  const explore = content.exploreLabel ?? "Explore capability";
+  const explore = content.exploreLabel ?? "";
   const Title = embedded ? "h2" : "h1";
   /* row 1: 4 + 3 + 3 columns, row 2: the featured card's 4 plus 2 + 2 + 2 */
   /* 20-column placement, matching the artwork: 01 spans cols 1-8 and overhangs
@@ -77,7 +77,7 @@ function SolutionsPage({ content, embedded = false }: { content: SolutionsConten
               </span>
               <h2 className="ap-sol-copy relative mt-[clamp(8px,1.8vh,20px)] w-[min(300px,58%)] text-[clamp(18px,min(2.1vw,3.4vh),30px)] font-bold leading-[1.16] tracking-[-0.02em] [overflow-wrap:normal]">{featured.title}</h2>
               <p className="ap-sol-copy relative mt-3 w-[min(300px,58%)] text-[clamp(11px,1.6vh,13px)] leading-[1.6] text-white/85">{featured.body}</p>
-              <AP_SolutionModalTrigger solutionKey={featured.key} className={`${exploreRow} ap-sol-copy relative w-fit cursor-pointer border-0 bg-transparent p-0 text-left text-white`}>
+              <AP_SolutionModalTrigger solutionKey={featured.key} content={content} className={`${exploreRow} ap-sol-copy relative w-fit cursor-pointer border-0 bg-transparent p-0 text-left text-white`}>
                 <span>{explore}</span>
                 <span className={`${arrowDisc} bg-white/20`}><AP_Icon name="arrow-right" className="h-4 w-4" /></span>
               </AP_SolutionModalTrigger>
@@ -104,7 +104,7 @@ function SolutionsPage({ content, embedded = false }: { content: SolutionsConten
                   <p className="mt-2 text-[clamp(11px,1.6vh,12.5px)] leading-[1.5] text-hx-copy">{item.body}</p>
                 </div>
               </div>
-              <AP_SolutionModalTrigger solutionKey={item.key} className={`${exploreRow} w-fit cursor-pointer border-0 bg-transparent p-0 text-left text-sx-teal hover:text-sx-tealDark`}>
+              <AP_SolutionModalTrigger solutionKey={item.key} content={content} className={`${exploreRow} w-fit cursor-pointer border-0 bg-transparent p-0 text-left text-sx-teal hover:text-sx-tealDark`}>
                 <span>{explore}</span>
                 <span className={`${arrowDisc} bg-sx-teal text-white`}><AP_Icon name="arrow-right" className="h-3.5 w-3.5" /></span>
               </AP_SolutionModalTrigger>

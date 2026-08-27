@@ -85,7 +85,7 @@ export default async function AP_CareersSections({ embedded = false }: { embedde
               <p className="mt-[18px] max-w-[520px] text-sm leading-[1.75] text-cx-copy">{page.body}</p>
               <div className="mt-[22px] flex flex-wrap items-center gap-x-[26px] gap-y-3">
                 <a className={buttonPrimary} href="#open-roles"><span>{page.primaryCta}</span><AP_Icon name="arrow-right" /></a>
-                <a className={textLink} href="#life-at-apex"><span>{page.secondaryCta ?? "Life at APEX"}</span><AP_Icon name="arrow-right" /></a>
+                <a className={textLink} href="#life-at-apex"><span>{page.secondaryCta ?? ""}</span><AP_Icon name="arrow-right" /></a>
               </div>
             </div>
           </div>
@@ -145,7 +145,7 @@ export default async function AP_CareersSections({ embedded = false }: { embedde
                   <span className={eyebrow}>{page.rolesEyebrow}</span>
                   <h2 className="mt-2 text-[22px] font-bold tracking-[-0.02em]">{page.rolesTitle}</h2>
                 </div>
-                <a className={textLink} href="#apply"><span>{page.viewAllLabel ?? "View all roles"}</span><AP_Icon name="arrow-right" /></a>
+                <a className={textLink} href="#apply"><span>{page.viewAllLabel ?? ""}</span><AP_Icon name="arrow-right" /></a>
               </div>
               <div className={`${splitBody} flex flex-wrap gap-3.5`}>
                 {page.roles.length ? page.roles.map((role, index) => (
@@ -162,7 +162,7 @@ export default async function AP_CareersSections({ embedded = false }: { embedde
                     </div>
                     <p className="mt-[11px] text-[11px] leading-[1.55] text-cx-copy">{role.summary}</p>
                     <a href="#apply" data-apply-role={role.title} className="mt-auto inline-flex items-center gap-1.5 pt-3 text-[10.5px] font-bold text-cx-cyanInk hover:text-[#00897E]">
-                      <span>{page.viewRoleLabel ?? "View role"}</span><AP_Icon name="arrow-right" className="h-3 w-3" />
+                      <span>{page.viewRoleLabel ?? ""}</span><AP_Icon name="arrow-right" className="h-3 w-3" />
                     </a>
                   </article>
                 )) : (
@@ -185,8 +185,8 @@ export default async function AP_CareersSections({ embedded = false }: { embedde
           <div className={shell}>
             <div className={split}>
               <div className={splitLabel}>
-                <span className={eyebrow}>{page.applyEyebrow ?? "Apply now"}</span>
-                <h2 className="mt-2 text-balance text-[22px] font-bold leading-[1.15] tracking-[-0.02em]">{page.applyTitle ?? "We'd love to hear from you"}</h2>
+                <span className={eyebrow}>{page.applyEyebrow ?? ""}</span>
+                <h2 className="mt-2 text-balance text-[22px] font-bold leading-[1.15] tracking-[-0.02em]">{page.applyTitle ?? ""}</h2>
                 {page.applyBody && <p className="mt-3 text-[11.5px] leading-[1.6] text-cx-copy">{page.applyBody}</p>}
               </div>
               <div className={splitBody}>
@@ -206,8 +206,8 @@ export default async function AP_CareersSections({ embedded = false }: { embedde
           <div className={shell}>
             <div className={`${split} items-center`}>
               <div className={splitLabel}>
-                <span className={eyebrow}>{page.processEyebrow ?? "Our hiring process"}</span>
-                <h2 className="mt-[7px] text-[19px] font-bold tracking-[-0.02em]">{page.processTitle ?? "What to expect"}</h2>
+                <span className={eyebrow}>{page.processEyebrow ?? ""}</span>
+                <h2 className="mt-[7px] text-[19px] font-bold tracking-[-0.02em]">{page.processTitle ?? ""}</h2>
               </div>
               <ol className={`${splitBody} flex flex-wrap`}>
                 {steps.map((step, index) => (
@@ -239,8 +239,8 @@ export default async function AP_CareersSections({ embedded = false }: { embedde
               <AP_Icon name="users" className="h-7 w-7" />
             </span>
             <div className="min-w-[min(320px,100%)] flex-1">
-              <strong className="block text-[19px] font-bold tracking-[-0.01em]">{page.closingTitle ?? "Do meaningful work. With great people."}</strong>
-              <p className="mt-[5px] text-[12.5px] text-white/90">{page.closingBody ?? "Let's build the future of intelligent systems—together."}</p>
+              <strong className="block text-[19px] font-bold tracking-[-0.01em]">{page.closingTitle ?? ""}</strong>
+              <p className="mt-[5px] text-[12.5px] text-white/90">{page.closingBody ?? ""}</p>
             </div>
             <a className={`${buttonLight} shrink-0`} href="#open-roles">
               <span>{page.closingCta ?? page.primaryCta}</span><AP_Icon name="arrow-right" />

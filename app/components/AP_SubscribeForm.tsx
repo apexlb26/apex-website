@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import type { SubscribeRequest, SubscribeResponse } from "@/shared/types";
 import { AP_TextBox } from "@/app/components/AP_TextBox";
 
-export default function AP_SubscribeForm({ placeholder, cta, className = "" }: { placeholder?: string; cta?: string; className?: string } = {}) {
+export default function AP_SubscribeForm({ placeholder, cta, sending, className = "" }: { placeholder?: string; cta?: string; sending?: string; className?: string } = {}) {
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -34,8 +34,8 @@ export default function AP_SubscribeForm({ placeholder, cta, className = "" }: {
 
   return (
     <form className={`subscribe-form ${className}`.trim()} onSubmit={submit}>
-      <AP_TextBox type="email" name="email" required placeholder={placeholder ?? "Enter your work email"} aria-label="Work email" />
-      <button className="button button-primary" disabled={state === "sending"}>{state === "sending" ? "Sending…" : (cta ?? "Subscribe")}</button>
+      <AP_TextBox type="email" name="email" required placeholder={placeholder ?? ""} aria-label={placeholder ?? ""} />
+      <button className="button button-primary" disabled={state === "sending"}>{state === "sending" ? (sending ?? "") : (cta ?? "")}</button>
       {message && <p className={`subscribe-status ${state}`}>{message}</p>}
     </form>
   );

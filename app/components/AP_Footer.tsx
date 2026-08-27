@@ -7,7 +7,7 @@ import AP_SubscribeForm from "@/app/components/AP_SubscribeForm";
 /* No media queries: one wrapping flex row of columns. */
 const shell = "mx-auto w-[min(1640px,86%)]";
 
-export default function AP_Footer({ nav, content, social }: { nav: NavItem[]; content: FooterContent; social: SocialContent }) {
+export default function AP_Footer({ nav, content, social, logo = "/api/assets/logo/apex-logo.svg", logoAlt = "APEX" }: { nav: NavItem[]; content: FooterContent; social: SocialContent; logo?: string; logoAlt?: string }) {
   // Fall back to the primary nav if a stored payload predates the column model.
   const columns = content.columns?.length
     ? content.columns
@@ -19,7 +19,7 @@ export default function AP_Footer({ nav, content, social }: { nav: NavItem[]; co
         {/* brand */}
         <div className="min-w-[min(240px,100%)] flex-[1.5] basis-[23%]">
           <Link prefetch={false} href="/" aria-label="APEX home" className="inline-block">
-            <Image src="/api/assets/logo/apex-logo.svg" alt="APEX" width={140} height={43} />
+            <Image src={logo} alt={logoAlt} width={140} height={43} />
           </Link>
           {content.tagline && <p className="mt-4 text-[12px] font-bold tracking-[-0.01em] text-hx-cyanInk">{content.tagline}</p>}
           {content.body && <p className="mt-2.5 max-w-[300px] text-[11.5px] leading-[1.7] text-hx-copy">{content.body}</p>}
@@ -50,7 +50,7 @@ export default function AP_Footer({ nav, content, social }: { nav: NavItem[]; co
           <strong className="block text-[10px] font-extrabold uppercase tracking-[0.15em] text-hx-ink/70">{content.newsletterTitle ?? ""}</strong>
           <span aria-hidden="true" className="mt-3 block h-px w-8 bg-hx-cyan2/45" />
           <p className="mt-4 max-w-[300px] text-[11.5px] leading-[1.6] text-hx-copy">{content.newsletterBody ?? ""}</p>
-          <div className="ap-footer-subscribe mt-4 max-w-[320px]"><AP_SubscribeForm /></div>
+          <div className="ap-footer-subscribe mt-4 max-w-[320px]"><AP_SubscribeForm placeholder={content.subscribePlaceholder} cta={content.subscribeCta} sending={content.subscribeSending} /></div>
         </div>
       </div>
 

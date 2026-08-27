@@ -3,27 +3,10 @@
  * Purely presentational — set `products.heroImage` in the CMS to replace it
  * with a real screenshot.
  */
-const TILES = [
-  { label: "System Health", value: "98%", tag: "Healthy" },
-  { label: "Active Workflows", value: "1,248", tag: "+12%" },
-  { label: "Automation Rate", value: "87%", tag: "+9%" },
-  { label: "Data Processed", value: "2.4 TB", tag: "+18%" },
-];
+import type { ProductMockContent } from "@/shared/types";
 
-const CATEGORIES = [
-  { label: "Operations", value: "45%", w: "45%" },
-  { label: "Analytics", value: "28%", w: "28%" },
-  { label: "AI Services", value: "17%", w: "17%" },
-  { label: "Integration", value: "10%", w: "10%" },
-];
-
-const ACTIVITY = [
-  { title: "Invoice Processing Workflow", meta: "Completed · 2 min ago", tone: "text-emerald-500" },
-  { title: "Customer Onboarding Flow", meta: "Completed · 5 min ago", tone: "text-emerald-500" },
-  { title: "Anomaly Detection Alert", meta: "High · 12 min ago", tone: "text-rose-500" },
-];
-
-export default function AP_ProductConsole() {
+export default function AP_ProductConsole({ mock }: { mock: ProductMockContent }) {
+  const { tiles: TILES, categories: CATEGORIES, activity: ACTIVITY } = mock;
   return (
     <div aria-hidden="true" className="flex w-full min-w-0 overflow-hidden rounded-xl border border-px-line bg-white shadow-[0_18px_44px_rgba(10,26,44,.12)]">
       {/* rail */}
@@ -34,7 +17,7 @@ export default function AP_ProductConsole() {
 
       <div className="min-w-0 flex-1 p-2.5">
         <div className="mb-2 flex items-center justify-between">
-          <strong className="truncate text-[9px] font-bold text-px-ink">APEX Command Center</strong>
+          <strong className="truncate text-[9px] font-bold text-px-ink">{mock.consoleTitle}</strong>
           <span className="flex gap-1">{Array.from({ length: 3 }).map((_, i) => <i key={i} className="block h-1 w-1 rounded-full bg-px-line" />)}</span>
         </div>
 
@@ -53,20 +36,20 @@ export default function AP_ProductConsole() {
         <div className="mt-1.5 flex flex-wrap gap-1.5">
           {/* line chart */}
           <div className="min-w-[min(150px,100%)] flex-1 basis-[42%] rounded-md border border-px-line p-2">
-            <span className="block text-[6.5px] font-bold text-px-ink">Workflow Activity</span>
+            <span className="block text-[6.5px] font-bold text-px-ink">{mock.activityTitle}</span>
             <svg viewBox="0 0 220 66" className="mt-1 w-full" preserveAspectRatio="none">
               <path d="M0 58 L28 50 L56 52 L84 36 L112 30 L140 20 L168 22 L196 12 L220 8" fill="none" stroke="#1f8fce" strokeWidth="2" />
               <path d="M0 58 L28 50 L56 52 L84 36 L112 30 L140 20 L168 22 L196 12 L220 8 V66 H0Z" fill="#1f8fce" fillOpacity=".08" />
             </svg>
             <div className="mt-1 flex gap-2.5 text-[5.5px] text-px-muted">
-              <span className="flex items-center gap-1"><i className="block h-1 w-1 rounded-full bg-px-cyan2" />Completed</span>
-              <span className="flex items-center gap-1"><i className="block h-1 w-1 rounded-full bg-px-line" />In Progress</span>
+              <span className="flex items-center gap-1"><i className="block h-1 w-1 rounded-full bg-px-cyan2" />{mock.legendCompleted}</span>
+              <span className="flex items-center gap-1"><i className="block h-1 w-1 rounded-full bg-px-line" />{mock.legendInProgress}</span>
             </div>
           </div>
 
           {/* categories */}
           <div className="min-w-[min(130px,100%)] flex-1 basis-[30%] rounded-md border border-px-line p-2">
-            <span className="block text-[6.5px] font-bold text-px-ink">Automation by Category</span>
+            <span className="block text-[6.5px] font-bold text-px-ink">{mock.categoriesTitle}</span>
             <ul className="mt-1.5 flex flex-col gap-1">
               {CATEGORIES.map((c) => (
                 <li key={c.label} className="flex items-center gap-1.5 text-[5.5px] text-px-muted">
@@ -80,7 +63,7 @@ export default function AP_ProductConsole() {
 
           {/* activity */}
           <div className="min-w-[min(130px,100%)] flex-1 basis-[24%] rounded-md border border-px-line p-2">
-            <span className="block text-[6.5px] font-bold text-px-ink">Recent Activity</span>
+            <span className="block text-[6.5px] font-bold text-px-ink">{mock.recentTitle}</span>
             <ul className="mt-1.5 flex flex-col gap-1.5">
               {ACTIVITY.map((a) => (
                 <li key={a.title} className="flex gap-1">

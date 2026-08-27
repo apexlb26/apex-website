@@ -67,7 +67,7 @@ export default async function AP_ProductsSections({ embedded = false }: { embedd
             <div className="min-w-[min(420px,100%)] flex-1 basis-[52%]">
               {page.heroImage
                 ? <img src={page.heroImage} alt={page.heroImageAlt ?? ""} className="w-full rounded-xl border border-px-line object-cover shadow-[0_18px_44px_rgba(10,26,44,.12)]" />
-                : <AP_ProductConsole />}
+                : <AP_ProductConsole mock={page.mock!} />}
             </div>
           </div>
         </section>
@@ -120,7 +120,7 @@ export default async function AP_ProductsSections({ embedded = false }: { embedd
             <div className={shell}>
               <div className={`${split} items-center`}>
                 <div className={splitLabel}>
-                  <span className={eyebrow}>{page.flowEyebrow ?? "How our products work together"}</span>
+                  <span className={eyebrow}>{page.flowEyebrow ?? ""}</span>
                   <h2 className="mt-[7px] text-[19px] font-bold leading-[1.25] tracking-[-0.02em]">{page.flowTitle}</h2>
                 </div>
                 <div className={`${splitBody} flex flex-wrap items-stretch gap-y-3`}>
@@ -157,7 +157,7 @@ export default async function AP_ProductsSections({ embedded = false }: { embedd
         <section className="border-b border-px-line bg-white py-7">
           <div className={`${shell} flex flex-wrap gap-x-8 gap-y-6`}>
             <div className="min-w-[min(280px,100%)] flex-1 basis-[22%]">
-              <span className={eyebrow}>{page.deployEyebrow ?? "Deploy your way"}</span>
+              <span className={eyebrow}>{page.deployEyebrow ?? ""}</span>
               <h2 className="mt-2 text-[22px] font-bold leading-[1.2] tracking-[-0.02em]">{page.deployTitle}</h2>
               <p className="mt-3 text-[11.5px] leading-[1.6] text-px-copy">{page.deployBody}</p>
             </div>
@@ -175,10 +175,10 @@ export default async function AP_ProductsSections({ embedded = false }: { embedd
             </div>
 
             <div className="min-w-[min(240px,100%)] flex-1 basis-[20%] rounded-xl border border-px-line bg-white p-4">
-              <strong className="block text-[13px] font-bold text-px-ink">{page.deployCardTitle ?? "See it in your brand"}</strong>
+              <strong className="block text-[13px] font-bold text-px-ink">{page.deployCardTitle ?? ""}</strong>
               <p className="mt-2 text-[11px] leading-[1.55] text-px-copy">{page.deployCardBody}</p>
               <a href="#cta" className={`${button} mt-4 bg-px-cyan2 text-white hover:bg-[#00695F]`}>
-                <span>{page.deployCardCta ?? "Book a demo"}</span><AP_Icon name="arrow-right" />
+                <span>{page.deployCardCta ?? ""}</span><AP_Icon name="arrow-right" />
               </a>
             </div>
           </div>
@@ -189,7 +189,7 @@ export default async function AP_ProductsSections({ embedded = false }: { embedd
           <section className="border-b border-px-line bg-px-band py-7">
             <div className={`${shell} flex flex-wrap gap-x-8 gap-y-6`}>
               <div className="min-w-[min(280px,100%)] flex-1 basis-[20%]">
-                <span className={eyebrow}>{page.featuredEyebrow ?? "Featured product"}</span>
+                <span className={eyebrow}>{page.featuredEyebrow ?? ""}</span>
                 <div className="mt-3 flex flex-wrap items-center gap-3">
                   <AP_Icon name="flow" className="h-8 w-8 shrink-0 text-px-cyan2" />
                   <div className="min-w-0">
@@ -201,7 +201,7 @@ export default async function AP_ProductsSections({ embedded = false }: { embedd
               </div>
 
               <div className="min-w-[min(240px,100%)] flex-1 basis-[20%]">
-                <strong className="block text-[11.5px] font-bold text-px-ink">{page.featuredCapabilitiesLabel ?? "Key capabilities"}</strong>
+                <strong className="block text-[11.5px] font-bold text-px-ink">{page.featuredCapabilitiesLabel ?? ""}</strong>
                 <ul className="mt-3 flex flex-col gap-2">
                   {(page.featuredCapabilities ?? []).map((capability) => (
                     <li key={capability} className="flex items-start gap-2 text-[11px] leading-[1.45] text-px-copy">
@@ -214,7 +214,7 @@ export default async function AP_ProductsSections({ embedded = false }: { embedd
               <div className="min-w-[min(420px,100%)] flex-[2] basis-[50%]">
                 {page.featuredImage
                   ? <img src={page.featuredImage} alt={page.featuredImageAlt ?? ""} className="w-full rounded-xl border border-px-line object-cover shadow-[0_14px_34px_rgba(10,26,44,.09)]" />
-                  : <AP_ProductPreview />}
+                  : <AP_ProductPreview mock={page.mock!} />}
               </div>
             </div>
           </section>
@@ -229,8 +229,8 @@ export default async function AP_ProductsSections({ embedded = false }: { embedd
               <p className="mt-1.5 text-[12px] text-white/85">{page.ctaBody}</p>
             </div>
             <div className="flex shrink-0 flex-wrap gap-3">
-              <a href="/#contact" className={`${button} bg-white text-px-deep hover:bg-[#e8f4fa]`}><span>{page.ctaPrimary ?? "Book a demo"}</span><AP_Icon name="arrow-right" /></a>
-              <a href="/#contact" className={`${button} border border-white/60 text-white hover:bg-white/10`}><span>{page.ctaSecondary ?? "Talk to an expert"}</span><AP_Icon name="arrow-right" /></a>
+              <a href="/#contact" className={`${button} bg-white text-px-deep hover:bg-[#e8f4fa]`}><span>{page.ctaPrimary ?? ""}</span><AP_Icon name="arrow-right" /></a>
+              <a href="/#contact" className={`${button} border border-white/60 text-white hover:bg-white/10`}><span>{page.ctaSecondary ?? ""}</span><AP_Icon name="arrow-right" /></a>
             </div>
           </div>
         </section>

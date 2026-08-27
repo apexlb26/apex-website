@@ -57,23 +57,22 @@ export default function AP_CaseStudyModal({ content }: { content: CaseStudyConte
           <div className="case-modal-visual">
             <div className="browser-frame browser-large"><div className="browser-dots"><i/><i/><i/></div><Image src={content.screenshot} alt={`${content.client} website`} width={1600} height={1000}/></div>
             <div className="case-outcomes">
-              <div><AP_Icon name="search"/><strong>Clearer discovery</strong><span>Stronger information hierarchy for users.</span></div>
-              <div><AP_Icon name="calendar"/><strong>Better booking flow</strong><span>Less friction across scheduling and sessions.</span></div>
-              <div><AP_Icon name="message"/><strong>Stronger admin usability</strong><span>More centralized visibility and control.</span></div>
-              <div><AP_Icon name="chart"/><strong>Scalable foundation</strong><span>Built to support future product growth.</span></div>
+              {(content.outcomes ?? []).map((outcome) => (
+                <div key={outcome.title}><AP_Icon name={outcome.icon}/><strong>{outcome.title}</strong><span>{outcome.body}</span></div>
+              ))}
             </div>
           </div>
           <div className="case-modal-details">
-            <Detail icon="search" title="Project scope">{content.projectScope}</Detail>
-            <Detail icon="shield" title="Business need">{content.businessNeed}</Detail>
-            <Detail icon="flow" title="What APEX delivered">{content.delivered}</Detail>
-            <Detail icon="check" title="Why it matters">{content.whyItMatters}</Detail>
-            <div className="client-reference"><span>CLIENT REFERENCE</span><strong>{content.client} Team</strong><p>Previous APEX collaboration</p></div>
+            <Detail icon="search" title={content.scopeLabel ?? ""}>{content.projectScope}</Detail>
+            <Detail icon="shield" title={content.needLabel ?? ""}>{content.businessNeed}</Detail>
+            <Detail icon="flow" title={content.deliveredLabel ?? ""}>{content.delivered}</Detail>
+            <Detail icon="check" title={content.mattersLabel ?? ""}>{content.whyItMatters}</Detail>
+            <div className="client-reference"><span>{content.referenceLabel}</span><strong>{content.client} {content.referenceSuffix}</strong><p>{content.referenceNote}</p></div>
           </div>
         </div>
         <footer className="case-modal-footer">
-          <button className="button button-primary" type="button" onClick={startProject}>Start a Project <AP_Icon name="arrow-up-right"/></button>
-          <button className="button button-secondary" type="button" onClick={() => setOpen(false)}>Close Case Study</button>
+          <button className="button button-primary" type="button" onClick={startProject}>{content.modalPrimaryCta} <AP_Icon name="arrow-up-right"/></button>
+          <button className="button button-secondary" type="button" onClick={() => setOpen(false)}>{content.modalCloseCta}</button>
         </footer>
       </article>
     </div>

@@ -8,7 +8,7 @@ import type { NavItem } from "@/shared/types";
 import AP_Button from "@/app/components/AP_Button";
 import AP_Icon from "@/app/components/AP_Icon";
 
-export default function AP_Header({ nav, activePath = "" }: { nav: NavItem[]; activePath?: string }) {
+export default function AP_Header({ nav, activePath = "", cta = "", logo = "/api/assets/logo/apex-logo.svg", logoAlt = "APEX" }: { nav: NavItem[]; activePath?: string; cta?: string; logo?: string; logoAlt?: string }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const [hash, setHash] = useState("");
@@ -109,7 +109,7 @@ export default function AP_Header({ nav, activePath = "" }: { nav: NavItem[]; ac
     <header className="topbar ap-ref-header">
       <div className="container nav-row ap-ref-nav-row">
         <Link prefetch={false} className="brand ap-ref-brand" href="/" aria-label="APEX home">
-          <Image src="/api/assets/logo/apex-logo.svg" alt="APEX" width={170} height={52} priority />
+          <Image src={logo} alt={logoAlt} width={170} height={52} priority />
         </Link>
         <nav className="nav-links ap-ref-nav-links" aria-label="Primary navigation">
           {nav.map((item) => (
@@ -127,7 +127,7 @@ export default function AP_Header({ nav, activePath = "" }: { nav: NavItem[]; ac
           ))}
         </nav>
         <div className="nav-actions ap-ref-nav-actions">
-          <AP_Button className="nav-button ap-ref-nav-cta" contact>Let&apos;s build together</AP_Button>
+          <AP_Button className="nav-button ap-ref-nav-cta" contact>{cta}</AP_Button>
           <button className="mobile-menu-button" type="button" aria-expanded={open} aria-label="Toggle navigation" onClick={() => setOpen((value) => !value)}><AP_Icon name="menu" /></button>
         </div>
       </div>
@@ -147,7 +147,7 @@ export default function AP_Header({ nav, activePath = "" }: { nav: NavItem[]; ac
               }}
             >{item.label}</Link>
           ))}
-          <AP_Button className="mt-3" contact>Let&apos;s build together</AP_Button>
+          <AP_Button className="mt-3" contact>{cta}</AP_Button>
         </nav>
       )}
     </header>

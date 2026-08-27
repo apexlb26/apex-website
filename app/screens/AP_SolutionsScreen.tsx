@@ -7,5 +7,5 @@ import AP_CtaBand from "@/app/components/AP_CtaBand";
 
 export default async function AP_SolutionsScreen() {
   const { data } = await getCmsContent("en");
-  return <><AP_Header nav={data.nav} activePath="/solutions"/><main><AP_Solutions content={data.solutions} standalone/><AP_TrustStrip trust={data.trust} /><AP_CtaBand content={data.method}/></main><AP_Footer nav={data.nav} content={data.footer} social={data.social}/></>;
+  return <><AP_Header cta={data.meta.headerCta ?? ""} logo={data.meta.logo} logoAlt={data.meta.logoAlt} nav={data.nav} activePath="/solutions"/><main><AP_Solutions content={data.solutions} standalone/><AP_TrustStrip trust={data.trust} /><AP_CtaBand mark={data.meta.logoMark} content={data.method}/></main><AP_Footer logo={data.meta.logo} logoAlt={data.meta.logoAlt} nav={data.nav} content={data.footer} social={data.social}/></>;
 }
