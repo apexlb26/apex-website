@@ -66,7 +66,7 @@ export default async function AP_ProductsSections({ embedded = false }: { embedd
 
             <div className="min-w-[min(420px,100%)] flex-1 basis-[52%]">
               {page.heroImage
-                ? <img src={page.heroImage} alt={page.heroImageAlt ?? ""} className="w-full rounded-xl border border-px-line object-cover shadow-[0_18px_44px_rgba(10,26,44,.12)]" />
+                ? <img src={page.heroImage} alt={page.heroImageAlt ?? ""} loading="lazy" className="w-full rounded-xl border border-px-line object-cover shadow-[0_18px_44px_rgba(10,26,44,.12)]" />
                 : <AP_ProductConsole />}
             </div>
           </div>

@@ -109,7 +109,7 @@ export default function AP_Header({ nav, activePath = "" }: { nav: NavItem[]; ac
     <header className="topbar ap-ref-header">
       <div className="container nav-row ap-ref-nav-row">
         <Link prefetch={false} className="brand ap-ref-brand" href="/" aria-label="APEX home">
-          <Image src="/api/assets/logo/apex-logo.svg" alt="APEX" width={170} height={52} priority />
+          <Image src="/api/assets/logo/apex-logo.svg" alt="APEX" width={170} height={52} loading="lazy" />
         </Link>
         <nav className="nav-links ap-ref-nav-links" aria-label="Primary navigation">
           {nav.map((item) => (

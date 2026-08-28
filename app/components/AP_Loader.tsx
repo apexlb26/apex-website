@@ -24,7 +24,7 @@ export default function AP_Loader({ mode = "route" }: { mode?: "route" | "entry"
       <div className="ap-load-dot-field"><AP_DotField dotSpacing={25} bulgeStrength={16} cursorRadius={300} glowRadius={180} /></div>
       <div className="ap-load-architecture"><AP_ArchitectureVisual compact /></div>
       <div className="ap-load-center">
-        <Image className="ap-load-logo" src="/api/assets/logo/apex-logo.svg" alt="APEX" width={430} height={130} priority />
+        <Image className="ap-load-logo" src="/api/assets/logo/apex-logo.svg" alt="APEX" width={430} height={130} loading="lazy" />
         <div className="ap-load-progress" aria-hidden="true"><span /></div>
         <AP_SplitFlapText
           words={["INITIALIZING", "SYNCING SYSTEMS", "APEX ONLINE"]}

@@ -50,6 +50,7 @@ export default function AP_Hero({ hero }: { hero: HeroContent }) {
             ? <img
                 src={hero.image}
                 alt={hero.imageAlt ?? ""}
+                loading="lazy"
                 /* the artwork carries its own near-white ground; multiply plus a soft
                    edge mask keeps its bounding box from showing on the hero gradient */
                 className="ap-hero-art mx-auto h-auto w-full max-w-[780px] mix-blend-multiply"

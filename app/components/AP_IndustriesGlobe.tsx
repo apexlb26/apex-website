@@ -80,7 +80,7 @@ export default function AP_IndustriesGlobe() {
       </svg>
 
       <span className="absolute left-1/2 top-1/2 grid h-[78px] w-[78px] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white shadow-[0_10px_30px_rgba(1,54,65,.14)] ring-1 ring-sx-teal/35">
-        <Image src="/api/assets/logo/apex-mark.svg" alt="" width={40} height={40} />
+        <Image src="/api/assets/logo/apex-mark.svg" alt="" width={40} height={40} loading="lazy" />
       </span>
     </div>
   );
