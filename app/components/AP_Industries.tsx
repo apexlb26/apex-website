@@ -170,7 +170,7 @@ export default function AP_Industries({ content, standalone = false, embedded = 
             <article key={item.key} className="flex min-w-[min(200px,100%)] flex-1 basis-[calc(25%-16px)] flex-col overflow-hidden rounded-xl border border-hx-line bg-white transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(11,34,51,.08)]">
               <div className="h-[132px] w-full shrink-0 overflow-hidden bg-hx-tint [&>svg]:h-full [&>svg]:w-full">
                 {(item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key]) ? (
-                  <img src={item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key]} alt={item.title} className="h-full w-full object-cover object-center" />
+                  <img src={item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key]} alt={item.title} loading="lazy" className="h-full w-full object-cover object-center" />
                 ) : <AP_IndustryVisual type={item.key} />}
               </div>
               <div className="flex flex-1 flex-col p-4">

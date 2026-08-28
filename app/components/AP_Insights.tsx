@@ -53,7 +53,7 @@ export default function AP_Insights({ blogs, solutions, compact = false }: { blo
           {posts.map((post, index) => (
             <article key={post.title} className="flex min-w-[min(250px,100%)] flex-1 basis-[calc(33.333%-14px)] flex-col overflow-hidden rounded-xl border border-hx-line bg-white transition hover:-translate-y-0.5 hover:border-[#bcdff2] hover:shadow-[0_14px_30px_rgba(11,34,51,.08)]">
               <div className="h-[124px] w-full shrink-0 overflow-hidden bg-hx-tint">
-                {post.image ? <img src={post.image} alt={post.title} className="h-full w-full object-cover" /> : <PostArt index={index} />}
+                {post.image ? <img src={post.image} alt={post.title} loading="lazy" className="h-full w-full object-cover" /> : <PostArt index={index} />}
               </div>
               <div className="flex flex-1 flex-col p-4">
                 <span className="block text-[10px] font-extrabold uppercase tracking-[0.12em] text-hx-cyanInk">{post.category}</span>

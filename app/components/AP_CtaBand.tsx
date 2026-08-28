@@ -13,7 +13,7 @@ export default function AP_CtaBand({ content, mark = "/api/assets/logo/apex-mark
           <span aria-hidden="true" className="ap-px-dots pointer-events-none absolute inset-y-0 left-[55%] right-0 opacity-40" />
 
           <span className="relative z-[1] grid h-[62px] w-[62px] shrink-0 place-items-center rounded-xl bg-white/70">
-            <Image src={mark} alt="" width={40} height={32} />
+            <Image src="/api/assets/logo/apex-mark.svg" alt="" width={40} height={32} loading="lazy" />
           </span>
 
           <h2 className="relative z-[1] min-w-[min(300px,100%)] flex-1 text-[clamp(20px,2vw,28px)] font-bold leading-[1.22] tracking-[-0.02em] text-hx-ink">

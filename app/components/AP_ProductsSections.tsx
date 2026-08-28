@@ -213,8 +213,8 @@ export default async function AP_ProductsSections({ embedded = false }: { embedd
 
               <div className="min-w-[min(420px,100%)] flex-[2] basis-[50%]">
                 {page.featuredImage
-                  ? <img src={page.featuredImage} alt={page.featuredImageAlt ?? ""} className="w-full rounded-xl border border-px-line object-cover shadow-[0_14px_34px_rgba(10,26,44,.09)]" />
-                  : <AP_ProductPreview mock={page.mock!} />}
+                  ? <img src={page.featuredImage} alt={page.featuredImageAlt ?? ""} loading="lazy" className="w-full rounded-xl border border-px-line object-cover shadow-[0_14px_34px_rgba(10,26,44,.09)]" />
+                  : <AP_ProductPreview />}
               </div>
             </div>
           </section>
