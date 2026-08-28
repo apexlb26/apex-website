@@ -34,7 +34,7 @@ export default function AP_CaseStudy({ content }: { content: CaseStudyContent })
 
         <div className="min-w-[min(340px,100%)] flex-1 basis-[50%]">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <Image src={content.clientLogo} alt={content.client} width={104} height={40} />
+            <Image src={content.clientLogo} alt={content.client} width={104} height={40} loading="lazy" />
             <span className="text-[11px] font-semibold text-hx-muted">{content.eyebrow}</span>
           </div>
 

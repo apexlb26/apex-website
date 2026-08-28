@@ -19,7 +19,7 @@ export default function AP_Footer({ nav, content, social }: { nav: NavItem[]; co
         {/* brand */}
         <div className="min-w-[min(240px,100%)] flex-[1.5] basis-[23%]">
           <Link prefetch={false} href="/" aria-label="APEX home" className="inline-block">
-            <Image src="/api/assets/logo/apex-logo.svg" alt="APEX" width={140} height={43} />
+            <Image src="/api/assets/logo/apex-logo.svg" alt="APEX" width={140} height={43} loading="lazy" />
           </Link>
           {content.tagline && <p className="mt-4 text-[12px] font-bold tracking-[-0.01em] text-hx-cyanInk">{content.tagline}</p>}
           {content.body && <p className="mt-2.5 max-w-[300px] text-[11.5px] leading-[1.7] text-hx-copy">{content.body}</p>}

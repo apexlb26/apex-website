@@ -1,0 +1,35 @@
+APEX - IMAGE-ONLY LAZY LOADING
+
+Scope
+-----
+Only image loading was changed. No components, modals, sections, scripts, or third-party libraries were lazy-loaded.
+
+Implementation
+--------------
+Below-the-fold images now explicitly use:
+
+    loading="lazy"
+
+Examples:
+
+    <img src={item.image} alt={item.title} loading="lazy" />
+
+    <Image src={content.screenshot} alt={content.client} loading="lazy" ... />
+
+Kept eager / immediate
+----------------------
+- Header logo
+- Main hero image / hero visual
+- Careers hero image
+- Products hero image
+- Existing priority images
+
+How to verify
+-------------
+1. Run the website.
+2. Right-click a below-the-fold image and choose Inspect.
+3. The rendered img element should show: loading="lazy"
+4. Open DevTools > Network > Img and refresh at the top of the page.
+5. Scroll down. Deferred images should request as they approach the viewport.
+
+No external lazy-loading package was added.

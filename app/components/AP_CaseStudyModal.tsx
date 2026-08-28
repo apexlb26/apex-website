@@ -50,12 +50,12 @@ export default function AP_CaseStudyModal({ content }: { content: CaseStudyConte
       <article className="case-modal">
         <button className="modal-close" type="button" onClick={() => setOpen(false)} aria-label="Close">×</button>
         <header className="case-modal-head">
-          <Image src={content.clientLogo} alt={content.client} width={126} height={58} />
+          <Image src={content.clientLogo} alt={content.client} width={126} height={58} loading="lazy" />
           <div><span className="eyebrow">{content.eyebrow}</span><h2 id="case-title">{content.modalTitle}</h2><p>{content.modalBody}</p></div>
         </header>
         <div className="case-modal-body">
           <div className="case-modal-visual">
-            <div className="browser-frame browser-large"><div className="browser-dots"><i/><i/><i/></div><Image src={content.screenshot} alt={`${content.client} website`} width={1600} height={1000}/></div>
+            <div className="browser-frame browser-large"><div className="browser-dots"><i/><i/><i/></div><Image src={content.screenshot} alt={`${content.client} website`} width={1600} height={1000} loading="lazy"/></div>
             <div className="case-outcomes">
               <div><AP_Icon name="search"/><strong>Clearer discovery</strong><span>Stronger information hierarchy for users.</span></div>
               <div><AP_Icon name="calendar"/><strong>Better booking flow</strong><span>Less friction across scheduling and sessions.</span></div>
