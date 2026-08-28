@@ -13,8 +13,16 @@ services:
   - type: web
     name: apex-website
     runtime: node
-    # Frankfurt is Render's closest region to Lebanon. Change if you prefer.
-    region: frankfurt
+    # Must match the MongoDB Atlas region. The cluster is in AWS us-east-1
+    # (Ashburn, Virginia), so the service belongs in Render's virginia region -
+    # every page render makes a database round trip, and a cross-country hop
+    # adds latency to all of them.
+    #
+    # Render assigns a service's region at creation and cannot change it
+    # afterwards, so verify this took effect in the dashboard before relying
+    # on it: an earlier deploy of this blueprint asked for frankfurt and was
+    # placed in oregon regardless.
+    region: virginia
     # `starter` keeps the process warm. The free plan spins down after ~15
     # minutes idle, which means a cold start of up to a minute for the next
     # visitor and a dropped Socket.IO connection. Fine for testing, not for a
