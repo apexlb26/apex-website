@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sendAdminEmail, ADMIN_RECIPIENT } from "@/shared/mailer";
+import { recordSubmission } from "@/shared/store";
 
 /*
  * Career applications. Posted as multipart so the CV travels with the form
@@ -66,6 +67,13 @@ export async function POST(request: Request) {
   const submittedAt = new Date().toISOString();
   const subject = `New job application - ${role || "General"} - ${name}`;
 
+  /*
+   * Stored before the email is attempted. Delivery used to be the only record
+   * of an application, so a mail outage lost it outright; now the database has
+   * it either way and `emailed` says whether the notification got through.
+   */
+  let emailed = false;
+
   try {
     const result = await sendAdminEmail({
       subject,
@@ -86,17 +94,21 @@ export async function POST(request: Request) {
       ].join("\n"),
       attachments: [{ filename, content, contentType: resume.type || "application/octet-stream" }],
     });
+    emailed = result.delivered;
     if (!result.delivered) {
       console.warn(`APEX: no mail transport configured; ${ADMIN_RECIPIENT} was not emailed.`);
     }
   } catch (error) {
     // An application is not lost because delivery failed.
     console.error("APEX application email failed", error);
+    await recordSubmission("application", { name, email, role, phone, location, linkedin, cover, resume: filename, resumeBase64: content.toString("base64"), resumeType: resume.type, submittedAt }, false);
     return NextResponse.json(
       { ok: false, error: "We could not send your application right now. Please try again." },
       { status: 502 },
     );
   }
+
+  await recordSubmission("application", { name, email, role, phone, location, linkedin, cover, resume: filename, resumeBase64: content.toString("base64"), resumeType: resume.type, submittedAt }, emailed);
 
   const webhookUrl = process.env.APEX_CONTACT_WEBHOOK_URL;
   if (webhookUrl) {

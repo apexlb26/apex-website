@@ -66,7 +66,7 @@ export default function AP_AdminShell({ children, email, mode }: { children: Rea
             <div><h1>{title}</h1><p>Manage APEX content without touching the website code.</p></div>
           </div>
           <div className="top-actions">
-            <span className="mode-badge"><span className="status-dot" /> {mode === "github" ? "GitHub publishing" : "Local JSON mode"}</span>
+            <span className="mode-badge"><span className="status-dot" /> {mode === "mongodb" ? "MongoDB" : "Fallback JSON (read-only)"}</span>
             <a className="ap-button ap-button-soft" href={process.env.NEXT_PUBLIC_APEX_SITE_URL || "/"} target="_blank" rel="noreferrer">Preview site <AP_AdminIcon name="external" /></a>
           </div>
         </header>

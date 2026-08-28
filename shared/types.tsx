@@ -620,29 +620,83 @@ export type AdminLoginResponse =
 export type AdminLogoutResponse = { ok: true };
 
 export type AdminContentGetResponse =
-  | { ok: true; locale: Locale; content: SiteContent }
+  | { ok: true; locale: Locale; content: SiteContent; version: number }
   | { ok: false; error: string };
 
 export type AdminContentUpdateRequest = {
   locale: Locale;
   content: SiteContent;
+  /** The version the editor loaded. A mismatch means someone else published first. */
+  expectedVersion?: number;
 };
 
 export type AdminSaveResult = {
-  mode: "local-json" | "github";
+  mode: "mongodb";
   updatedAt: string;
-  commitSha?: string;
+  version: number;
 };
 
 export type AdminContentUpdateResponse =
   | ({ ok: true } & AdminSaveResult)
-  | { ok: false; error: string };
+  | { ok: false; error: string; conflictVersion?: number };
 
 export type AdminMediaUploadResult = {
   path: string;
-  mode: "local-json" | "github";
+  mode: "mongodb";
+  id: string;
 };
 
 export type AdminMediaResponse =
   | ({ ok: true } & AdminMediaUploadResult)
+  | { ok: false; error: string };
+
+/** One image in the media library, without its bytes. */
+export type AdminMediaItem = {
+  id: string;
+  path: string;
+  filename: string;
+  contentType: string;
+  size: number;
+  uploadedAt: string;
+};
+
+export type AdminMediaListResponse =
+  | { ok: true; items: AdminMediaItem[] }
+  | { ok: false; error: string };
+
+/** The lists an editor can add to, reorder and delete from. */
+export type AdminItemKind = "product" | "post" | "update" | "role";
+
+export type AdminItem = {
+  id: string;
+  order: number;
+  data: Record<string, unknown>;
+};
+
+export type AdminItemsResponse =
+  | { ok: true; items: AdminItem[] }
+  | { ok: false; error: string };
+
+export type AdminItemResponse =
+  | { ok: true; item: AdminItem }
+  | { ok: false; error: string };
+
+export type AdminDraft = {
+  savedAt: string;
+  savedBy?: string;
+};
+
+export type AdminDraftResponse =
+  | { ok: true; draft: (AdminDraft & { data: SiteContent }) | null }
+  | { ok: false; error: string };
+
+export type AdminRevision = {
+  id: string;
+  version: number;
+  savedAt: string;
+  savedBy?: string;
+};
+
+export type AdminRevisionsResponse =
+  | { ok: true; revisions: AdminRevision[] }
   | { ok: false; error: string };

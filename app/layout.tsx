@@ -48,7 +48,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         "@id": `${siteUrl}/#organization`,
         name: "APEX",
         url: siteUrl,
-        logo: `${siteUrl}/api/assets/logo/apex-logo.svg`,
+        /*
+         * Taken from the CMS rather than hard-coded: the logo is editable, and
+         * a fixed path here would keep telling search engines about the old one
+         * after someone changed it.
+         */
+        logo: `${siteUrl}${content.meta.logo ?? "/api/assets/logo/apex-logo.svg"}`,
         description: content.meta.description,
       },
       {

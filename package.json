@@ -2,6 +2,9 @@
   "name": "apex-digital-systems",
   "version": "3.0.0",
   "private": true,
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "dev": "node server.mjs",
     "build": "next build",
@@ -9,9 +12,11 @@
     "typecheck": "tsc --noEmit",
     "dev:next": "next dev",
     "start:next": "next start",
-    "mail:test": "node scripts/send-test-email.mjs"
+    "mail:test": "node scripts/send-test-email.mjs",
+    "db:migrate": "node scripts/migrate-to-mongo.mjs"
   },
   "dependencies": {
+    "mongodb": "^6.21.0",
     "next": "15.5.21",
     "nodemailer": "^9.0.5",
     "react": "19.0.0",

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { ContactRequest, ContactResponse } from "@/shared/types";
 import { sendAdminEmail, ADMIN_RECIPIENT } from "@/shared/mailer";
+import { recordSubmission } from "@/shared/store";
 
 function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
 
   // Delivery must not cost the applicant their submission, so failures here
   // are logged and the request still succeeds.
+  let emailed = false;
   try {
     const result = await sendAdminEmail({
       subject,
@@ -53,12 +55,16 @@ export async function POST(request: Request) {
         message,
       ].join("\n"),
     });
+    emailed = result.delivered;
     if (!result.delivered) {
       console.warn(`APEX: no mail transport configured; ${ADMIN_RECIPIENT} was not emailed.`);
     }
   } catch (error) {
     console.error("APEX admin email failed", error);
   }
+
+  // The enquiry is kept regardless of whether the notification was delivered.
+  await recordSubmission(isApplication ? "application" : "contact", { ...lead }, emailed);
 
   if (webhookUrl) {
     try {

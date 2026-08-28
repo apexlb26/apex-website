@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { SubscribeRequest, SubscribeResponse } from "@/shared/types";
+import { recordSubmission } from "@/shared/store";
 
 function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -18,6 +19,10 @@ export async function POST(request: Request) {
 
   const signup = { email, submittedAt: new Date().toISOString() };
   const webhookUrl = process.env.APEX_SUBSCRIBE_WEBHOOK_URL;
+
+  // Kept in the database whether or not a webhook is configured; previously a
+  // signup with no webhook was only written to the server log.
+  await recordSubmission("subscribe", signup, false);
 
   if (webhookUrl) {
     try {

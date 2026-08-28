@@ -1,0 +1,73 @@
+# Render Blueprint for the APEX website.
+#
+# Render runs a persistent Node process, which is what this app needs:
+# server.mjs serves Next *and* holds the Socket.IO connection open, so a CMS
+# publish reaches open browsers instantly. (On serverless hosts the socket
+# cannot connect and clients fall back to polling.)
+#
+# To use: push this file, then in Render choose New > Blueprint and point it at
+# this repository. Values marked `sync: false` are set in the dashboard, not
+# here - they are secrets and must not live in git.
+
+services:
+  - type: web
+    name: apex-website
+    runtime: node
+    # Frankfurt is Render's closest region to Lebanon. Change if you prefer.
+    region: frankfurt
+    # `starter` keeps the process warm. The free plan spins down after ~15
+    # minutes idle, which means a cold start of up to a minute for the next
+    # visitor and a dropped Socket.IO connection. Fine for testing, not for a
+    # site real people visit.
+    plan: starter
+    branch: main
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    # Cheap, and deliberately does not fail when MongoDB is briefly unreachable:
+    # a database blip should not make Render restart a healthy process.
+    healthCheckPath: /api/content/version
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: "22.11.0"
+
+      # ---------------------------------------------------------- database
+      # MongoDB Atlas connection string. Render has no managed MongoDB, so this
+      # points at Atlas (or any reachable MongoDB).
+      # Format: mongodb+srv://user:password@cluster.mongodb.net/?retryWrites=true&w=majority
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB
+        value: apex
+
+      # ------------------------------------------------------------- admin
+      - key: APEX_ADMIN_EMAIL
+        sync: false
+      - key: APEX_ADMIN_PASSWORD
+        sync: false
+      # Signs the admin session cookie. Render generates a strong value once
+      # and keeps it; changing it logs every admin out.
+      - key: APEX_ADMIN_SECRET
+        generateValue: true
+
+      # -------------------------------------------------------------- mail
+      # Optional. Without a transport, submissions are still stored in MongoDB
+      # and simply are not emailed.
+      - key: APEX_NOTIFY_EMAIL
+        sync: false
+      - key: APEX_MAIL_FROM
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+
+      # --------------------------------------------------------------- seo
+      - key: NEXT_PUBLIC_APEX_SITE_URL
+        sync: false

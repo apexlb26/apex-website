@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/shared/auth";
-import { getContent, saveContent } from "@/shared/store";
+import { ContentConflictError, getContentWithVersion, saveContent } from "@/shared/store";
 import { publishContentUpdate } from "@/shared/realtime";
 import type {
   AdminContentGetResponse,
@@ -26,8 +26,8 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const locale = parseLocale(url.searchParams.get("locale"));
   try {
-    const content = await getContent(locale);
-    return NextResponse.json<AdminContentGetResponse>({ ok: true, locale, content });
+    const { content, version } = await getContentWithVersion(locale);
+    return NextResponse.json<AdminContentGetResponse>({ ok: true, locale, content, version });
   } catch (error) {
     return NextResponse.json<AdminContentGetResponse>({ ok: false, error: error instanceof Error ? error.message : "Could not load content" }, { status: 500 });
   }
@@ -42,11 +42,26 @@ export async function PUT(request: Request) {
     if (!looksLikeSiteContent(body.content)) {
       return NextResponse.json<AdminContentUpdateResponse>({ ok: false, error: "Content payload is incomplete." }, { status: 422 });
     }
-    const result = await saveContent(locale, body.content);
+
+    const result = await saveContent(locale, body.content, {
+      expectedVersion: body.expectedVersion,
+      updatedBy: session.email,
+    });
     // Tell every open page to pull the new content in.
-    publishContentUpdate(locale);
+    await publishContentUpdate(locale, "content");
     return NextResponse.json<AdminContentUpdateResponse>({ ok: true, ...result });
   } catch (error) {
+    /*
+     * A conflict is not a server failure: someone else published while this
+     * editor was working. 409 lets the editor offer "reload and reapply"
+     * instead of silently overwriting the other person's work.
+     */
+    if (error instanceof ContentConflictError) {
+      return NextResponse.json<AdminContentUpdateResponse>(
+        { ok: false, error: error.message, conflictVersion: error.currentVersion },
+        { status: 409 },
+      );
+    }
     return NextResponse.json<AdminContentUpdateResponse>({ ok: false, error: error instanceof Error ? error.message : "Could not publish content" }, { status: 500 });
   }
 }

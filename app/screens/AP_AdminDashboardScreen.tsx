@@ -21,7 +21,7 @@ export default async function AP_AdminDashboardScreen() {
         </div>
         <div className="dashboard-system">
           <h3>Publishing system</h3>
-          <div className="system-row"><span>Storage mode</span><strong>{getStorageMode() === "github" ? "GitHub repository" : "Local JSON"}</strong></div>
+          <div className="system-row"><span>Storage mode</span><strong>{getStorageMode() === "mongodb" ? "MongoDB" : "Fallback JSON (read-only)"}</strong></div>
           <div className="system-row"><span>English content</span><strong>Connected</strong></div>
           <div className="system-row"><span>Arabic content</span><strong>Connected</strong></div>
           <div className="system-row"><span>Products catalog</span><strong>Layout ready · empty</strong></div>

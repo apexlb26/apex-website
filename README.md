@@ -21,26 +21,27 @@ This build implements the supplied APEX PDF direction as a real responsive Next.
 - Multi-column footer with LinkedIn, Instagram, and WhatsApp icons.
 - Floating WhatsApp action remains functional with a temporary fallback number.
 
-## CMS / fallback behavior
+## CMS storage
 
-The public website still reads deterministic fallback data from:
+**MongoDB is the source of truth.** Everything an editor can change lives in the
+database: page copy and every label, image bytes (base64), products, blog posts,
+blog updates, career roles, drafts, publish history and form submissions.
 
-```text
-shared/en.json
-shared/ar.json
+Nothing is written to the filesystem, and publishing no longer commits to
+GitHub.
+
+```powershell
+npm.cmd run db:migrate    # seed the database from the JSON snapshot, once
 ```
+
+See [DATABASE.md](DATABASE.md) for the collections, the publish flow, image
+handling and rollback.
+
+`shared/en.json` and `shared/ar.json` remain as a **read-only fallback**: if the
+database is unreachable the public site renders the last shipped snapshot rather
+than erroring. Nothing writes to them any more.
 
 Social/contact fields are editable under `/admin/site` → **Social & contact**.
-
-Fallbacks included in JSON:
-
-```text
-WhatsApp  -> temporary wa.me number
-LinkedIn  -> linkedin.com
-Instagram -> instagram.com
-```
-
-No MongoDB, Socket.IO, hosted CMS, or new external runtime service is added in this build. Those integrations remain deferred.
 
 ## Routes
 
@@ -76,14 +77,20 @@ app/
 └── sitemap.ts
 
 shared/
-├── assets/
-├── en.json
-├── ar.json
-├── content.ts
+├── assets/           # build-time artwork; CMS images live in MongoDB
+├── en.json           # read-only fallback snapshot
+├── ar.json           # read-only fallback snapshot
+├── db.ts             # MongoDB client, collections, document types
+├── store.ts          # the CMS store: content, items, media, drafts, revisions
+├── content.ts        # public read path, with the JSON fallback
+├── realtime.ts       # version + Socket.IO push (server only)
+├── events.ts         # event names shared with the browser
 ├── globals.css
 ├── types.tsx
-├── auth.ts
-└── store.ts
+└── auth.ts
+
+scripts/
+└── migrate-to-mongo.mjs
 ```
 
 `app/loading.tsx` has intentionally been removed to satisfy KAN-13. `app/components/AP_Loader.tsx` stays available as a reusable component but is not used as a public entry screen.
@@ -93,8 +100,8 @@ shared/
 - **KAN-1** — Tailwind + Grid/Flex responsive redesign: implemented.
 - **KAN-2** — CMS client navigation: existing App Router + `next/link` structure retained.
 - **KAN-3** — Lazy loading: dynamic lower homepage modules and public overlays retained.
-- **KAN-4** — Socket.IO: deferred.
-- **KAN-5** — MongoDB/backend database: deferred.
+- **KAN-4** — Socket.IO: implemented (`server.mjs`, with a polling fallback).
+- **KAN-5** — MongoDB/backend database: implemented (see [DATABASE.md](DATABASE.md)).
 - **KAN-6** — SEO/GEO baseline: canonical metadata, schema, sitemap, robots retained and expanded for new routes.
 - **KAN-7** — `apexlb.tech`: retained as canonical production target.
 - **KAN-8** — WhatsApp floating action: implemented with CMS + JSON fallback.
@@ -153,9 +160,11 @@ Email:    admin@apex.local
 Password: apex-dev
 ```
 
-Production admin credentials still come from Vercel environment variables:
+Production requires these environment variables:
 
 ```text
+MONGODB_URI          # local dev falls back to mongodb://127.0.0.1:27017
+MONGODB_DB           # defaults to "apex"
 APEX_ADMIN_EMAIL
 APEX_ADMIN_PASSWORD
 APEX_ADMIN_SECRET

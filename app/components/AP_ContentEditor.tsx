@@ -2,7 +2,16 @@
 
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { AP_AdminIcon } from "@/app/components/AP_AdminIcons";
-import type { AP_IconName, Locale, SiteContent } from "@/shared/types";
+import AP_ImageField from "@/app/components/AP_ImageField";
+import type {
+  AdminContentGetResponse,
+  AdminContentUpdateResponse,
+  AdminDraft,
+  AdminDraftResponse,
+  AP_IconName,
+  Locale,
+  SiteContent,
+} from "@/shared/types";
 
 type EditorMode = "site" | "products" | "blogs" | "careers";
 type SiteSection = "meta" | "hero" | "about" | "solutions" | "industries" | "caseStudy" | "method" | "contactModal" | "social" | "footer";
@@ -65,19 +74,24 @@ function SectionHead({ eyebrow, title, description }: { eyebrow: string; title: 
 export default function AP_ContentEditor({
   initialEn,
   initialAr,
+  initialVersions,
   mode,
   initialSection = "hero",
 }: {
   initialEn: SiteContent;
   initialAr: SiteContent;
+  /** Publish version per locale, used to detect a concurrent publish. */
+  initialVersions: Record<Locale, number>;
   mode: EditorMode;
   initialSection?: SiteSection;
 }) {
   const [locale, setLocale] = useState<Locale>("en");
   const [contentMap, setContentMap] = useState<Record<Locale, SiteContent>>({ en: initialEn, ar: initialAr });
+  const [versions, setVersions] = useState<Record<Locale, number>>(initialVersions);
   const [section, setSection] = useState<SiteSection>(initialSection);
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [draftInfo, setDraftInfo] = useState<AdminDraft | null>(null);
   const [toast, setToast] = useState<{ text: string; error?: boolean } | null>(null);
 
   const content = contentMap[locale];
@@ -109,13 +123,25 @@ export default function AP_ContentEditor({
       const response = await fetch("/api/admin/content", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale, content }),
+        // The version we loaded travels with the write, so the server can
+        // reject it rather than overwrite a publish we never saw.
+        body: JSON.stringify({ locale, content, expectedVersion: versions[locale] }),
       });
-      const body = await response.json();
-      if (!response.ok) throw new Error(body.error || "Publish failed");
+      const body = (await response.json()) as AdminContentUpdateResponse;
+
+      if (response.status === 409 && !body.ok) {
+        setToast({ text: `${body.error} Press Reset to load their version, then reapply your edits.`, error: true });
+        return;
+      }
+      if (!body.ok) throw new Error(body.error || "Publish failed");
+
+      setVersions((current) => ({ ...current, [locale]: body.version }));
       setDirty(false);
-      localStorage.removeItem(`apex-cms-draft-${locale}`);
-      setToast({ text: body.mode === "github" ? "Published to GitHub. Your website deployment can now rebuild from the updated content." : "Saved to the local JSON source successfully." });
+      setDraftInfo(null);
+      // Publishing supersedes the draft, so it should not linger and be
+      // restored over newer content later.
+      void fetch(`/api/admin/draft?locale=${locale}`, { method: "DELETE" });
+      setToast({ text: `Published to the database. Open pages are updating now (version ${body.version}).` });
     } catch (error) {
       setToast({ text: error instanceof Error ? error.message : "Publish failed", error: true });
     } finally {
@@ -123,18 +149,30 @@ export default function AP_ContentEditor({
     }
   }
 
-  function saveDraft() {
-    localStorage.setItem(`apex-cms-draft-${locale}`, JSON.stringify(content));
-    setToast({ text: `Draft saved in this browser for ${locale === "en" ? "English" : "Arabic"}. It has not been published.` });
+  async function saveDraft() {
+    try {
+      const response = await fetch("/api/admin/draft", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ locale, content }),
+      });
+      const body = (await response.json()) as { ok: boolean; error?: string; savedAt?: string };
+      if (!body.ok) throw new Error(body.error || "Could not save the draft");
+      setDraftInfo({ savedAt: body.savedAt ?? new Date().toISOString() });
+      setToast({ text: `Draft saved for ${locale === "en" ? "English" : "Arabic"}. It is stored in the database and has not been published.` });
+    } catch (error) {
+      setToast({ text: error instanceof Error ? error.message : "Could not save the draft", error: true });
+    }
   }
 
   async function reloadPublished() {
     if (dirty && !window.confirm("Discard unsaved changes for this language?")) return;
     try {
       const response = await fetch(`/api/admin/content?locale=${locale}`, { cache: "no-store" });
-      const body = await response.json();
-      if (!response.ok) throw new Error(body.error || "Could not reload content");
-      setContentMap((current) => ({ ...current, [locale]: body.content as SiteContent }));
+      const body = (await response.json()) as AdminContentGetResponse;
+      if (!body.ok) throw new Error(body.error || "Could not reload content");
+      setContentMap((current) => ({ ...current, [locale]: body.content }));
+      setVersions((current) => ({ ...current, [locale]: body.version }));
       setDirty(false);
       setToast({ text: "Reloaded the currently published content." });
     } catch (error) {
@@ -142,16 +180,21 @@ export default function AP_ContentEditor({
     }
   }
 
-  function restoreDraft() {
-    const raw = localStorage.getItem(`apex-cms-draft-${locale}`);
-    if (!raw) return setToast({ text: "No browser draft exists for this language." });
+  async function restoreDraft() {
     try {
-      const draft = JSON.parse(raw) as SiteContent;
-      setContentMap((current) => ({ ...current, [locale]: draft }));
+      const response = await fetch(`/api/admin/draft?locale=${locale}`, { cache: "no-store" });
+      const body = (await response.json()) as AdminDraftResponse;
+      if (!body.ok) throw new Error(body.error || "Could not load the draft");
+      const draft = body.draft;
+      if (!draft) return setToast({ text: "No saved draft exists for this language." });
+
+      setContentMap((current) => ({ ...current, [locale]: draft.data }));
+      setDraftInfo({ savedAt: draft.savedAt, savedBy: draft.savedBy });
       setDirty(true);
-      setToast({ text: "Browser draft restored. Review it before publishing." });
-    } catch {
-      setToast({ text: "The saved browser draft could not be read.", error: true });
+      const who = draft.savedBy ? ` by ${draft.savedBy}` : "";
+      setToast({ text: `Draft from ${new Date(draft.savedAt).toLocaleString()}${who} restored. Review it before publishing.` });
+    } catch (error) {
+      setToast({ text: error instanceof Error ? error.message : "Could not restore the draft", error: true });
     }
   }
 
@@ -179,7 +222,7 @@ export default function AP_ContentEditor({
           <div className="editor-card" dir={content.direction}>
             {mode === "site" ? renderSiteSection(section, content, change, value) : mode === "products" ? renderProducts(content, change, value) : mode === "blogs" ? renderBlogs(content, change, value) : renderCareers(content, change, value)}
           </div>
-          <p style={{ color: "#7b909b", fontSize: 11, margin: "12px 4px 0" }}>Editing <strong>{pageTitle}</strong> · {locale === "en" ? "English" : "Arabic"}. Drafts stay in your browser; Publish writes to the configured CMS source.</p>
+          <p style={{ color: "#7b909b", fontSize: 11, margin: "12px 4px 0" }}>Editing <strong>{pageTitle}</strong> · {locale === "en" ? "English" : "Arabic"} · version {versions[locale]}. Drafts and published content both live in MongoDB; publishing pushes the change to every open page immediately.{draftInfo ? ` Draft saved ${new Date(draftInfo.savedAt).toLocaleString()}.` : ""}</p>
         </section>
       </div>
       {toast ? <div className={`toast${toast.error ? " error" : ""}`}>{toast.text}</div> : null}
@@ -189,11 +232,11 @@ export default function AP_ContentEditor({
 
 function renderSiteSection(section: SiteSection, content: SiteContent, change: (path: string, value: unknown) => void, value: (path: string) => string) {
   if (section === "meta") {
-    return <><SectionHead eyebrow="WEBSITE" title="Site & navigation" description={sectionDescriptions.meta} /><div className="editor-card-body"><div className="field-grid"><TextField label="SEO title" value={value("meta.title")} onChange={(v) => change("meta.title", v)} /><TextArea label="SEO description" value={value("meta.description")} onChange={(v) => change("meta.description", v)} /><TextField label="Header button label" value={value("meta.headerCta")} onChange={(v) => change("meta.headerCta", v)} /><TextField label="Logo image path" value={value("meta.logo")} onChange={(v) => change("meta.logo", v)} hint="Wordmark in the header and footer. Upload in Media, then paste the path." /><TextField label="Logo mark path" value={value("meta.logoMark")} onChange={(v) => change("meta.logoMark", v)} hint="Square mark used in the CTA band and the industries globe." /><TextField label="Logo alt text" value={value("meta.logoAlt")} onChange={(v) => change("meta.logoAlt", v)} /></div><div className="form-divider" /><div className="array-stack">{content.nav.map((item, index) => <div className="subcard" key={`${item.href}-${index}`}><div className="subcard-head"><strong>Navigation item {index + 1}</strong><span>{item.href}</span></div><div className="field-grid"><TextField label="Label" value={item.label} onChange={(v) => change(`nav.${index}.label`, v)} /><TextField label="Href" value={item.href} onChange={(v) => change(`nav.${index}.href`, v)} /></div></div>)}</div></div></>;
+    return <><SectionHead eyebrow="WEBSITE" title="Site & navigation" description={sectionDescriptions.meta} /><div className="editor-card-body"><div className="field-grid"><TextField label="SEO title" value={value("meta.title")} onChange={(v) => change("meta.title", v)} /><TextArea label="SEO description" value={value("meta.description")} onChange={(v) => change("meta.description", v)} /><TextField label="Header button label" value={value("meta.headerCta")} onChange={(v) => change("meta.headerCta", v)} /><AP_ImageField label="Logo image path" value={value("meta.logo")} onChange={(v) => change("meta.logo", v)} hint="Wordmark in the header and footer. Upload in Media, then paste the path." /><AP_ImageField label="Logo mark path" value={value("meta.logoMark")} onChange={(v) => change("meta.logoMark", v)} hint="Square mark used in the CTA band and the industries globe." /><TextField label="Logo alt text" value={value("meta.logoAlt")} onChange={(v) => change("meta.logoAlt", v)} /></div><div className="form-divider" /><div className="array-stack">{content.nav.map((item, index) => <div className="subcard" key={`${item.href}-${index}`}><div className="subcard-head"><strong>Navigation item {index + 1}</strong><span>{item.href}</span></div><div className="field-grid"><TextField label="Label" value={item.label} onChange={(v) => change(`nav.${index}.label`, v)} /><TextField label="Href" value={item.href} onChange={(v) => change(`nav.${index}.href`, v)} /></div></div>)}</div></div></>;
   }
 
   if (section === "hero") {
-    return <><SectionHead eyebrow="HOMEPAGE" title="Hero" description={sectionDescriptions.hero} /><div className="editor-card-body"><div className="field-grid"><TextField label="Eyebrow" value={value("hero.eyebrow")} onChange={(v) => change("hero.eyebrow", v)} /><TextField label="Headline line 1" value={value("hero.lines.0")} onChange={(v) => change("hero.lines.0", v)} /><TextField label="Headline line 2" value={value("hero.lines.1")} onChange={(v) => change("hero.lines.1", v)} /><TextField label="Headline line 3" value={value("hero.lines.2")} onChange={(v) => change("hero.lines.2", v)} /><div className="field full"><TextArea label="Body" value={value("hero.body")} onChange={(v) => change("hero.body", v)} /></div><TextField label="Primary CTA" value={value("hero.primaryCta")} onChange={(v) => change("hero.primaryCta", v)} /><TextField label="Secondary CTA" value={value("hero.secondaryCta")} onChange={(v) => change("hero.secondaryCta", v)} /><TextField label="Hero image path" value={value("hero.image")} onChange={(v) => change("hero.image", v)} hint="Upload in Media, then paste the public path. Leave blank to use the built-in artwork." /><TextField label="Hero image alt" value={value("hero.imageAlt")} onChange={(v) => change("hero.imageAlt", v)} /></div><div className="form-divider" /><div className="array-stack">{content.hero.principles.map((item, index) => <div className="subcard" key={index}><div className="subcard-head"><strong>Principle {index + 1}</strong><span>{item.icon}</span></div><div className="field-grid"><TextField label="Title" value={item.title} onChange={(v) => change(`hero.principles.${index}.title`, v)} /><TextArea label="Body" value={item.body} onChange={(v) => change(`hero.principles.${index}.body`, v)} /></div></div>)}</div></div></>;
+    return <><SectionHead eyebrow="HOMEPAGE" title="Hero" description={sectionDescriptions.hero} /><div className="editor-card-body"><div className="field-grid"><TextField label="Eyebrow" value={value("hero.eyebrow")} onChange={(v) => change("hero.eyebrow", v)} /><TextField label="Headline line 1" value={value("hero.lines.0")} onChange={(v) => change("hero.lines.0", v)} /><TextField label="Headline line 2" value={value("hero.lines.1")} onChange={(v) => change("hero.lines.1", v)} /><TextField label="Headline line 3" value={value("hero.lines.2")} onChange={(v) => change("hero.lines.2", v)} /><div className="field full"><TextArea label="Body" value={value("hero.body")} onChange={(v) => change("hero.body", v)} /></div><TextField label="Primary CTA" value={value("hero.primaryCta")} onChange={(v) => change("hero.primaryCta", v)} /><TextField label="Secondary CTA" value={value("hero.secondaryCta")} onChange={(v) => change("hero.secondaryCta", v)} /><AP_ImageField label="Hero image path" value={value("hero.image")} onChange={(v) => change("hero.image", v)} hint="Upload in Media, then paste the public path. Leave blank to use the built-in artwork." /><TextField label="Hero image alt" value={value("hero.imageAlt")} onChange={(v) => change("hero.imageAlt", v)} /></div><div className="form-divider" /><div className="array-stack">{content.hero.principles.map((item, index) => <div className="subcard" key={index}><div className="subcard-head"><strong>Principle {index + 1}</strong><span>{item.icon}</span></div><div className="field-grid"><TextField label="Title" value={item.title} onChange={(v) => change(`hero.principles.${index}.title`, v)} /><TextArea label="Body" value={item.body} onChange={(v) => change(`hero.principles.${index}.body`, v)} /></div></div>)}</div></div></>;
   }
 
   if (section === "about") {
@@ -205,7 +248,7 @@ function renderSiteSection(section: SiteSection, content: SiteContent, change: (
   }
 
   if (section === "industries") {
-    return <><SectionHead eyebrow="HOMEPAGE" title="Industries" description={sectionDescriptions.industries} /><div className="editor-card-body"><div className="field-grid"><TextField label="Eyebrow" value={value("industries.eyebrow")} onChange={(v) => change("industries.eyebrow", v)} /><TextField label="Section title" value={value("industries.title")} onChange={(v) => change("industries.title", v)} /><div className="field full"><TextArea label="Body" value={value("industries.body")} onChange={(v) => change("industries.body", v)} /></div><TextField label="Card CTA" value={value("industries.cta")} onChange={(v) => change("industries.cta", v)} /><TextField label="Hero image path" value={value("industries.heroImage")} onChange={(v) => change("industries.heroImage", v)} hint="Upload in Media, then paste the public path. Leave blank to use the built-in artwork." /><TextField label="Hero image alt" value={value("industries.heroImageAlt")} onChange={(v) => change("industries.heroImageAlt", v)} /></div><div className="form-divider" /><div className="array-stack">{content.industries.items.map((item, index) => <div className="subcard" key={item.key}><div className="subcard-head"><strong>{item.number} · {item.title}</strong><span>{item.key}</span></div><div className="field-grid"><TextField label="Title" value={item.title} onChange={(v) => change(`industries.items.${index}.title`, v)} /><TextArea label="Body" value={item.body} onChange={(v) => change(`industries.items.${index}.body`, v)} /><div className="field full"><TextField label="Bullets (separate with |)" value={item.bullets.join(" | ")} onChange={(v) => change(`industries.items.${index}.bullets`, v.split("|").map((s) => s.trim()).filter(Boolean))} /></div><div className="field full"><TextField label="Card image path" value={item.image ?? ""} onChange={(v) => change(`industries.items.${index}.image`, v)} hint="Upload in Media, then paste the public path. Leave blank to use the built-in artwork." /></div></div></div>)}</div><div className="subcard"><div className="subcard-head"><strong>Open-door row</strong><span>Different vertical</span></div><div className="field-grid"><TextField label="Title" value={value("industries.openDoorTitle")} onChange={(v) => change("industries.openDoorTitle", v)} /><TextField label="Body" value={value("industries.openDoorBody")} onChange={(v) => change("industries.openDoorBody", v)} /><TextField label="CTA" value={value("industries.openDoorCta")} onChange={(v) => change("industries.openDoorCta", v)} /></div></div></div></>;
+    return <><SectionHead eyebrow="HOMEPAGE" title="Industries" description={sectionDescriptions.industries} /><div className="editor-card-body"><div className="field-grid"><TextField label="Eyebrow" value={value("industries.eyebrow")} onChange={(v) => change("industries.eyebrow", v)} /><TextField label="Section title" value={value("industries.title")} onChange={(v) => change("industries.title", v)} /><div className="field full"><TextArea label="Body" value={value("industries.body")} onChange={(v) => change("industries.body", v)} /></div><TextField label="Card CTA" value={value("industries.cta")} onChange={(v) => change("industries.cta", v)} /><AP_ImageField label="Hero image path" value={value("industries.heroImage")} onChange={(v) => change("industries.heroImage", v)} hint="Upload in Media, then paste the public path. Leave blank to use the built-in artwork." /><TextField label="Hero image alt" value={value("industries.heroImageAlt")} onChange={(v) => change("industries.heroImageAlt", v)} /></div><div className="form-divider" /><div className="array-stack">{content.industries.items.map((item, index) => <div className="subcard" key={item.key}><div className="subcard-head"><strong>{item.number} · {item.title}</strong><span>{item.key}</span></div><div className="field-grid"><TextField label="Title" value={item.title} onChange={(v) => change(`industries.items.${index}.title`, v)} /><TextArea label="Body" value={item.body} onChange={(v) => change(`industries.items.${index}.body`, v)} /><div className="field full"><TextField label="Bullets (separate with |)" value={item.bullets.join(" | ")} onChange={(v) => change(`industries.items.${index}.bullets`, v.split("|").map((s) => s.trim()).filter(Boolean))} /></div><div className="field full"><AP_ImageField label="Card image" value={item.image ?? ""} onChange={(v) => change(`industries.items.${index}.image`, v)} hint="Choose an image from the library or upload one. Leave blank to use the built-in artwork." /></div></div></div>)}</div><div className="subcard"><div className="subcard-head"><strong>Open-door row</strong><span>Different vertical</span></div><div className="field-grid"><TextField label="Title" value={value("industries.openDoorTitle")} onChange={(v) => change("industries.openDoorTitle", v)} /><TextField label="Body" value={value("industries.openDoorBody")} onChange={(v) => change("industries.openDoorBody", v)} /><TextField label="CTA" value={value("industries.openDoorCta")} onChange={(v) => change("industries.openDoorCta", v)} /></div></div></div></>;
   }
 
   if (section === "caseStudy") {
@@ -316,7 +359,7 @@ function renderProducts(content: SiteContent, change: (path: string, value: unkn
           <TextField label="Highlighted second line" value={value("products.highlight")} onChange={(v) => change("products.highlight", v)} />
           <TextField label="Primary CTA" value={value("products.primaryCta")} onChange={(v) => change("products.primaryCta", v)} />
           <div className="field full"><TextArea label="Intro body" value={value("products.body")} onChange={(v) => change("products.body", v)} /></div>
-          <TextField label="Hero image path" value={value("products.heroImage")} onChange={(v) => change("products.heroImage", v)} hint="Blank keeps the built-in console mockup." />
+          <AP_ImageField label="Hero image path" value={value("products.heroImage")} onChange={(v) => change("products.heroImage", v)} hint="Blank keeps the built-in console mockup." />
           <TextField label="Hero image alt text" value={value("products.heroImageAlt")} onChange={(v) => change("products.heroImageAlt", v)} />
         </div>
 
@@ -446,7 +489,7 @@ function renderProducts(content: SiteContent, change: (path: string, value: unkn
           <TextField label="Featured category" value={value("products.featuredCategory")} onChange={(v) => change("products.featuredCategory", v)} />
           <TextField label="Capabilities heading" value={value("products.featuredCapabilitiesLabel")} onChange={(v) => change("products.featuredCapabilitiesLabel", v)} />
           <div className="field full"><TextArea label="Featured body" value={value("products.featuredBody")} onChange={(v) => change("products.featuredBody", v)} rows={2} /></div>
-          <TextField label="Featured image path" value={value("products.featuredImage")} onChange={(v) => change("products.featuredImage", v)} hint="Blank keeps the built-in preview mockup." />
+          <AP_ImageField label="Featured image path" value={value("products.featuredImage")} onChange={(v) => change("products.featuredImage", v)} hint="Blank keeps the built-in preview mockup." />
           <TextField label="Featured image alt text" value={value("products.featuredImageAlt")} onChange={(v) => change("products.featuredImageAlt", v)} />
         </div>
         <div className="subcard-head"><strong>Featured capabilities</strong><button className="ap-button ap-button-soft" type="button" onClick={() => capabilityList.add("New capability")}>Add capability</button></div>
@@ -504,7 +547,7 @@ function renderProducts(content: SiteContent, change: (path: string, value: unkn
 }
 
 function renderBlogs(content: SiteContent, change: (path: string, value: unknown) => void, value: (path: string) => string) {
-  return <><SectionHead eyebrow="BLOGS & NEWS" title="Newsroom layout" description="Prepare the page language and filtering structure now. Publish actual achievements, collaborations, and news only when they exist." /><div className="editor-card-body"><div className="field-grid"><TextField label="Eyebrow" value={value("blogs.eyebrow")} onChange={(v) => change("blogs.eyebrow", v)} /><TextField label="Main title" value={value("blogs.title")} onChange={(v) => change("blogs.title", v)} /><TextField label="Highlighted words" value={value("blogs.highlight")} onChange={(v) => change("blogs.highlight", v)} /><div className="field full"><TextArea label="Intro body" value={value("blogs.body")} onChange={(v) => change("blogs.body", v)} /></div><TextField label="Subscribe title" value={value("blogs.subscribeTitle")} onChange={(v) => change("blogs.subscribeTitle", v)} /><TextArea label="Subscribe body" value={value("blogs.subscribeBody")} onChange={(v) => change("blogs.subscribeBody", v)} /><TextField label="Featured label" value={value("blogs.featuredLabel")} onChange={(v) => change("blogs.featuredLabel", v)} /><TextField label="Empty-state title" value={value("blogs.emptyTitle")} onChange={(v) => change("blogs.emptyTitle", v)} /><div className="field full"><TextArea label="Empty-state body" value={value("blogs.emptyBody")} onChange={(v) => change("blogs.emptyBody", v)} /></div><div className="field full"><TextField label="Categories (separate with |)" value={content.blogs.categories.join(" | ")} onChange={(v) => change("blogs.categories", v.split("|").map((s) => s.trim()).filter(Boolean))} /></div><TextField label="Hero image path" value={value("blogs.heroImage")} onChange={(v) => change("blogs.heroImage", v)} hint="Upload in Media, then paste the public path. Leave blank to use the built-in artwork." /><TextField label="Hero image alt" value={value("blogs.heroImageAlt")} onChange={(v) => change("blogs.heroImageAlt", v)} /><TextField label="Featured story image" value={value("blogs.featured.image")} onChange={(v) => change("blogs.featured.image", v)} hint="Upload in Media, then paste the public path. Leave blank to use the built-in artwork." /></div><div className="form-divider" /><div className="array-stack">{content.blogs.updates?.map((update, index) => <div className="subcard" key={`update-img-${index}`}><div className="subcard-head"><strong>{update.title}</strong><span>update {index + 1}</span></div><div className="field-grid"><div className="field full"><TextField label="Card image path" value={update.image ?? ""} onChange={(v) => change(`blogs.updates.${index}.image`, v)} hint="Upload in Media, then paste the public path. Leave blank to use the built-in artwork." /></div></div></div>)}{content.blogs.posts?.map((post, index) => <div className="subcard" key={`post-img-${index}`}><div className="subcard-head"><strong>{post.title}</strong><span>insight {index + 1}</span></div><div className="field-grid"><div className="field full"><TextField label="Card image path" value={post.image ?? ""} onChange={(v) => change(`blogs.posts.${index}.image`, v)} hint="Upload in Media, then paste the public path. Leave blank to use the built-in artwork." /></div></div></div>)}</div><div className="editor-empty"><div className="empty-icon"><AP_AdminIcon name="blogs" /></div><h3>No articles are published.</h3><p>The public newsroom can stay visually complete without fake Series B rounds, vendor awards, or partnerships. Add real updates once they are approved.</p></div></div></>;
+  return <><SectionHead eyebrow="BLOGS & NEWS" title="Newsroom layout" description="Prepare the page language and filtering structure now. Publish actual achievements, collaborations, and news only when they exist." /><div className="editor-card-body"><div className="field-grid"><TextField label="Eyebrow" value={value("blogs.eyebrow")} onChange={(v) => change("blogs.eyebrow", v)} /><TextField label="Main title" value={value("blogs.title")} onChange={(v) => change("blogs.title", v)} /><TextField label="Highlighted words" value={value("blogs.highlight")} onChange={(v) => change("blogs.highlight", v)} /><div className="field full"><TextArea label="Intro body" value={value("blogs.body")} onChange={(v) => change("blogs.body", v)} /></div><TextField label="Subscribe title" value={value("blogs.subscribeTitle")} onChange={(v) => change("blogs.subscribeTitle", v)} /><TextArea label="Subscribe body" value={value("blogs.subscribeBody")} onChange={(v) => change("blogs.subscribeBody", v)} /><TextField label="Featured label" value={value("blogs.featuredLabel")} onChange={(v) => change("blogs.featuredLabel", v)} /><TextField label="Empty-state title" value={value("blogs.emptyTitle")} onChange={(v) => change("blogs.emptyTitle", v)} /><div className="field full"><TextArea label="Empty-state body" value={value("blogs.emptyBody")} onChange={(v) => change("blogs.emptyBody", v)} /></div><div className="field full"><TextField label="Categories (separate with |)" value={content.blogs.categories.join(" | ")} onChange={(v) => change("blogs.categories", v.split("|").map((s) => s.trim()).filter(Boolean))} /></div><AP_ImageField label="Hero image path" value={value("blogs.heroImage")} onChange={(v) => change("blogs.heroImage", v)} hint="Upload in Media, then paste the public path. Leave blank to use the built-in artwork." /><TextField label="Hero image alt" value={value("blogs.heroImageAlt")} onChange={(v) => change("blogs.heroImageAlt", v)} /><AP_ImageField label="Featured story image" value={value("blogs.featured.image")} onChange={(v) => change("blogs.featured.image", v)} hint="Upload in Media, then paste the public path. Leave blank to use the built-in artwork." /></div><div className="form-divider" /><div className="array-stack">{content.blogs.updates?.map((update, index) => <div className="subcard" key={`update-img-${index}`}><div className="subcard-head"><strong>{update.title}</strong><span>update {index + 1}</span></div><div className="field-grid"><div className="field full"><AP_ImageField label="Card image" value={update.image ?? ""} onChange={(v) => change(`blogs.updates.${index}.image`, v)} hint="Choose an image from the library or upload one. Leave blank to use the built-in artwork." /></div></div></div>)}{content.blogs.posts?.map((post, index) => <div className="subcard" key={`post-img-${index}`}><div className="subcard-head"><strong>{post.title}</strong><span>insight {index + 1}</span></div><div className="field-grid"><div className="field full"><AP_ImageField label="Card image" value={post.image ?? ""} onChange={(v) => change(`blogs.posts.${index}.image`, v)} hint="Choose an image from the library or upload one. Leave blank to use the built-in artwork." /></div></div></div>)}</div><div className="editor-empty"><div className="empty-icon"><AP_AdminIcon name="blogs" /></div><h3>No articles are published.</h3><p>The public newsroom can stay visually complete without fake Series B rounds, vendor awards, or partnerships. Add real updates once they are approved.</p></div></div></>;
 }
 
 
@@ -531,7 +574,7 @@ function renderCareers(content: SiteContent, change: (path: string, value: unkno
           <div className="field full"><TextArea label="Intro body" value={value("careers.body")} onChange={(v) => change("careers.body", v)} /></div>
           <TextField label="Primary CTA" value={value("careers.primaryCta")} onChange={(v) => change("careers.primaryCta", v)} />
           <TextField label="Secondary link" value={value("careers.secondaryCta")} onChange={(v) => change("careers.secondaryCta", v)} />
-          <div className="field full"><TextField label="Hero image path" hint="Leave blank to keep the illustrated placeholder. Point it at an uploaded file, e.g. /api/assets/team/careers.jpg" value={value("careers.heroImage")} onChange={(v) => change("careers.heroImage", v)} /></div>
+          <AP_ImageField label="Hero image" hint="Leave blank to keep the illustrated placeholder." value={value("careers.heroImage")} onChange={(v) => change("careers.heroImage", v)} />
         </div>
 
         <div className="form-divider" />

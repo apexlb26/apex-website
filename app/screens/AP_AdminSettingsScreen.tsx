@@ -12,7 +12,7 @@ export default function AP_AdminSettingsScreen() {
         <h3>Publishing</h3>
         <p>The portal supports local JSON development and GitHub-backed production publishing.</p>
         <ul className="setting-list">
-          <li><span>Current mode</span><strong>{mode === "github" ? "GitHub" : "Local JSON"}</strong></li>
+          <li><span>Current mode</span><strong>{mode === "mongodb" ? "MongoDB" : "Fallback JSON (read-only)"}</strong></li>
           <li><span>Repository</span><strong>{present(process.env.GITHUB_REPO)}</strong></li>
           <li><span>Branch</span><strong>{process.env.GITHUB_BRANCH || "main"}</strong></li>
           <li><span>English path</span><strong>{process.env.GITHUB_CONTENT_PATH_EN || "shared/en.json"}</strong></li>

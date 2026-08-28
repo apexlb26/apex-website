@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { io, type Socket } from "socket.io-client";
-import { CONTENT_UPDATED } from "@/shared/realtime";
+import { CONTENT_UPDATED } from "@/shared/events";
 
 /*
  * Keeps the open page in step with the CMS.

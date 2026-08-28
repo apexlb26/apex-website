@@ -1,7 +1,14 @@
 import AP_ContentEditor from "@/app/components/AP_ContentEditor";
-import { getContent } from "@/shared/store";
+import { getContentWithVersion } from "@/shared/store";
 
 export default async function AP_AdminCareersScreen() {
-  const [en, ar] = await Promise.all([getContent("en"), getContent("ar")]);
-  return <AP_ContentEditor initialEn={en} initialAr={ar} mode="careers" />;
+  const [en, ar] = await Promise.all([getContentWithVersion("en"), getContentWithVersion("ar")]);
+  return (
+    <AP_ContentEditor
+      initialEn={en.content}
+      initialAr={ar.content}
+      initialVersions={{ en: en.version, ar: ar.version }}
+      mode="careers"
+    />
+  );
 }
