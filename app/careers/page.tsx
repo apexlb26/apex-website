@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
+import { getCmsContent } from "@/shared/content";
 import AP_CareersScreen from "@/app/screens/AP_CareersScreen";
 
-export const metadata: Metadata = {
-  title: "Careers",
-  description: "Build thoughtful software, AI, data, and workflow systems with APEX. Approved openings are published when available.",
-  alternates: { canonical: "/careers" },
-};
+/* Tab title and search description come from the CMS. */
+export async function generateMetadata(): Promise<Metadata> {
+  const { data } = await getCmsContent("en");
+  const page = data.meta.pages?.["careers"];
+  return {
+    title: page?.title,
+    description: page?.description,
+    alternates: { canonical: "/careers" },
+  };
+}
 
 export default function CareersPage() { return <AP_CareersScreen />; }
 

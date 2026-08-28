@@ -7,7 +7,45 @@
     "headerCta": "Let's build together",
     "logo": "/api/assets/logo/apex-logo.svg",
     "logoMark": "/api/assets/logo/apex-mark.svg",
-    "logoAlt": "APEX"
+    "logoAlt": "APEX",
+    "pages": {
+      "blogs": {
+        "title": "Blogs & News",
+        "description": "APEX news, achievements, collaborations, and practical thinking on intelligent digital systems."
+      },
+      "products": {
+        "title": "Products",
+        "description": "Explore the product ecosystem APEX is preparing for connected operations. Approved products will be published as they are released."
+      },
+      "industries": {
+        "title": "Industries",
+        "description": "APEX builds connected systems for education, service operations, and public and environmental workflows."
+      },
+      "solutions": {
+        "title": "Solutions",
+        "description": "AI, automation, custom software, integration, data, and workflow systems from APEX."
+      },
+      "careers": {
+        "title": "Careers",
+        "description": "Build thoughtful software, AI, data, and workflow systems with APEX. Approved openings are published when available."
+      },
+      "method": {
+        "title": "Method",
+        "description": "The APEX method: discover, architect, build, integrate, and evolve connected digital systems."
+      }
+    },
+    "labels": {
+      "home": "APEX home",
+      "primaryNav": "Primary navigation",
+      "mobileNav": "Mobile navigation",
+      "toggleNav": "Toggle navigation",
+      "close": "Close",
+      "closeCaseStudy": "Close case study",
+      "quickActions": "Quick contact actions",
+      "assistant": "APEX assistant",
+      "contactError": "Could not submit your request.",
+      "subscribeError": "Could not subscribe."
+    }
   },
   "nav": [
     {
@@ -539,7 +577,9 @@
           "Learning Platforms",
           "Admin Automation",
           "AI Guidance Systems"
-        ]
+        ],
+        "image": "",
+        "imageAlt": ""
       },
       {
         "key": "service",
@@ -551,7 +591,9 @@
           "Booking & Scheduling",
           "Customer Journey Automation",
           "CRM & Operations"
-        ]
+        ],
+        "image": "",
+        "imageAlt": ""
       },
       {
         "key": "environment",
@@ -563,7 +605,9 @@
           "Environmental Monitoring",
           "Data Intelligence",
           "Workflow Coordination"
-        ]
+        ],
+        "image": "",
+        "imageAlt": ""
       }
     ],
     "learnMoreLabel": "Learn more",
@@ -611,7 +655,9 @@
     "exploreLabel": "Explore this industry",
     "pageOpenDoorTitle": "Have a different operational challenge?",
     "pageOpenDoorBody": "Let's discuss how we can help.",
-    "pageOpenDoorCta": "Talk to our team"
+    "pageOpenDoorCta": "Talk to our team",
+    "heroImage": "",
+    "heroImageAlt": ""
   },
   "caseStudy": {
     "eyebrow": "CASE STUDY",
@@ -1273,7 +1319,9 @@
     ],
     "bottomEyebrow": "BE PART OF WHAT'S NEXT",
     "bottomTitle": "Get the latest milestones and updates from APEX.",
-    "bottomBody": "Sign up for our newsletter and never miss an important update."
+    "bottomBody": "Sign up for our newsletter and never miss an important update.",
+    "heroImage": "",
+    "heroImageAlt": ""
   },
   "social": {
     "whatsapp": "",

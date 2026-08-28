@@ -27,13 +27,6 @@ const FALLBACK_FORM: CareerFormLabels = {
   errorGeneric: "Something went wrong. Please try again.",
 };
 
-const FALLBACK_STEPS: CareerStep[] = [
-  { title: "Application Review", body: "We review your application and get back to you." },
-  { title: "Intro Call", body: "A quick call to learn more about you and the role." },
-  { title: "Skills & Culture", body: "Technical or practical assessment and team conversation." },
-  { title: "Final Interview", body: "Meet with leaders and align on impact and growth." },
-  { title: "Offer & Onboard", body: "We extend an offer and prepare you for an amazing start." },
-];
 
 /*
  * Layout notes — no media queries anywhere on this page.
@@ -67,7 +60,7 @@ export default async function AP_CareersSections({ embedded = false }: { embedde
   const page = data.careers;
 
   const stats: CareerStat[] = page.heroStats ?? [];
-  const steps = page.steps?.length ? page.steps : FALLBACK_STEPS;
+  const steps = page.steps ?? [];
   const form = { ...FALLBACK_FORM, ...(page.form ?? {}) };
   const locations = Array.from(new Set([...page.roles.map((role) => role.location), "Remote", "Other"])).filter(Boolean);
 

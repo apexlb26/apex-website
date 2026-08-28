@@ -107,6 +107,7 @@ export type IndustryItem = {
   body: string;
   bullets: string[];
   image?: string;
+  imageAlt?: string;
   learnMore?: string;
 };
 
@@ -117,6 +118,9 @@ export type IndustryStat = {
 };
 
 export type IndustriesContent = {
+  /** Optional photo replacing the drawn globe. */
+  heroImage?: string;
+  heroImageAlt?: string;
   eyebrow: string;
   title: string;
   body: string;
@@ -367,6 +371,9 @@ export type BlogUpdate = {
 };
 
 export type BlogsPageContent = {
+  /** Optional photo replacing the drawn network graphic. */
+  heroImage?: string;
+  heroImageAlt?: string;
   subscribePlaceholder?: string;
   subscribeCta?: string;
   privacyNote?: string;
@@ -519,7 +526,26 @@ export type CareersPageContent = {
   form?: CareerFormLabels;
 };
 
+export type PageMeta = { title: string; description: string };
+
+/** Screen-reader labels and failure messages: not laid out on the page, but read aloud or shown when something breaks. */
+export type UiLabels = {
+  home: string;
+  primaryNav: string;
+  mobileNav: string;
+  toggleNav: string;
+  close: string;
+  closeCaseStudy: string;
+  quickActions: string;
+  assistant: string;
+  contactError: string;
+  subscribeError: string;
+};
+
 export type SiteMeta = {
+  /** Per-route tab title and search description. */
+  pages?: Record<string, PageMeta>;
+  labels?: UiLabels;
   /** Label on the header call-to-action button. */
   headerCta?: string;
   /** Wordmark used in the header and footer. */

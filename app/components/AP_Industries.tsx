@@ -50,7 +50,7 @@ export default function AP_Industries({ content, standalone = false, embedded = 
     const photo = (item: typeof content.items[number], className: string) => (
       <div className={`overflow-hidden rounded-[20px] bg-sx-mint ${className}`}>
         <div className="h-full w-full [&>img]:h-full [&>img]:w-full [&>img]:object-cover [&>svg]:h-full [&>svg]:w-full">
-          {item.image ? <img src={item.image} alt={item.title} /> : <AP_IndustryVisual type={item.key} />}
+          {item.image ? <img src={item.image} alt={item.imageAlt || item.title} /> : <AP_IndustryVisual type={item.key} />}
         </div>
       </div>
     );
@@ -69,7 +69,11 @@ export default function AP_Industries({ content, standalone = false, embedded = 
               </Title>
               <p className="mt-4 max-w-[430px] text-[13px] leading-[1.7] text-hx-copy">{content.pageBody}</p>
             </div>
-            <div className="min-w-[min(320px,100%)] flex-1 basis-[44%]"><AP_IndustriesGlobe mark={mark} /></div>
+            <div className="min-w-[min(320px,100%)] flex-1 basis-[44%]">
+              {content.heroImage
+                ? <img src={content.heroImage} alt={content.heroImageAlt ?? ""} className="h-auto w-full rounded-[20px] object-cover" />
+                : <AP_IndustriesGlobe mark={mark} />}
+            </div>
           </div>
 
           {/* ---------- two-up industry cards ---------- */}

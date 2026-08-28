@@ -43,7 +43,11 @@ export default async function AP_BlogsSections({ embedded = false }: { embedded?
                 <AP_Icon name="shield-check" className="h-3.5 w-3.5 shrink-0 text-hx-cyan" />{page.privacyNote}
               </p>
             </div>
-            <div className="min-w-[min(380px,100%)] flex-1 basis-[48%]"><AP_BlogNetwork /></div>
+            <div className="min-w-[min(380px,100%)] flex-1 basis-[48%]">
+              {page.heroImage
+                ? <img src={page.heroImage} alt={page.heroImageAlt ?? ""} className="h-auto w-full rounded-[20px] object-cover" />
+                : <AP_BlogNetwork />}
+            </div>
           </div>
         </section>
 

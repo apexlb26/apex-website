@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import type { SubscribeRequest, SubscribeResponse } from "@/shared/types";
 import { AP_TextBox } from "@/app/components/AP_TextBox";
 
-export default function AP_SubscribeForm({ placeholder, cta, sending, className = "" }: { placeholder?: string; cta?: string; sending?: string; className?: string } = {}) {
+export default function AP_SubscribeForm({ placeholder, cta, sending, error, className = "" }: { placeholder?: string; cta?: string; sending?: string; error?: string; className?: string } = {}) {
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -22,13 +22,13 @@ export default function AP_SubscribeForm({ placeholder, cta, sending, className 
         body: JSON.stringify(payload),
       });
       const data = (await response.json()) as SubscribeResponse;
-      if (!response.ok || !data.ok) throw new Error(data.ok ? "Could not subscribe." : data.error);
+      if (!response.ok || !data.ok) throw new Error(data.ok ? (error ?? "") : data.error);
       setState("sent");
       setMessage(data.message);
       event.currentTarget.reset();
     } catch (reason) {
       setState("error");
-      setMessage(reason instanceof Error ? reason.message : "Could not subscribe.");
+      setMessage(reason instanceof Error ? reason.message : (error ?? ""));
     }
   }
 

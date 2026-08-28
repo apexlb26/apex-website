@@ -46,9 +46,9 @@ export default function AP_CaseStudyModal({ content }: { content: CaseStudyConte
 
   return (
     <div className="modal-shell case-modal-shell" role="dialog" aria-modal="true" aria-labelledby="case-title">
-      <button type="button" className="modal-backdrop" onClick={() => setOpen(false)} aria-label="Close case study" />
+      <button type="button" className="modal-backdrop" onClick={() => setOpen(false)} aria-label={content.modalCloseCta ?? ""} />
       <article className="case-modal">
-        <button className="modal-close" type="button" onClick={() => setOpen(false)} aria-label="Close">×</button>
+        <button className="modal-close" type="button" onClick={() => setOpen(false)} aria-label={content.modalCloseCta ?? ""}>×</button>
         <header className="case-modal-head">
           <Image src={content.clientLogo} alt={content.client} width={126} height={58} />
           <div><span className="eyebrow">{content.eyebrow}</span><h2 id="case-title">{content.modalTitle}</h2><p>{content.modalBody}</p></div>

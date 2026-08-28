@@ -1,24 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { FooterContent, NavItem, SocialContent } from "@/shared/types";
+import type { FooterContent, NavItem, SocialContent, UiLabels } from "@/shared/types";
 import AP_SocialLinks from "@/app/components/AP_SocialLinks";
 import AP_SubscribeForm from "@/app/components/AP_SubscribeForm";
 
 /* No media queries: one wrapping flex row of columns. */
 const shell = "mx-auto w-[min(1640px,86%)]";
 
-export default function AP_Footer({ nav, content, social, logo = "/api/assets/logo/apex-logo.svg", logoAlt = "APEX" }: { nav: NavItem[]; content: FooterContent; social: SocialContent; logo?: string; logoAlt?: string }) {
+export default function AP_Footer({ nav, content, social, logo = "/api/assets/logo/apex-logo.svg", logoAlt = "APEX", labels }: { nav: NavItem[]; content: FooterContent; social: SocialContent; logo?: string; logoAlt?: string; labels?: UiLabels }) {
   // Fall back to the primary nav if a stored payload predates the column model.
-  const columns = content.columns?.length
-    ? content.columns
-    : [{ title: "Company", links: nav.map((item) => ({ label: item.label, href: item.href })) }];
+  const columns = content.columns ?? [];
 
   return (
     <footer className="border-t border-hx-line bg-[linear-gradient(180deg,#f7fafd_0%,#eef5fa_100%)] text-hx-ink">
       <div className={`${shell} flex flex-wrap gap-x-[clamp(1.25rem,2.5vw,3rem)] gap-y-10 pb-10 pt-[clamp(2.5rem,4.5vw,3.5rem)]`}>
         {/* brand */}
         <div className="min-w-[min(240px,100%)] flex-[1.5] basis-[23%]">
-          <Link prefetch={false} href="/" aria-label="APEX home" className="inline-block">
+          <Link prefetch={false} href="/" aria-label={labels?.home ?? ""} className="inline-block">
             <Image src={logo} alt={logoAlt} width={140} height={43} />
           </Link>
           {content.tagline && <p className="mt-4 text-[12px] font-bold tracking-[-0.01em] text-hx-cyanInk">{content.tagline}</p>}
@@ -50,7 +48,7 @@ export default function AP_Footer({ nav, content, social, logo = "/api/assets/lo
           <strong className="block text-[10px] font-extrabold uppercase tracking-[0.15em] text-hx-ink/70">{content.newsletterTitle ?? ""}</strong>
           <span aria-hidden="true" className="mt-3 block h-px w-8 bg-hx-cyan2/45" />
           <p className="mt-4 max-w-[300px] text-[11.5px] leading-[1.6] text-hx-copy">{content.newsletterBody ?? ""}</p>
-          <div className="ap-footer-subscribe mt-4 max-w-[320px]"><AP_SubscribeForm placeholder={content.subscribePlaceholder} cta={content.subscribeCta} sending={content.subscribeSending} /></div>
+          <div className="ap-footer-subscribe mt-4 max-w-[320px]"><AP_SubscribeForm placeholder={content.subscribePlaceholder} cta={content.subscribeCta} sending={content.subscribeSending} error={labels?.subscribeError} /></div>
         </div>
       </div>
 

@@ -7,7 +7,45 @@
     "headerCta": "لنبنِ معاً",
     "logo": "/api/assets/logo/apex-logo.svg",
     "logoMark": "/api/assets/logo/apex-mark.svg",
-    "logoAlt": "APEX"
+    "logoAlt": "APEX",
+    "pages": {
+      "blogs": {
+        "title": "Blogs & News",
+        "description": "APEX news, achievements, collaborations, and practical thinking on intelligent digital systems."
+      },
+      "products": {
+        "title": "Products",
+        "description": "Explore the product ecosystem APEX is preparing for connected operations. Approved products will be published as they are released."
+      },
+      "industries": {
+        "title": "Industries",
+        "description": "APEX builds connected systems for education, service operations, and public and environmental workflows."
+      },
+      "solutions": {
+        "title": "Solutions",
+        "description": "AI, automation, custom software, integration, data, and workflow systems from APEX."
+      },
+      "careers": {
+        "title": "Careers",
+        "description": "Build thoughtful software, AI, data, and workflow systems with APEX. Approved openings are published when available."
+      },
+      "method": {
+        "title": "Method",
+        "description": "The APEX method: discover, architect, build, integrate, and evolve connected digital systems."
+      }
+    },
+    "labels": {
+      "home": "الصفحة الرئيسية لـ APEX",
+      "primaryNav": "التنقل الرئيسي",
+      "mobileNav": "تنقل الجوال",
+      "toggleNav": "إظهار/إخفاء القائمة",
+      "close": "إغلاق",
+      "closeCaseStudy": "إغلاق دراسة الحالة",
+      "quickActions": "إجراءات تواصل سريعة",
+      "assistant": "مساعد APEX",
+      "contactError": "تعذّر إرسال طلبك.",
+      "subscribeError": "تعذّر الاشتراك."
+    }
   },
   "nav": [
     {
@@ -539,7 +577,9 @@
           "منصات التعلم",
           "مساعدة تعليمية بالذكاء الاصطناعي",
           "أنظمة العمليات"
-        ]
+        ],
+        "image": "",
+        "imageAlt": ""
       },
       {
         "key": "service",
@@ -551,7 +591,9 @@
           "الحجز والجدولة",
           "أتمتة رحلة العميل",
           "إدارة العملاء والعمليات"
-        ]
+        ],
+        "image": "",
+        "imageAlt": ""
       },
       {
         "key": "environment",
@@ -563,7 +605,9 @@
           "المراقبة البيئية",
           "ذكاء البيانات",
           "تنسيق سير العمل"
-        ]
+        ],
+        "image": "",
+        "imageAlt": ""
       }
     ],
     "learnMoreLabel": "اعرف المزيد",
@@ -611,7 +655,9 @@
     "exploreLabel": "استكشف هذا القطاع",
     "pageOpenDoorTitle": "لديك تحدٍّ تشغيلي مختلف؟",
     "pageOpenDoorBody": "لنناقش كيف يمكننا المساعدة.",
-    "pageOpenDoorCta": "تحدّث إلى فريقنا"
+    "pageOpenDoorCta": "تحدّث إلى فريقنا",
+    "heroImage": "",
+    "heroImageAlt": ""
   },
   "caseStudy": {
     "eyebrow": "دراسة حالة",
@@ -1273,7 +1319,9 @@
     ],
     "bottomEyebrow": "كن جزءًا مما هو قادم",
     "bottomTitle": "احصل على أحدث إنجازات وتحديثات APEX.",
-    "bottomBody": "اشترك في نشرتنا ولا تفوّت أي تحديث مهم."
+    "bottomBody": "اشترك في نشرتنا ولا تفوّت أي تحديث مهم.",
+    "heroImage": "",
+    "heroImageAlt": ""
   },
   "social": {
     "whatsapp": "",

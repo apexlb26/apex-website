@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { SocialContent } from "@/shared/types";
+import type { SocialContent, UiLabels } from "@/shared/types";
 import { whatsappHref } from "@/shared/whatsapp";
 
 function Icon({ name }: { name: "whatsapp" | "ai" | "arrow" }) {
@@ -21,7 +21,7 @@ function Icon({ name }: { name: "whatsapp" | "ai" | "arrow" }) {
   );
 }
 
-export default function AP_FloatingActions({ social }: { social: SocialContent }) {
+export default function AP_FloatingActions({ social, labels }: { social: SocialContent; labels?: UiLabels }) {
   const [chatOpen, setChatOpen] = useState(false);
   function contact() {
     window.dispatchEvent(new CustomEvent("apex:open-contact"));
@@ -30,7 +30,7 @@ export default function AP_FloatingActions({ social }: { social: SocialContent }
   const whatsapp = whatsappHref(social);
   return (
     <>
-      {chatOpen && <aside className="ap-mini-chat ap-reveal" aria-label="APEX assistant">
+      {chatOpen && <aside className="ap-mini-chat ap-reveal" aria-label={labels?.assistant ?? ""}>
         <div className="ap-mini-chat-head"><strong>{social.chatbotTitle}</strong><span>{social.chatbotSubtitle}</span></div>
         <div className="ap-mini-chat-body">
           <p>No external AI service is connected yet. Use the quick paths below and the CMS can replace this with the production assistant later.</p>
@@ -39,7 +39,7 @@ export default function AP_FloatingActions({ social }: { social: SocialContent }
           <button onClick={contact}>I want to discuss AI automation</button>
         </div>
       </aside>}
-      <div className="ap-floating-actions" aria-label="Quick contact actions">
+      <div className="ap-floating-actions" aria-label={labels?.quickActions ?? ""}>
         {whatsapp && (
           <a
             className="ap-float-action ap-float-whatsapp"

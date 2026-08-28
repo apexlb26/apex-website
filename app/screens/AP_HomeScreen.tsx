@@ -24,7 +24,7 @@ export default async function AP_HomeScreen() {
   const { data } = await getCmsContent("en");
   return (
     <>
-      <AP_Header cta={data.meta.headerCta ?? ""} logo={data.meta.logo} logoAlt={data.meta.logoAlt} nav={data.nav} />
+      <AP_Header labels={data.meta.labels} cta={data.meta.headerCta ?? ""} logo={data.meta.logo} logoAlt={data.meta.logoAlt} nav={data.nav} />
       <main id="top">
         <AP_Hero hero={data.hero} />
         <AP_Solutions content={data.solutions} standalone embedded />
@@ -38,7 +38,7 @@ export default async function AP_HomeScreen() {
         <AP_AboutSection content={data.about} />
         <AP_CtaBand mark={data.meta.logoMark} content={data.method} />
       </main>
-      <AP_Footer logo={data.meta.logo} logoAlt={data.meta.logoAlt} nav={data.nav} content={data.footer} social={data.social} />
+      <AP_Footer labels={data.meta.labels} logo={data.meta.logo} logoAlt={data.meta.logoAlt} nav={data.nav} content={data.footer} social={data.social} />
     </>
   );
 }

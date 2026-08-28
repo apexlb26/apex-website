@@ -4,11 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import type { NavItem } from "@/shared/types";
+import type { NavItem, UiLabels } from "@/shared/types";
 import AP_Button from "@/app/components/AP_Button";
 import AP_Icon from "@/app/components/AP_Icon";
 
-export default function AP_Header({ nav, activePath = "", cta = "", logo = "/api/assets/logo/apex-logo.svg", logoAlt = "APEX" }: { nav: NavItem[]; activePath?: string; cta?: string; logo?: string; logoAlt?: string }) {
+export default function AP_Header({ nav, activePath = "", cta = "", logo = "/api/assets/logo/apex-logo.svg", logoAlt = "APEX", labels }: { nav: NavItem[]; activePath?: string; cta?: string; logo?: string; logoAlt?: string; labels?: UiLabels }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const [hash, setHash] = useState("");
@@ -108,10 +108,10 @@ export default function AP_Header({ nav, activePath = "", cta = "", logo = "/api
   return (
     <header className="topbar ap-ref-header">
       <div className="container nav-row ap-ref-nav-row">
-        <Link prefetch={false} className="brand ap-ref-brand" href="/" aria-label="APEX home">
+        <Link prefetch={false} className="brand ap-ref-brand" href="/" aria-label={labels?.home ?? ""}>
           <Image src={logo} alt={logoAlt} width={170} height={52} priority />
         </Link>
-        <nav className="nav-links ap-ref-nav-links" aria-label="Primary navigation">
+        <nav className="nav-links ap-ref-nav-links" aria-label={labels?.primaryNav ?? ""}>
           {nav.map((item) => (
             <Link
               prefetch={false}
@@ -128,11 +128,11 @@ export default function AP_Header({ nav, activePath = "", cta = "", logo = "/api
         </nav>
         <div className="nav-actions ap-ref-nav-actions">
           <AP_Button className="nav-button ap-ref-nav-cta" contact>{cta}</AP_Button>
-          <button className="mobile-menu-button" type="button" aria-expanded={open} aria-label="Toggle navigation" onClick={() => setOpen((value) => !value)}><AP_Icon name="menu" /></button>
+          <button className="mobile-menu-button" type="button" aria-expanded={open} aria-label={labels?.toggleNav ?? ""} onClick={() => setOpen((value) => !value)}><AP_Icon name="menu" /></button>
         </div>
       </div>
       {open && (
-        <nav className="mobile-nav ap-ref-mobile-nav" aria-label="Mobile navigation">
+        <nav className="mobile-nav ap-ref-mobile-nav" aria-label={labels?.mobileNav ?? ""}>
           {nav.map((item) => (
             <Link
               prefetch={false}
