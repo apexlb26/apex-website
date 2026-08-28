@@ -38,7 +38,7 @@ export default function AP_AdminShell({ children, email, mode }: { children: Rea
     <div className="admin-shell">
       <aside className="admin-sidebar" data-open={open ? "true" : "false"}>
         <div className="admin-brand">
-          <img src="/api/assets/logo/apex-logo.svg" alt="APEX" />
+          <img src="/api/assets/logo/apex-logo.svg" alt="APEX" loading="lazy" />
           <small>Content Management</small>
         </div>
         <nav className="admin-nav">
