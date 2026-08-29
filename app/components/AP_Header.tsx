@@ -108,8 +108,8 @@ export default function AP_Header({ nav, activePath = "", cta = "", logo = "/api
   return (
     <header className="topbar ap-ref-header">
       <div className="container nav-row ap-ref-nav-row">
-        <Link prefetch={false} className="brand ap-ref-brand" href="/" aria-label="APEX home">
-          <Image src="/api/assets/logo/apex-logo.svg" alt="APEX" width={170} height={52} loading="lazy" />
+        <Link prefetch={false} className="brand ap-ref-brand" href="/" aria-label={labels?.home ?? ""}>
+          <Image src={logo} alt={logoAlt} width={170} height={52} loading="lazy" unoptimized />
         </Link>
         <nav className="nav-links ap-ref-nav-links" aria-label={labels?.primaryNav ?? ""}>
           {nav.map((item) => (
