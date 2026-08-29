@@ -17,7 +17,7 @@ export default function AP_CaseStudy({ content }: { content: CaseStudyContent })
 
           <div className="mt-8 flex flex-wrap gap-y-5">
             {content.facts.map((fact) => (
-              <div key={fact.title} className="flex min-w-[min(175px,32%)] flex-1 basis-1/3 items-start gap-3 border-l border-hx-line px-4 first:border-l-0 first:pl-0">
+              <div key={fact.title} className="flex min-w-[min(175px,100%)] flex-1 basis-1/3 items-start gap-3 border-l border-hx-line px-4 first:border-l-0 first:pl-0">
                 <AP_Icon name={fact.icon} className="mt-0.5 h-[23px] w-[23px] shrink-0 text-hx-cyan" />
                 <div className="min-w-0">
                   <strong className="block text-[13.5px] font-bold text-hx-ink">{fact.title}</strong>
