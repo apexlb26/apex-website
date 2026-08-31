@@ -45,7 +45,7 @@ export default async function AP_BlogsSections({ embedded = false }: { embedded?
             </div>
             <div className="min-w-[min(380px,100%)] flex-1 basis-[48%]">
               {page.heroImage
-                ? <img src={page.heroImage} alt={page.heroImageAlt ?? ""} className="h-auto w-full rounded-[20px] object-cover" />
+                ? <img src={page.heroImage} alt={page.heroImageAlt ?? ""} loading="lazy" className="h-auto w-full rounded-[20px] object-cover" />
                 : <AP_BlogNetwork />}
             </div>
           </div>

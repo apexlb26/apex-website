@@ -60,7 +60,9 @@ export default function AP_Industries({ content, mark, standalone = false, embed
         <div className={`relative overflow-hidden rounded-[20px] border border-sx-line bg-white ${className}`}>
           <div className="absolute inset-0 bg-[linear-gradient(145deg,#f8fbfb,#eef8f6)]" aria-hidden="true" />
           <div className="relative h-full w-full [&>img]:h-full [&>img]:w-full [&>img]:object-contain [&>img]:object-center [&>svg]:h-full [&>svg]:w-full">
-            {image ? <img src={image} alt={item.title} loading="lazy" decoding="async" /> : <AP_IndustryVisual type={item.key} />}
+            {image
+              ? <Image src={image} alt={item.title} fill loading="lazy" sizes="(max-width: 900px) 100vw, 50vw" className="object-contain object-center" />
+              : <AP_IndustryVisual type={item.key} />}
           </div>
         </div>
       );
@@ -77,21 +79,23 @@ export default function AP_Industries({ content, mark, standalone = false, embed
           {image ? (
             <>
               {/* A tiny blurred copy exists only under the left transition. The mask prevents any square blur block. */}
-              <img
+              <Image
                 src={image}
                 alt=""
                 aria-hidden="true"
+                fill
                 loading="lazy"
-                decoding="async"
+                sizes="(max-width: 900px) 100vw, 470px"
                 className="pointer-events-none absolute inset-0 h-full w-full scale-[1.015] object-cover object-center blur-[8px] opacity-70 [mask-image:linear-gradient(90deg,#000_0%,rgba(0,0,0,.82)_2.5%,rgba(0,0,0,.28)_6%,transparent_10%,transparent_100%)]"
               />
 
               {/* The real image is untouched after the first few percent, so both white metric pills stay crisp and complete. */}
-              <img
+              <Image
                 src={image}
                 alt={item.title}
+                fill
                 loading="lazy"
-                decoding="async"
+                sizes="(max-width: 900px) 100vw, 470px"
                 className="absolute inset-0 h-full w-full rounded-r-[20px] object-cover object-center [mask-image:linear-gradient(90deg,transparent_0%,rgba(0,0,0,.28)_2%,rgba(0,0,0,.78)_5%,#000_8%,#000_100%)]"
               />
             </>
@@ -207,9 +211,9 @@ export default function AP_Industries({ content, mark, standalone = false, embed
         <div className="flex min-w-[min(560px,100%)] flex-[2.6] basis-[72%] flex-wrap gap-4">
           {content.items.map((item) => (
             <article key={item.key} className="flex min-w-[min(200px,100%)] flex-1 basis-[calc(25%-16px)] flex-col overflow-hidden rounded-xl border border-hx-line bg-white transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(11,34,51,.08)]">
-              <div className="h-[132px] w-full shrink-0 overflow-hidden bg-hx-tint [&>svg]:h-full [&>svg]:w-full">
+              <div className="relative h-[132px] w-full shrink-0 overflow-hidden bg-hx-tint [&>svg]:h-full [&>svg]:w-full">
                 {(item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key]) ? (
-                  <img src={item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key]} alt={item.title} loading="lazy" className="h-full w-full object-cover object-center" />
+                  <Image src={item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key]} alt={item.title} fill loading="lazy" sizes="(max-width: 768px) 50vw, 25vw" className="object-cover object-center" />
                 ) : <AP_IndustryVisual type={item.key} />}
               </div>
               <div className="flex flex-1 flex-col p-4">
