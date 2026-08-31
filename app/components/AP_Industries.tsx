@@ -65,6 +65,44 @@ export default function AP_Industries({ content, standalone = false, embedded = 
       );
     };
 
+    /* Wide environmental image treatment:
+       - preserve the source image's natural 4:3 ratio so BOTH dashboard pills stay fully visible;
+       - no border or hard left edge;
+       - only the first few percent of the image softly blur/fade into the white card. */
+    const widePhoto = (item: typeof content.items[number]) => {
+      const image = item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key];
+      return (
+        <div className="relative ml-auto aspect-[4/3] w-full max-w-[470px] overflow-visible">
+          {image ? (
+            <>
+              {/* A tiny blurred copy exists only under the left transition. The mask prevents any square blur block. */}
+              <img
+                src={image}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+                className="pointer-events-none absolute inset-0 h-full w-full scale-[1.015] object-cover object-center blur-[8px] opacity-70 [mask-image:linear-gradient(90deg,#000_0%,rgba(0,0,0,.82)_2.5%,rgba(0,0,0,.28)_6%,transparent_10%,transparent_100%)]"
+              />
+
+              {/* The real image is untouched after the first few percent, so both white metric pills stay crisp and complete. */}
+              <img
+                src={image}
+                alt={item.title}
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full rounded-r-[20px] object-cover object-center [mask-image:linear-gradient(90deg,transparent_0%,rgba(0,0,0,.28)_2%,rgba(0,0,0,.78)_5%,#000_8%,#000_100%)]"
+              />
+            </>
+          ) : (
+            <div className="relative h-full w-full [&>svg]:h-full [&>svg]:w-full">
+              <AP_IndustryVisual type={item.key} />
+            </div>
+          )}
+        </div>
+      );
+    };
+
     return (
       <section id="industries" className="bg-sx-page pb-[clamp(2.5rem,5vw,4rem)] pt-[clamp(0.9rem,1.6vw,1.5rem)]">
         <div className={shell}>
@@ -116,7 +154,7 @@ export default function AP_Industries({ content, standalone = false, embedded = 
               className="mt-5 flex flex-col rounded-[24px] border border-sx-line bg-white p-6 shadow-[0_14px_34px_rgba(1,54,65,.06)]"
             >
               {chip(item.number)}
-              <div className="mt-4 grid items-center gap-6 lg:grid-cols-[84px_minmax(0,1.2fr)_minmax(210px,0.9fr)_minmax(320px,390px)]">
+              <div className="mt-4 grid items-center gap-6 lg:grid-cols-[84px_minmax(0,1.1fr)_minmax(210px,0.82fr)_minmax(420px,470px)]">
                 {tile(item.icon)}
                 <div className="min-w-0">
                   <h2 className="text-[clamp(16px,1.35vw,20px)] font-bold leading-[1.2] tracking-[-0.01em] text-hx-ink [overflow-wrap:normal]">{item.title}</h2>
@@ -124,7 +162,7 @@ export default function AP_Industries({ content, standalone = false, embedded = 
                   {exploreLink}
                 </div>
                 <div className="min-w-0">{checklist(item.bullets)}</div>
-                {photo(item, "aspect-[4/3] w-full justify-self-end")}
+                {widePhoto(item)}
               </div>
             </article>
           ))}

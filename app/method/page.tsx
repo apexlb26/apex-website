@@ -1,8 +1,18 @@
-import type { Metadata } from "next";
+import AP_PageStructuredData from "@/app/components/AP_PageStructuredData";
 import AP_MethodScreen from "@/app/screens/AP_MethodScreen";
+import { buildPageMetadata } from "@/shared/seo";
 
-export const metadata: Metadata = { title: "Method", description: "The APEX method: discover, architect, build, integrate, and evolve connected digital systems.", alternates: { canonical: "/method" } };
-export default function Page() { return <AP_MethodScreen />; }
+const description = "The APEX method: discover, architect, build, integrate, and evolve connected digital systems.";
 
-/* Rendered per request so CMS edits appear without a redeploy. */
+export const metadata = buildPageMetadata({ title: "Method", description, path: "/method" });
+
+export default function Page() {
+  return (
+    <>
+      <AP_PageStructuredData name="The APEX Method" description={description} path="/method" />
+      <AP_MethodScreen />
+    </>
+  );
+}
+
 export const dynamic = "force-dynamic";

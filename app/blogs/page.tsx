@@ -1,13 +1,18 @@
-import type { Metadata } from "next";
+import AP_PageStructuredData from "@/app/components/AP_PageStructuredData";
 import AP_BlogsScreen from "@/app/screens/AP_BlogsScreen";
+import { buildPageMetadata } from "@/shared/seo";
 
-export const metadata: Metadata = {
-  title: "Blogs & News",
-  description: "APEX news, achievements, collaborations, and practical thinking on intelligent digital systems.",
-  alternates: { canonical: "/blogs" },
-};
+const description = "APEX news, collaborations, case-driven insights, and practical thinking on intelligent digital systems.";
 
-export default function BlogsPage() { return <AP_BlogsScreen />; }
+export const metadata = buildPageMetadata({ title: "Blogs & News", description, path: "/blogs" });
 
-/* Rendered per request so CMS edits appear without a redeploy. */
+export default function BlogsPage() {
+  return (
+    <>
+      <AP_PageStructuredData name="APEX Blogs & News" description={description} path="/blogs" type="CollectionPage" />
+      <AP_BlogsScreen />
+    </>
+  );
+}
+
 export const dynamic = "force-dynamic";

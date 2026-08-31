@@ -24,15 +24,15 @@
     },
     {
       "label": "Products",
-      "href": "/#products"
+      "href": "/products"
     },
     {
       "label": "Blogs",
-      "href": "/#blogs"
+      "href": "/blogs"
     },
     {
       "label": "Careers",
-      "href": "/#careers"
+      "href": "/careers"
     }
   ],
   "hero": {
