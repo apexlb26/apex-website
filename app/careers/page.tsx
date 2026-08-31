@@ -1,19 +1,18 @@
-import type { Metadata } from "next";
-import { getCmsContent } from "@/shared/content";
+import AP_PageStructuredData from "@/app/components/AP_PageStructuredData";
 import AP_CareersScreen from "@/app/screens/AP_CareersScreen";
+import { buildPageMetadata } from "@/shared/seo";
 
-/* Tab title and search description come from the CMS. */
-export async function generateMetadata(): Promise<Metadata> {
-  const { data } = await getCmsContent("en");
-  const page = data.meta.pages?.["careers"];
-  return {
-    title: page?.title,
-    description: page?.description,
-    alternates: { canonical: "/careers" },
-  };
+const description = "Do meaningful work with great people at APEX, building thoughtful software, AI, data, and workflow systems.";
+
+export const metadata = buildPageMetadata({ title: "Careers", description, path: "/careers" });
+
+export default function CareersPage() {
+  return (
+    <>
+      <AP_PageStructuredData name="Careers at APEX" description={description} path="/careers" type="CollectionPage" />
+      <AP_CareersScreen />
+    </>
+  );
 }
 
-export default function CareersPage() { return <AP_CareersScreen />; }
-
-/* Rendered per request so CMS edits appear without a redeploy. */
 export const dynamic = "force-dynamic";

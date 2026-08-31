@@ -1,18 +1,18 @@
-import type { Metadata } from "next";
-import { getCmsContent } from "@/shared/content";
+import AP_PageStructuredData from "@/app/components/AP_PageStructuredData";
 import AP_SolutionsScreen from "@/app/screens/AP_SolutionsScreen";
+import { buildPageMetadata } from "@/shared/seo";
 
-/* Tab title and search description come from the CMS. */
-export async function generateMetadata(): Promise<Metadata> {
-  const { data } = await getCmsContent("en");
-  const page = data.meta.pages?.["solutions"];
-  return {
-    title: page?.title,
-    description: page?.description,
-    alternates: { canonical: "/solutions" },
-  };
+const description = "AI, intelligent automation, legacy modernization, system integration, data infrastructure, custom software, and workflow automation from APEX.";
+
+export const metadata = buildPageMetadata({ title: "Solutions", description, path: "/solutions" });
+
+export default function Page() {
+  return (
+    <>
+      <AP_PageStructuredData name="APEX Solutions" description={description} path="/solutions" type="CollectionPage" />
+      <AP_SolutionsScreen />
+    </>
+  );
 }
-export default function Page() { return <AP_SolutionsScreen />; }
 
-/* Rendered per request so CMS edits appear without a redeploy. */
 export const dynamic = "force-dynamic";

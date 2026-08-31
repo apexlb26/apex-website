@@ -66,15 +66,15 @@
     },
     {
       "label": "المنتجات",
-      "href": "/#products"
+      "href": "/products"
     },
     {
       "label": "الأخبار",
-      "href": "/#blogs"
+      "href": "/blogs"
     },
     {
       "label": "الوظائف",
-      "href": "/#careers"
+      "href": "/careers"
     }
   ],
   "hero": {

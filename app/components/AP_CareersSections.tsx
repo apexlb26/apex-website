@@ -1,4 +1,4 @@
-import { getCmsContent } from "@/shared/content";
+﻿import { getCmsContent } from "@/shared/content";
 import type { AP_IconName, CareerFormLabels, CareerStat, CareerStep } from "@/shared/types";
 import AP_Icon from "@/app/components/AP_Icon";
 import AP_TeamVisual from "@/app/components/AP_TeamVisual";
@@ -225,7 +225,7 @@ export default async function AP_CareersSections({ embedded = false }: { embedde
         </section>
 
         {/* ---------- closing ---------- */}
-        <section className="relative overflow-hidden bg-[linear-gradient(90deg,#1087b3_0%,#4ab4da_26%,#51c5e6_52%,#6ad1ef_76%,#8ae2f8_100%)] text-white">
+        <section className="relative overflow-hidden bg-[linear-gradient(105deg,#1E2328_0%,#1E2328_46%,#007F75_78%,#00B3A4_100%)] text-white">
           <span aria-hidden="true" className="ap-cx-dots pointer-events-none absolute inset-y-0 left-[45%] right-0" />
           <div className={`${shell} relative z-[1] flex flex-wrap items-center gap-x-5 gap-y-4 py-[18px]`}>
             <span className="grid h-[54px] w-[54px] shrink-0 place-items-center rounded-[10px] bg-white text-cx-cyanInk">

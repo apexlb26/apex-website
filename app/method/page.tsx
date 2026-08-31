@@ -1,18 +1,18 @@
-import type { Metadata } from "next";
-import { getCmsContent } from "@/shared/content";
+import AP_PageStructuredData from "@/app/components/AP_PageStructuredData";
 import AP_MethodScreen from "@/app/screens/AP_MethodScreen";
+import { buildPageMetadata } from "@/shared/seo";
 
-/* Tab title and search description come from the CMS. */
-export async function generateMetadata(): Promise<Metadata> {
-  const { data } = await getCmsContent("en");
-  const page = data.meta.pages?.["method"];
-  return {
-    title: page?.title,
-    description: page?.description,
-    alternates: { canonical: "/method" },
-  };
+const description = "The APEX method: discover, architect, build, integrate, and evolve connected digital systems.";
+
+export const metadata = buildPageMetadata({ title: "Method", description, path: "/method" });
+
+export default function Page() {
+  return (
+    <>
+      <AP_PageStructuredData name="The APEX Method" description={description} path="/method" />
+      <AP_MethodScreen />
+    </>
+  );
 }
-export default function Page() { return <AP_MethodScreen />; }
 
-/* Rendered per request so CMS edits appear without a redeploy. */
 export const dynamic = "force-dynamic";
