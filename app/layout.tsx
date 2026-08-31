@@ -16,7 +16,14 @@ export async function generateMetadata(): Promise<Metadata> {
     creator: "APEX",
     publisher: "APEX",
     alternates: { canonical: "/" },
-    icons: { icon: "/api/assets/logo/icon.svg" },
+    /* SVG first for sharpness; the PNGs cover browsers that ignore SVG favicons. */
+    icons: {
+      icon: [
+        { url: "/api/assets/logo/icon.svg", type: "image/svg+xml" },
+        { url: "/api/assets/logo/icon-32.png", type: "image/png", sizes: "32x32" },
+      ],
+      apple: { url: "/api/assets/logo/icon-180.png", sizes: "180x180" },
+    },
     openGraph: {
       title: content.meta.title,
       description: content.meta.description,
