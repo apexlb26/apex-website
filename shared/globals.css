@@ -62,7 +62,7 @@ p, h1, h2, h3 { overflow-wrap: break-word; }
   gap: 28px;
   align-items: center;
 }
-.brand { display: inline-flex; align-items: center; width: fit-content; }
+.brand { display: inline-flex; align-items: center; width: fit-content; cursor: pointer; }
 .brand img { width: 156px; height: auto; }
 .nav-links { display: flex; justify-content: center; align-items: center; gap: 34px; font-size: 13px; font-weight: 680; color: #3C474D; }
 .nav-links a { position: relative; padding: 27px 0 25px; }
