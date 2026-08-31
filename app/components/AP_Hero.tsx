@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { HeroContent } from "@/shared/types";
 import AP_Icon from "@/app/components/AP_Icon";
 import AP_ArchitectureVisual from "@/app/components/AP_ArchitectureVisual";
@@ -21,9 +20,10 @@ export default function AP_Hero({ hero }: { hero: HeroContent }) {
           {hero.body ? <p className="mt-4 max-w-[560px] whitespace-pre-line text-[13.5px] leading-[1.75] text-hx-copy">{hero.body}</p> : null}
 
           <div className="mt-7 flex flex-wrap items-center gap-3">
-            <Link href="/solutions" className={`${button} bg-hx-cyan2 text-white hover:bg-[#00695F]`}>
+            {/* In-page anchor: the solutions section is on this page, so scroll rather than navigate. */}
+            <a href="#solutions" className={`${button} bg-hx-cyan2 text-white hover:bg-[#00695F]`}>
               <span>{hero.primaryCta}</span><AP_Icon name="arrow-right" />
-            </Link>
+            </a>
             <AP_ContactLink
               className={`${button} border border-hx-line bg-white text-hx-ink hover:border-hx-cyan hover:text-hx-cyanInk`}
               icon="arrow-up-right"
