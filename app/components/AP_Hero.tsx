@@ -9,7 +9,7 @@ const button = "inline-flex h-[36px] items-center justify-center gap-2 rounded p
 
 export default function AP_Hero({ hero }: { hero: HeroContent }) {
   return (
-    <section className="border-b border-hx-line bg-[linear-gradient(180deg,#ffffff_0%,#f7fbfe_100%)]">
+    <section id="hero" className="border-b border-hx-line bg-[linear-gradient(180deg,#ffffff_0%,#f7fbfe_100%)]">
       <div className={`${shell} flex flex-wrap items-center gap-x-10 gap-y-8 py-[clamp(2rem,3.5vw,3.25rem)]`}>
         <div className="min-w-[min(440px,100%)] flex-1 basis-[42%]">
           <span className="block text-[10px] font-extrabold uppercase leading-tight tracking-[0.14em] text-hx-cyanInk">{hero.eyebrow}</span>

@@ -8,6 +8,8 @@ import type { NavItem } from "@/shared/types";
 import AP_Button from "@/app/components/AP_Button";
 import AP_Icon from "@/app/components/AP_Icon";
 
+const HERO_ID = "hero";
+
 export default function AP_Header({ nav, activePath = "" }: { nav: NavItem[]; activePath?: string }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -49,8 +51,11 @@ export default function AP_Header({ nav, activePath = "" }: { nav: NavItem[]; ac
   const navIdKey = navIds.join(",");
 
   useEffect(() => {
-    const sections = navIdKey
-      .split(",")
+    // The hero is watched alongside the nav sections even though no nav item
+    // points at it: while it is the section being read, activeId matches no
+    // nav item and nothing is highlighted, which is the correct state at the
+    // top of the page.
+    const sections = [HERO_ID, ...navIdKey.split(",")]
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => Boolean(el));
     if (!sections.length) {
@@ -108,7 +113,16 @@ export default function AP_Header({ nav, activePath = "" }: { nav: NavItem[]; ac
   return (
     <header className="topbar ap-ref-header">
       <div className="container nav-row ap-ref-nav-row">
-        <Link prefetch={false} className="brand ap-ref-brand" href="/" aria-label="APEX home">
+        <Link
+          prefetch={false}
+          className="brand ap-ref-brand"
+          href={`/#${HERO_ID}`}
+          aria-label="APEX home"
+          onClick={(event) => {
+            scrollToAnchor(event, `/#${HERO_ID}`);
+            setHash(`#${HERO_ID}`);
+          }}
+        >
           <Image src="/api/assets/logo/apex-logo.svg" alt="APEX" width={170} height={52} loading="lazy" />
         </Link>
         <nav className="nav-links ap-ref-nav-links" aria-label="Primary navigation">
