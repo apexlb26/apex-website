@@ -9,7 +9,7 @@ export default async function AP_AdminLoginScreen() {
   return (
     <div className="ap-admin-root"><main className="login-page">
       <section className="login-brand">
-        <img className="login-logo" src="/api/assets/logo/apex-logo.svg" alt="APEX" />
+        <img className="login-logo" src="/api/assets/logo/apex-logo.svg" alt="APEX" loading="lazy" />
         <div className="login-brand-copy">
           <div className="login-eyebrow" style={{ color: "#60dfd0" }}>APEX INTERNAL</div>
           <h1>One place to run the <span>content layer.</span></h1>
@@ -19,7 +19,7 @@ export default async function AP_AdminLoginScreen() {
       </section>
       <section className="login-panel">
         <div className="login-card">
-          <img className="mobile-logo" src="/api/assets/logo/apex-logo.svg" alt="APEX" />
+          <img className="mobile-logo" src="/api/assets/logo/apex-logo.svg" alt="APEX" loading="lazy" />
           <div className="login-eyebrow">CONTENT MANAGEMENT</div>
           <h2>Welcome back.</h2>
           <p>Sign in to manage the APEX website and publish approved changes.</p>

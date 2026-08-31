@@ -92,7 +92,7 @@ export default async function AP_CareersSections({ embedded = false }: { embedde
 
           <div className="relative min-w-[min(420px,100%)] flex-1 basis-[54%] self-stretch">
             {page.heroImage
-              ? <img src={page.heroImage} alt={page.heroImageAlt ?? ""} className="h-full min-h-[240px] w-full object-cover" />
+              ? <img src={page.heroImage} alt={page.heroImageAlt ?? ""} loading="lazy" className="h-full min-h-[240px] w-full object-cover" />
               : <AP_TeamVisual />}
             {/* fades the media into the copy column */}
             <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-[clamp(0px,12vw,260px)] bg-gradient-to-r from-white from-[12%] to-transparent" />
