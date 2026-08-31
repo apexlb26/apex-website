@@ -10,7 +10,7 @@ import AP_Icon from "@/app/components/AP_Icon";
 
 const HERO_ID = "hero";
 
-export default function AP_Header({ nav, activePath = "" }: { nav: NavItem[]; activePath?: string }) {
+export default function AP_Header({ nav, activePath = "", cta = "", logo = "/api/assets/logo/apex-logo.svg", logoAlt = "APEX", labels }: { nav: NavItem[]; activePath?: string; cta?: string; logo?: string; logoAlt?: string; labels?: UiLabels }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const [hash, setHash] = useState("");
@@ -117,13 +117,13 @@ export default function AP_Header({ nav, activePath = "" }: { nav: NavItem[]; ac
           prefetch={false}
           className="brand ap-ref-brand"
           href={`/#${HERO_ID}`}
-          aria-label="APEX home"
+          aria-label={labels?.home ?? ""}
           onClick={(event) => {
             scrollToAnchor(event, `/#${HERO_ID}`);
             setHash(`#${HERO_ID}`);
           }}
         >
-          <Image src="/api/assets/logo/apex-logo.svg" alt="APEX" width={170} height={52} loading="lazy" />
+          <Image src={logo} alt={logoAlt} width={170} height={52} loading="lazy" unoptimized />
         </Link>
         <nav className="nav-links ap-ref-nav-links" aria-label={labels?.primaryNav ?? ""}>
           {nav.map((item) => (
