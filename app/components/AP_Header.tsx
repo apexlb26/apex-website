@@ -90,9 +90,12 @@ export default function AP_Header({ nav, activePath = "", cta = "", logo = "/api
   const scrollToAnchor = useCallback((event: React.MouseEvent, href: string) => {
     const [rawRoute, anchor] = href.split("#");
     if (!anchor || (rawRoute || "/") !== pathname) return;
-    event.preventDefault();
     const target = document.getElementById(anchor);
+    // No section with that id on this page. Leave the click alone rather than
+    // cancelling it, so a stale anchor in the CMS degrades to a normal
+    // navigation instead of a dead link.
     if (!target) return;
+    event.preventDefault();
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
     window.history.pushState(null, "", href);
