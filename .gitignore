@@ -6,3 +6,7 @@ out/
 .env.*.local
 .DS_Store
 npm-debug.log*
+
+# TypeScript incremental build cache - regenerated on every build,
+# and a guaranteed merge conflict while it is tracked.
+tsconfig.tsbuildinfo
