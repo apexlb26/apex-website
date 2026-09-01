@@ -4,7 +4,7 @@ import { buildPageMetadata } from "@/shared/seo";
 
 const description = "AI, intelligent automation, legacy modernization, system integration, data infrastructure, custom software, and workflow automation from APEX.";
 
-export const metadata = buildPageMetadata({ title: "Solutions", description, path: "/solutions" });
+export const metadata = buildPageMetadata({ title: "Solutions", description, path: "/solutions", arabicAlternate: true });
 
 export default function Page() {
   return (

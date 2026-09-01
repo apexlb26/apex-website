@@ -4,7 +4,7 @@ import { buildPageMetadata } from "@/shared/seo";
 
 const description = "Do meaningful work with great people at APEX, building thoughtful software, AI, data, and workflow systems.";
 
-export const metadata = buildPageMetadata({ title: "Careers", description, path: "/careers" });
+export const metadata = buildPageMetadata({ title: "Careers", description, path: "/careers", arabicAlternate: true });
 
 export default function CareersPage() {
   return (

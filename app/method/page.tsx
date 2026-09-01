@@ -4,7 +4,7 @@ import { buildPageMetadata } from "@/shared/seo";
 
 const description = "The APEX method: discover, architect, build, integrate, and evolve connected digital systems.";
 
-export const metadata = buildPageMetadata({ title: "Method", description, path: "/method" });
+export const metadata = buildPageMetadata({ title: "Method", description, path: "/method", arabicAlternate: true });
 
 export default function Page() {
   return (

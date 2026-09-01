@@ -4,7 +4,7 @@ import { buildPageMetadata } from "@/shared/seo";
 
 const description = "Explore the APEX product ecosystem for connected operations, intelligent workflows, data, and automation.";
 
-export const metadata = buildPageMetadata({ title: "Products", description, path: "/products" });
+export const metadata = buildPageMetadata({ title: "Products", description, path: "/products", arabicAlternate: true });
 
 export default function ProductsPage() {
   return (

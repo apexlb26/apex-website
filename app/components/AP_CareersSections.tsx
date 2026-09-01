@@ -1,5 +1,5 @@
-﻿import { getCmsContent } from "@/shared/content";
-import type { AP_IconName, CareerFormLabels, CareerStat, CareerStep } from "@/shared/types";
+import { getCmsContent } from "@/shared/content";
+import type { AP_IconName, CareerFormLabels, CareerStat, CareerStep, Locale } from "@/shared/types";
 import AP_Icon from "@/app/components/AP_Icon";
 import AP_TeamVisual from "@/app/components/AP_TeamVisual";
 import AP_CareerApplyForm from "@/app/components/AP_CareerApplyForm";
@@ -53,8 +53,8 @@ const split = "flex flex-wrap gap-x-2.5 gap-y-5";
 const splitLabel = "min-w-[min(16rem,100%)] shrink-0 grow-0 basis-64";
 const splitBody = "min-w-[min(560px,100%)] flex-1";
 
-export default async function AP_CareersSections({ embedded = false }: { embedded?: boolean }) {
-  const { data } = await getCmsContent("en");
+export default async function AP_CareersSections({ embedded = false, locale = "en" }: { embedded?: boolean; locale?: Locale }) {
+  const { data } = await getCmsContent(locale);
   const Wrapper = embedded ? "div" : "main";
   const Title = embedded ? "h2" : "h1";
   const page = data.careers;

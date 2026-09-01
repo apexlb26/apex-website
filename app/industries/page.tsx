@@ -4,7 +4,7 @@ import { buildPageMetadata } from "@/shared/seo";
 
 const description = "APEX builds connected systems for education, service operations, and public and environmental workflows.";
 
-export const metadata = buildPageMetadata({ title: "Industries", description, path: "/industries" });
+export const metadata = buildPageMetadata({ title: "Industries", description, path: "/industries", arabicAlternate: true });
 
 export default function Page() {
   return (

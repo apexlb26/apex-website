@@ -1,5 +1,6 @@
 import { getCmsContent } from "@/shared/content";
-import type { BlogMilestone, BlogUpdate } from "@/shared/types";
+import { localizedPath, slugifySeo } from "@/shared/seo";
+import type { BlogMilestone, BlogUpdate, Locale } from "@/shared/types";
 import AP_Icon from "@/app/components/AP_Icon";
 import AP_SubscribeForm from "@/app/components/AP_SubscribeForm";
 import AP_BlogNetwork from "@/app/components/AP_BlogNetwork";
@@ -14,8 +15,8 @@ const shell = "mx-auto w-[min(1640px,86%)]";
 const eyebrow = "block text-[10px] font-extrabold uppercase leading-tight tracking-[0.14em] text-hx-cyanInk";
 const readMore = "mt-auto inline-flex items-center gap-1.5 pt-3 text-[10.5px] font-extrabold uppercase tracking-[0.08em] text-hx-cyanInk hover:text-[#00897E]";
 
-export default async function AP_BlogsSections({ embedded = false }: { embedded?: boolean }) {
-  const { data } = await getCmsContent("en");
+export default async function AP_BlogsSections({ embedded = false, locale = "en" }: { embedded?: boolean; locale?: Locale }) {
+  const { data } = await getCmsContent(locale);
   const Wrapper = embedded ? "div" : "main";
   const Title = embedded ? "h2" : "h1";
   const page = data.blogs;
@@ -101,7 +102,7 @@ export default async function AP_BlogsSections({ embedded = false }: { embedded?
                     </div>
                     <h3 className="mt-2 text-[12px] font-bold leading-[1.3] text-hx-ink">{update.title}</h3>
                     <p className="mt-1.5 text-[10px] leading-[1.5] text-hx-copy">{update.body}</p>
-                    <span className={readMore}>{update.cta ?? ""}<AP_Icon name="arrow-right" className="h-3 w-3" /></span>
+                    <a href={update.href || localizedPath(`/blogs/${slugifySeo(update.title)}`, locale)} className={readMore}>{update.cta || "Read more"}<AP_Icon name="arrow-right" className="h-3 w-3" /></a>
                   </div>
                 </article>
               )) : (

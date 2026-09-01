@@ -4,7 +4,7 @@ import { buildPageMetadata } from "@/shared/seo";
 
 const description = "APEX news, collaborations, case-driven insights, and practical thinking on intelligent digital systems.";
 
-export const metadata = buildPageMetadata({ title: "Blogs & News", description, path: "/blogs" });
+export const metadata = buildPageMetadata({ title: "Blogs & News", description, path: "/blogs", arabicAlternate: true });
 
 export default function BlogsPage() {
   return (

@@ -1,6 +1,15 @@
+import AP_PageStructuredData from "@/app/components/AP_PageStructuredData";
 import AP_HomeScreen from "@/app/screens/AP_HomeScreen";
+import { getCmsContent } from "@/shared/content";
 
-export default AP_HomeScreen;
+export default async function HomePage() {
+  const { data } = await getCmsContent("en");
+  return (
+    <>
+      <AP_PageStructuredData name={data.meta.title} description={data.meta.description} path="/" />
+      <AP_HomeScreen locale="en" />
+    </>
+  );
+}
 
-/* Rendered per request so CMS edits appear without a redeploy. */
 export const dynamic = "force-dynamic";
