@@ -69,13 +69,13 @@ export default function AP_Industries({ content, mark, standalone = false, embed
     };
 
     /* Wide environmental image treatment:
-       - preserve the source image's natural 4:3 ratio so BOTH dashboard pills stay fully visible;
-       - no border or hard left edge;
-       - only the first few percent of the image softly blur/fade into the white card. */
+       - use a deliberately shallow panorama so this horizontal card does not become too tall;
+       - keep the dashboard pills inside the crop;
+       - no border or hard left edge, with only a short soft transition into the white card. */
     const widePhoto = (item: typeof content.items[number]) => {
       const image = item.image ?? INDUSTRY_IMAGE_FALLBACKS[item.key];
       return (
-        <div className="relative ml-auto aspect-[4/3] w-full max-w-[470px] overflow-visible">
+        <div className="relative ml-auto aspect-[3.15/1] w-full max-w-none overflow-visible">
           {image ? (
             <>
               {/* A tiny blurred copy exists only under the left transition. The mask prevents any square blur block. */}
@@ -86,7 +86,7 @@ export default function AP_Industries({ content, mark, standalone = false, embed
                 fill
                 loading="lazy"
                 sizes="(max-width: 900px) 100vw, 470px"
-                className="pointer-events-none absolute inset-0 h-full w-full scale-[1.015] object-cover object-center blur-[8px] opacity-70 [mask-image:linear-gradient(90deg,#000_0%,rgba(0,0,0,.82)_2.5%,rgba(0,0,0,.28)_6%,transparent_10%,transparent_100%)]"
+              className="pointer-events-none absolute inset-0 h-full w-full scale-[1.02] object-cover object-center blur-[14px] opacity-65 [mask-image:linear-gradient(90deg,#000_0%,rgba(0,0,0,.78)_2%,rgba(0,0,0,.24)_4.5%,transparent_7%,transparent_100%)]"
               />
 
               {/* The real image is untouched after the first few percent, so both white metric pills stay crisp and complete. */}
@@ -95,8 +95,8 @@ export default function AP_Industries({ content, mark, standalone = false, embed
                 alt={item.title}
                 fill
                 loading="lazy"
-                sizes="(max-width: 900px) 100vw, 470px"
-                className="absolute inset-0 h-full w-full rounded-r-[20px] object-cover object-center [mask-image:linear-gradient(90deg,transparent_0%,rgba(0,0,0,.28)_2%,rgba(0,0,0,.78)_5%,#000_8%,#000_100%)]"
+                sizes="(max-width: 900px) 100vw, 48vw"
+                className="absolute inset-0 h-full w-full rounded-r-[20px] object-cover object-center [mask-image:linear-gradient(90deg,transparent_0%,rgba(0,0,0,.28)_1.5%,rgba(0,0,0,.78)_3.5%,#000_6%,#000_100%)]"
               />
             </>
           ) : (
@@ -163,7 +163,7 @@ export default function AP_Industries({ content, mark, standalone = false, embed
               className="mt-5 flex flex-col rounded-[24px] border border-sx-line bg-white p-6 shadow-[0_14px_34px_rgba(1,54,65,.06)]"
             >
               {chip(item.number)}
-              <div className="mt-4 grid items-center gap-6 lg:grid-cols-[84px_minmax(0,1.1fr)_minmax(210px,0.82fr)_minmax(420px,470px)]">
+              <div className="mt-4 grid items-center gap-6 lg:grid-cols-[84px_minmax(250px,1.1fr)_minmax(210px,0.82fr)_minmax(420px,1.45fr)]">
                 {tile(item.icon)}
                 <div className="min-w-0">
                   <h2 className="text-[clamp(16px,1.35vw,20px)] font-bold leading-[1.2] tracking-[-0.01em] text-hx-ink [overflow-wrap:normal]">{item.title}</h2>
