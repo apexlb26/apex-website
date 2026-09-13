@@ -32,6 +32,9 @@ export async function POST(request: Request) {
     const file = data.get("file");
     if (!(file instanceof File)) return NextResponse.json<AdminMediaResponse>({ ok: false, error: "No file was provided." }, { status: 400 });
     const result = await uploadMedia(file, session.email);
+    // Matches DELETE below: a second editor with the media library open should
+    // see the new file without reloading.
+    await publishContentUpdate("en", "media");
     return NextResponse.json<AdminMediaResponse>({ ok: true, ...result });
   } catch (error) {
     return NextResponse.json<AdminMediaResponse>({ ok: false, error: error instanceof Error ? error.message : "Upload failed" }, { status: 500 });

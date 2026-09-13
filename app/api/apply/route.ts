@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { sendAdminEmail, ADMIN_RECIPIENT } from "@/shared/mailer";
+import { sendAdminEmail } from "@/shared/mailer";
 import { recordSubmission } from "@/shared/store";
 
 /*
@@ -74,6 +74,8 @@ export async function POST(request: Request) {
    */
   let emailed = false;
 
+  const stored = { name, email, role, phone, location, linkedin, cover, resume: filename, resumeBase64: content.toString("base64"), resumeType: resume.type, submittedAt };
+
   try {
     const result = await sendAdminEmail({
       subject,
@@ -96,19 +98,21 @@ export async function POST(request: Request) {
     });
     emailed = result.delivered;
     if (!result.delivered) {
-      console.warn(`APEX: no mail transport configured; ${ADMIN_RECIPIENT} was not emailed.`);
+      console.error(
+        `[mail:undelivered] application from ${email} stored but not emailed - no mail transport is configured. Intended recipients: ${result.recipients.join(", ") || "none"}.`,
+      );
     }
   } catch (error) {
-    // An application is not lost because delivery failed.
-    console.error("APEX application email failed", error);
-    await recordSubmission("application", { name, email, role, phone, location, linkedin, cover, resume: filename, resumeBase64: content.toString("base64"), resumeType: resume.type, submittedAt }, false);
-    return NextResponse.json(
-      { ok: false, error: "We could not send your application right now. Please try again." },
-      { status: 502 },
-    );
+    /*
+     * The application, CV included, is already in hand - so it is not lost and
+     * the applicant is not asked to send it again. This used to return 502,
+     * which invited a resubmission that stored the whole thing a second time.
+     * The failure is reported as `delivered: false` and logged instead.
+     */
+    console.error(`[mail:undelivered] application from ${email} stored but the send failed:`, error);
   }
 
-  await recordSubmission("application", { name, email, role, phone, location, linkedin, cover, resume: filename, resumeBase64: content.toString("base64"), resumeType: resume.type, submittedAt }, emailed);
+  await recordSubmission("application", stored, emailed);
 
   const webhookUrl = process.env.APEX_CONTACT_WEBHOOK_URL;
   if (webhookUrl) {
@@ -123,5 +127,5 @@ export async function POST(request: Request) {
     }
   }
 
-  return NextResponse.json({ ok: true, message: "Application received." }, { status: 201 });
+  return NextResponse.json({ ok: true, delivered: emailed, message: "Application received." }, { status: 201 });
 }

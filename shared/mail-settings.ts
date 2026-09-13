@@ -109,6 +109,16 @@ function decryptPassword(value?: string) {
       decipher.final(),
     ]).toString("utf8");
   } catch {
+    /*
+     * Almost always the wrong key rather than corrupt data: APEX_ADMIN_SECRET
+     * doubles as the encryption key and render.yaml generates a different one
+     * per service, so a password saved by one deployment cannot be read by
+     * another sharing the same database. Say so - the caller falls back to
+     * SMTP_PASS, and silence here made that fallback look like a mail outage.
+     */
+    console.warn(
+      "APEX mail settings: the stored SMTP password could not be decrypted (APEX_MAIL_SETTINGS_KEY/APEX_ADMIN_SECRET likely differs from the one that saved it); falling back to SMTP_PASS.",
+    );
     return undefined;
   }
 }

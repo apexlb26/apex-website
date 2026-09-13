@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { ContactRequest, ContactResponse } from "@/shared/types";
-import { sendAdminEmail, ADMIN_RECIPIENT } from "@/shared/mailer";
+import { sendAdminEmail } from "@/shared/mailer";
 import { recordSubmission } from "@/shared/store";
 
 function isEmail(value: string) {
@@ -37,8 +37,15 @@ export async function POST(request: Request) {
     ? `New job application - ${company || "General"} - ${name}`
     : `New enquiry from ${name}${company ? ` (${company})` : ""}`;
 
-  // Delivery must not cost the applicant their submission, so failures here
-  // are logged and the request still succeeds.
+  /*
+   * Delivery must not cost the sender their submission: the enquiry is stored
+   * either way, and a failed notification is reported back as `delivered:
+   * false` rather than as a failed request. Telling someone to try again when
+   * their message is already saved only produces duplicates.
+   *
+   * The operator's signal is the [mail:undelivered] line below plus the
+   * `emailed` flag on the stored submission.
+   */
   let emailed = false;
   try {
     const result = await sendAdminEmail({
@@ -57,10 +64,12 @@ export async function POST(request: Request) {
     });
     emailed = result.delivered;
     if (!result.delivered) {
-      console.warn(`APEX: no mail transport configured; ${ADMIN_RECIPIENT} was not emailed.`);
+      console.error(
+        `[mail:undelivered] enquiry from ${email} stored but not emailed - no mail transport is configured. Intended recipients: ${result.recipients.join(", ") || "none"}.`,
+      );
     }
   } catch (error) {
-    console.error("APEX admin email failed", error);
+    console.error(`[mail:undelivered] enquiry from ${email} stored but the send failed:`, error);
   }
 
   // The enquiry is kept regardless of whether the notification was delivered.
@@ -78,5 +87,5 @@ export async function POST(request: Request) {
     console.log("APEX contact lead (preview mode)", lead);
   }
 
-  return NextResponse.json<ContactResponse>({ ok: true, message: "Request received." }, { status: 201 });
+  return NextResponse.json<ContactResponse>({ ok: true, delivered: emailed, message: "Request received." }, { status: 201 });
 }

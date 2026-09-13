@@ -14,10 +14,6 @@ import { getEffectiveMailSettings } from "@/shared/mail-settings";
  *   RESEND_API_KEY
  */
 
-/** Compatibility export used only in warning/log messages in existing routes. */
-export const ADMIN_RECIPIENT =
-  process.env.APEX_NOTIFY_EMAIL || process.env.SMTP_USER || "configured admin recipient";
-
 export type MailAttachment = {
   filename: string;
   content: Buffer;
@@ -31,7 +27,13 @@ export type MailMessage = {
   attachments?: MailAttachment[];
 };
 
-export type MailResult = { delivered: boolean; transport: "smtp" | "resend" | "log" };
+/*
+ * `recipients` is reported back so callers can log where a message was meant
+ * to go. It was previously a module-level constant read from process.env at
+ * import time, which never reflected the CMS mail settings - so a failure was
+ * logged against an address that was not the one actually configured.
+ */
+export type MailResult = { delivered: boolean; transport: "smtp" | "resend" | "log"; recipients: string[] };
 
 async function sendViaResend(message: MailMessage): Promise<void> {
   const settings = await getEffectiveMailSettings();
@@ -83,7 +85,15 @@ async function sendViaSmtp(message: MailMessage): Promise<void> {
         return createTransport({
           host: settings.host,
           port: settings.port,
-          secure: Boolean(settings.secure),
+          /*
+           * Port 465 is implicit TLS: the connection is encrypted before the
+           * first byte. Opening it in plaintext stalls until the socket times
+           * out. So when SMTP_SECURE is not set, let the port decide rather
+           * than defaulting to false - a host/port pair alone is enough to
+           * configure working mail, which is what the deployment blueprint
+           * actually provides.
+           */
+          secure: settings.secure ?? settings.port === 465,
           auth: { user: settings.user, pass: settings.password },
         });
       })();
@@ -107,17 +117,17 @@ export async function sendAdminEmail(message: MailMessage): Promise<MailResult> 
 
   if (settings.smtpUrl || settings.host) {
     await sendViaSmtp(message);
-    return { delivered: true, transport: "smtp" };
+    return { delivered: true, transport: "smtp", recipients: settings.recipients };
   }
 
   if (settings.resendApiKey) {
     await sendViaResend(message);
-    return { delivered: true, transport: "resend" };
+    return { delivered: true, transport: "resend", recipients: settings.recipients };
   }
 
   const files = message.attachments?.map((f) => `${f.filename} (${f.content.length} bytes)`).join(", ");
   console.log(
     `[mail:not-configured] to=${settings.recipients.join(",") || "none"} subject=${message.subject}${files ? ` attachments=${files}` : ""}\n${message.text}`,
   );
-  return { delivered: false, transport: "log" };
+  return { delivered: false, transport: "log", recipients: settings.recipients };
 }

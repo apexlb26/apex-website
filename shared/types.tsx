@@ -585,7 +585,8 @@ export type ContactRequest = {
 };
 
 export type ContactResponse =
-  | { ok: true; message: string }
+  /** `delivered` is false when the enquiry was stored but the notification email could not be sent. */
+  | { ok: true; message: string; delivered: boolean }
   | { ok: false; error: string };
 
 export type SubscribeRequest = {

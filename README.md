@@ -153,12 +153,42 @@ git commit -m "Implement APEX reference design across public site"
 git push origin main
 ```
 
-## Development-only admin fallback
+## Admin sign-in
+
+The CMS is at `/admin` (`https://apexlb.tech/admin` in production, which
+redirects to `/admin/login` when there is no session).
+
+**Production login**
+
+```text
+Email:    admin@apexlb.tech
+Password: set as APEX_ADMIN_PASSWORD in the Render dashboard
+```
+
+The password is deliberately not recorded here, because this file is committed.
+Render -> apex-website -> **Environment** holds the live value and is where it
+is changed; a restart picks the new one up. A local, gitignored copy is kept in
+`ADMIN-CREDENTIALS.md` for whoever has the checkout.
+
+**Local development**
+
+With neither `APEX_ADMIN_EMAIL` nor `APEX_ADMIN_PASSWORD` set, a built-in
+fallback applies:
 
 ```text
 Email:    admin@apex.local
 Password: apex-dev
 ```
+
+This is gated on `NODE_ENV !== "production"` and **does not work on the live
+site** - see `checkCredentials()` in `shared/auth.ts`. Use the production
+credentials above there.
+
+Note the third branch: in production, if only one of `APEX_ADMIN_EMAIL` /
+`APEX_ADMIN_PASSWORD` is set, the dev fallback is skipped and the check
+returns `false` for every input - no password works at all, and the error is
+the same "Invalid email or password." If a known-good password is being
+rejected, check that both variables are present.
 
 Production requires these environment variables:
 
@@ -169,3 +199,9 @@ APEX_ADMIN_EMAIL
 APEX_ADMIN_PASSWORD
 APEX_ADMIN_SECRET
 ```
+
+`APEX_ADMIN_SECRET` signs the session cookie **and** encrypts the SMTP password
+stored in the CMS (`shared/mail-settings.ts`). Rotating it logs every admin out
+*and* makes the stored mail password undecryptable, which silently stops
+notification emails. Change `APEX_ADMIN_PASSWORD` on its own when resetting a
+login.

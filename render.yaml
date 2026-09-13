@@ -75,9 +75,18 @@ services:
         sync: false
       - key: SMTP_PORT
         value: "465"
+      # 465 is implicit TLS. The code infers this from the port when the
+      # variable is absent, but setting it explicitly keeps the intent visible
+      # and lets a move to 587 (STARTTLS) be made by editing two values here.
+      - key: SMTP_SECURE
+        value: "true"
       - key: SMTP_USER
         sync: false
       - key: SMTP_PASS
+        sync: false
+      # Must be a mailbox the SMTP user is allowed to send as; most providers
+      # reject a From that does not match the authenticated account.
+      - key: SMTP_FROM
         sync: false
 
       # --------------------------------------------------------------- seo
