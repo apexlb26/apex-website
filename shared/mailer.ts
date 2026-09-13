@@ -86,14 +86,20 @@ async function sendViaSmtp(message: MailMessage): Promise<void> {
           host: settings.host,
           port: settings.port,
           /*
-           * Port 465 is implicit TLS: the connection is encrypted before the
-           * first byte. Opening it in plaintext stalls until the socket times
-           * out. So when SMTP_SECURE is not set, let the port decide rather
-           * than defaulting to false - a host/port pair alone is enough to
-           * configure working mail, which is what the deployment blueprint
-           * actually provides.
+           * Port 465 is implicit TLS by definition (RFC 8314): the connection
+           * is encrypted before the first byte and no plaintext service
+           * listens there. Opening it unencrypted does not fail - it waits for
+           * a greeting that never comes, then times out around 30s, which
+           * reads as "mail silently does not work".
+           *
+           * So 465 decides for itself rather than trusting the flag. The
+           * stored value is honoured on every other port, where STARTTLS on
+           * 587 vs implicit TLS is a real choice. This is deliberately not
+           * `settings.secure ?? port === 465`: the admin form's checkbox
+           * defaults to unticked, so saving those settings once stores a
+           * literal `false` and a nullish fallback never fires.
            */
-          secure: settings.secure ?? settings.port === 465,
+          secure: settings.port === 465 ? true : (settings.secure ?? false),
           auth: { user: settings.user, pass: settings.password },
         });
       })();
