@@ -1,4 +1,5 @@
 import { getStorageMode } from "@/shared/store";
+import AP_AdminMailSettings from "@/app/components/AP_AdminMailSettings";
 
 function present(value?: string) {
   return value ? value : "Not configured";
@@ -8,9 +9,11 @@ export default function AP_AdminSettingsScreen() {
   const mode = getStorageMode();
   return (
     <div className="settings-grid">
+      <AP_AdminMailSettings />
+
       <section className="setting-card">
         <h3>Publishing</h3>
-        <p>The portal supports local JSON development and GitHub-backed production publishing.</p>
+        <p>The portal supports MongoDB-backed production publishing with bundled JSON fallback.</p>
         <ul className="setting-list">
           <li><span>Current mode</span><strong>{mode === "mongodb" ? "MongoDB" : "Fallback JSON (read-only)"}</strong></li>
           <li><span>Repository</span><strong>{present(process.env.GITHUB_REPO)}</strong></li>
@@ -44,12 +47,12 @@ export default function AP_AdminSettingsScreen() {
 
       <section className="setting-card">
         <h3>Production checklist</h3>
-        <p>Before exposing /admin in production, configure all secrets and restrict repository access to the minimum required scope.</p>
+        <p>Before exposing /admin in production, configure all secrets and verify the mail transport from the settings panel above.</p>
         <ul className="setting-list">
           <li><span>1</span><strong>Set real admin credentials</strong></li>
           <li><span>2</span><strong>Set a long random session secret</strong></li>
-          <li><span>3</span><strong>Add a fine-grained GitHub token</strong></li>
-          <li><span>4</span><strong>Redeploy the APEX site and verify /admin</strong></li>
+          <li><span>3</span><strong>Configure SMTP environment fallback</strong></li>
+          <li><span>4</span><strong>Send a test email from /admin/settings</strong></li>
         </ul>
       </section>
     </div>
