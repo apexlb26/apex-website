@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { NavItem, UiLabels } from "@/shared/types";
 import AP_Button from "@/app/components/AP_Button";
 import AP_Icon from "@/app/components/AP_Icon";
+import { BRAND_LOGO, BRAND_LOGO_ALT } from "@/shared/brand";
 
 const HERO_ID = "hero";
 
@@ -126,7 +127,7 @@ export default function AP_Header({ nav, activePath = "", cta = "", logo = "/api
             setHash(`#${HERO_ID}`);
           }}
         >
-          <Image src={logo} alt={logoAlt} width={170} height={52} loading="lazy" unoptimized />
+          <Image src={BRAND_LOGO} alt={BRAND_LOGO_ALT} width={140} height={43} priority unoptimized />
         </Link>
         <nav className="nav-links ap-ref-nav-links" aria-label={labels?.primaryNav ?? ""}>
           {nav.map((item) => (

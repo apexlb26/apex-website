@@ -1,7 +1,9 @@
+import Image from "next/image";
 import type { HeroContent } from "@/shared/types";
 import AP_Icon from "@/app/components/AP_Icon";
 import AP_ArchitectureVisual from "@/app/components/AP_ArchitectureVisual";
 import AP_ContactLink from "@/app/components/AP_ContactLink";
+import { BRAND_LOGO, BRAND_LOGO_ALT } from "@/shared/brand";
 
 /* No media queries: copy and visual are flex children that wrap. */
 const shell = "mx-auto w-[min(1640px,86%)]";
@@ -12,6 +14,7 @@ export default function AP_Hero({ hero }: { hero: HeroContent }) {
     <section id="hero" className="border-b border-hx-line bg-[linear-gradient(180deg,#ffffff_0%,#f7fbfe_100%)]">
       <div className={`${shell} flex flex-wrap items-center gap-x-10 gap-y-8 py-[clamp(2rem,3.5vw,3.25rem)]`}>
         <div className="min-w-[min(440px,100%)] flex-1 basis-[42%]">
+          <Image src={BRAND_LOGO} alt={BRAND_LOGO_ALT} width={140} height={43} priority unoptimized className="mb-5 h-auto w-[140px]" />
           <span className="block text-[10px] font-extrabold uppercase leading-tight tracking-[0.14em] text-hx-cyanInk">{hero.eyebrow}</span>
           <h1 className="mt-3.5 text-[clamp(38px,3.9vw,62px)] font-bold leading-[1.08] tracking-[-0.035em] text-hx-ink">
             {hero.lines[0]}<br />{hero.lines[1]}{hero.lines[2] ? <><br />{hero.lines[2]}</> : null}

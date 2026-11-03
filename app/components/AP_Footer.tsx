@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { FooterContent, NavItem, SocialContent, UiLabels } from "@/shared/types";
 import AP_SocialLinks from "@/app/components/AP_SocialLinks";
 import AP_SubscribeForm from "@/app/components/AP_SubscribeForm";
+import { BRAND_LOGO, BRAND_LOGO_ALT } from "@/shared/brand";
 
 /* No media queries: one wrapping flex row of columns. */
 const shell = "mx-auto w-[min(1640px,86%)]";
@@ -17,7 +18,7 @@ export default function AP_Footer({ nav, content, social, logo = "/api/assets/lo
         {/* brand */}
         <div className="min-w-[min(240px,100%)] flex-[1.5] basis-[23%]">
           <Link prefetch={false} href="/" aria-label="APEX home" className="inline-block">
-            <Image src="/api/assets/logo/apex-logo.svg" alt="APEX" width={140} height={43} loading="lazy" />
+            <Image src={BRAND_LOGO} alt={BRAND_LOGO_ALT} width={140} height={43} loading="lazy" unoptimized />
           </Link>
           {content.tagline && <p className="mt-4 text-[12px] font-bold tracking-[-0.01em] text-hx-cyanInk">{content.tagline}</p>}
           {content.body && <p className="mt-2.5 max-w-[300px] text-[11.5px] leading-[1.7] text-hx-copy">{content.body}</p>}
