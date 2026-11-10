@@ -4,6 +4,7 @@ import AP_Header from "@/app/components/AP_Header";
 import AP_Footer from "@/app/components/AP_Footer";
 import { getCmsContent } from "@/shared/content";
 import { absoluteUrl, buildPageMetadata, slugifySeo } from "@/shared/seo";
+import { sizedImage, imageSrcSet } from "@/shared/images";
 
 export const dynamic = "force-dynamic";
 
@@ -114,7 +115,7 @@ export default async function BlogPostPage({ params }: RouteProps) {
           </div>
           <h1 className="mt-4 max-w-[850px] text-[clamp(34px,6vw,68px)] font-bold leading-[1.02] tracking-[-0.045em] text-hx-ink">{post.title}</h1>
           <p className="mt-7 max-w-[760px] text-[clamp(17px,2vw,21px)] leading-[1.75] text-hx-copy">{post.body}</p>
-          {post.image ? <img src={post.image} alt={post.title} className="mt-10 h-auto w-full rounded-[22px] border border-hx-line object-cover" /> : null}
+          {post.image ? <img src={sizedImage(post.image, 1200)} srcSet={imageSrcSet(post.image)} sizes="(min-width:1024px) 900px, 100vw" alt={post.title} decoding="async" fetchPriority="high" className="mt-10 h-auto w-full rounded-[22px] border border-hx-line object-cover" /> : null}
           <div className="mt-12 border-t border-hx-line pt-7 text-[12px] leading-[1.7] text-hx-muted">
             Published by {author || "APEX"}. This page is the canonical, indexable version of this update.
           </div>

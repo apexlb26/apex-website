@@ -5,6 +5,7 @@ import AP_Icon from "@/app/components/AP_Icon";
 import AP_SubscribeForm from "@/app/components/AP_SubscribeForm";
 import AP_BlogNetwork from "@/app/components/AP_BlogNetwork";
 import AP_BlogCover from "@/app/components/AP_BlogCover";
+import { sizedImage, imageSrcSet } from "@/shared/images";
 
 /*
  * No media queries anywhere. Rows are `flex flex-wrap`; children carry a
@@ -46,7 +47,7 @@ export default async function AP_BlogsSections({ embedded = false, locale = "en"
             </div>
             <div className="min-w-[min(380px,100%)] flex-1 basis-[48%]">
               {page.heroImage
-                ? <img src={page.heroImage} alt={page.heroImageAlt ?? ""} loading="lazy" className="h-auto w-full rounded-[20px] object-cover" />
+                ? <img src={sizedImage(page.heroImage, 1200)} srcSet={imageSrcSet(page.heroImage)} sizes="(min-width:1024px) 560px, 100vw" alt={page.heroImageAlt ?? ""} decoding="async" fetchPriority="high" className="h-auto w-full rounded-[20px] object-cover" />
                 : <AP_BlogNetwork />}
             </div>
           </div>
@@ -65,7 +66,7 @@ export default async function AP_BlogsSections({ embedded = false, locale = "en"
                 </div>
                 <div className="relative min-h-[190px] min-w-[min(260px,100%)] flex-1 basis-[54%] self-stretch overflow-hidden bg-hx-tint">
                   <div className="absolute inset-0 [&>img]:h-full [&>img]:w-full [&>img]:object-cover [&>svg]:h-full [&>svg]:w-full">
-                    {featured.image ? <img src={featured.image} alt={featured.title} loading="lazy" /> : <AP_BlogCover variant="feature" />}
+                    {featured.image ? <img src={sizedImage(featured.image, 800)} srcSet={imageSrcSet(featured.image)} sizes="(min-width:1024px) 480px, 100vw" alt={featured.title} loading="lazy" decoding="async" /> : <AP_BlogCover variant="feature" />}
                   </div>
                   <div className="absolute inset-y-0 right-0 flex w-[52%] flex-col items-center justify-center gap-2 px-4 text-center">
                     <strong className="text-[clamp(24px,2.6vw,38px)] font-bold leading-none tracking-[-0.03em] text-hx-cyanInk">{featured.statValue}</strong>
@@ -93,7 +94,7 @@ export default async function AP_BlogsSections({ embedded = false, locale = "en"
               {updates.length ? updates.map((update, index) => (
                 <article key={update.title} className="flex min-w-[min(132px,100%)] flex-1 basis-[calc(20%-13px)] flex-col overflow-hidden rounded-xl border border-hx-line bg-white transition hover:-translate-y-0.5 hover:border-[#bcdff2] hover:shadow-[0_14px_30px_rgba(11,34,51,.08)]">
                   <div className="h-[84px] w-full shrink-0 overflow-hidden bg-hx-tint">
-                    {update.image ? <img src={update.image} alt={update.title} loading="lazy" className="h-full w-full object-cover" /> : <AP_BlogCover variant={index} />}
+                    {update.image ? <img src={sizedImage(update.image, 480)} srcSet={imageSrcSet(update.image, [480, 800])} sizes="240px" alt={update.title} loading="lazy" decoding="async" className="h-full w-full object-cover" /> : <AP_BlogCover variant={index} />}
                   </div>
                   <div className="flex flex-1 flex-col p-3.5">
                     <div className="flex flex-wrap items-baseline justify-between gap-x-2">
