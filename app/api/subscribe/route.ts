@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import type { SubscribeRequest, SubscribeResponse } from "@/shared/types";
 import { recordSubmission } from "@/shared/store";
+import { sendAdminEmail } from "@/shared/mailer";
+
+/** Where newsletter signups are announced. */
+const SUBSCRIBE_NOTIFY_TO = process.env.APEX_SUBSCRIBE_NOTIFY_EMAIL?.trim() || "info@apexlb.tech";
 
 function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -23,6 +27,25 @@ export async function POST(request: Request) {
   // Kept in the database whether or not a webhook is configured; previously a
   // signup with no webhook was only written to the server log.
   await recordSubmission("subscribe", signup, false);
+
+  /*
+   * Tell the team about the signup. The address is already stored, so a mail
+   * failure is logged rather than reported to the visitor - telling them to
+   * retry would only create duplicate signups.
+   */
+  try {
+    const result = await sendAdminEmail({
+      to: [SUBSCRIBE_NOTIFY_TO],
+      replyTo: email,
+      subject: `New newsletter subscriber - ${email}`,
+      text: [`${email} has subscribed to the APEX newsletter.`, "", `Email:     ${email}`, `Subscribed: ${signup.submittedAt}`].join("\n"),
+    });
+    if (!result.delivered) {
+      console.error(`[mail:undelivered] subscriber ${email} stored but not emailed - no mail transport is configured. Intended: ${result.recipients.join(", ")}.`);
+    }
+  } catch (error) {
+    console.error("APEX subscribe notification failed", error);
+  }
 
   if (webhookUrl) {
     try {

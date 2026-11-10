@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getCmsContent } from "@/shared/content";
 import { SITE_URL, slugifySeo } from "@/shared/seo";
+import { blogEntries } from "@/shared/blog";
 import { contentDate, getContentLastModified } from "@/shared/seo-server";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -34,10 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     data: typeof en,
     updatedAt: Date,
   ) => {
-    const blogItems = [
-      ...(data.blogs.updates ?? []).map((item) => ({ title: item.title, date: item.date })),
-      ...(data.blogs.posts ?? []).map((item) => ({ title: item.title, date: item.date })),
-    ];
+    const blogItems = blogEntries(data.blogs, locale).map((item) => ({ title: item.title, date: item.date ?? "" }));
     const seen = new Set<string>();
     for (const item of blogItems) {
       const slug = slugifySeo(item.title);

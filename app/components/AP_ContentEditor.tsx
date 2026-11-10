@@ -547,9 +547,149 @@ function renderProducts(content: SiteContent, change: (path: string, value: unkn
 }
 
 function renderBlogs(content: SiteContent, change: (path: string, value: unknown) => void, value: (path: string) => string) {
-  return <><SectionHead eyebrow="BLOGS & NEWS" title="Newsroom layout" description="Prepare the page language and filtering structure now. Publish actual achievements, collaborations, and news only when they exist." /><div className="editor-card-body"><div className="field-grid"><TextField label="Eyebrow" value={value("blogs.eyebrow")} onChange={(v) => change("blogs.eyebrow", v)} /><TextField label="Main title" value={value("blogs.title")} onChange={(v) => change("blogs.title", v)} /><TextField label="Highlighted words" value={value("blogs.highlight")} onChange={(v) => change("blogs.highlight", v)} /><div className="field full"><TextArea label="Intro body" value={value("blogs.body")} onChange={(v) => change("blogs.body", v)} /></div><TextField label="Subscribe title" value={value("blogs.subscribeTitle")} onChange={(v) => change("blogs.subscribeTitle", v)} /><TextArea label="Subscribe body" value={value("blogs.subscribeBody")} onChange={(v) => change("blogs.subscribeBody", v)} /><TextField label="Featured label" value={value("blogs.featuredLabel")} onChange={(v) => change("blogs.featuredLabel", v)} /><TextField label="Empty-state title" value={value("blogs.emptyTitle")} onChange={(v) => change("blogs.emptyTitle", v)} /><div className="field full"><TextArea label="Empty-state body" value={value("blogs.emptyBody")} onChange={(v) => change("blogs.emptyBody", v)} /></div><div className="field full"><TextField label="Categories (separate with |)" value={content.blogs.categories.join(" | ")} onChange={(v) => change("blogs.categories", v.split("|").map((s) => s.trim()).filter(Boolean))} /></div><AP_ImageField label="Hero image path" value={value("blogs.heroImage")} onChange={(v) => change("blogs.heroImage", v)} hint="Upload in Media, then paste the public path. Leave blank to use the built-in artwork." /><TextField label="Hero image alt" value={value("blogs.heroImageAlt")} onChange={(v) => change("blogs.heroImageAlt", v)} /><AP_ImageField label="Featured story image" value={value("blogs.featured.image")} onChange={(v) => change("blogs.featured.image", v)} hint="Upload in Media, then paste the public path. Leave blank to use the built-in artwork." /></div><div className="form-divider" /><div className="array-stack">{content.blogs.updates?.map((update, index) => <div className="subcard" key={`update-img-${index}`}><div className="subcard-head"><strong>{update.title}</strong><span>update {index + 1}</span></div><div className="field-grid"><div className="field full"><AP_ImageField label="Card image" value={update.image ?? ""} onChange={(v) => change(`blogs.updates.${index}.image`, v)} hint="Choose an image from the library or upload one. Leave blank to use the built-in artwork." /></div></div></div>)}{content.blogs.posts?.map((post, index) => <div className="subcard" key={`post-img-${index}`}><div className="subcard-head"><strong>{post.title}</strong><span>insight {index + 1}</span></div><div className="field-grid"><div className="field full"><AP_ImageField label="Card image" value={post.image ?? ""} onChange={(v) => change(`blogs.posts.${index}.image`, v)} hint="Choose an image from the library or upload one. Leave blank to use the built-in artwork." /></div></div></div>)}</div><div className="editor-empty"><div className="empty-icon"><AP_AdminIcon name="blogs" /></div><h3>No articles are published.</h3><p>The public newsroom can stay visually complete without fake Series B rounds, vendor awards, or partnerships. Add real updates once they are approved.</p></div></div></>;
-}
+  const blogs = content.blogs;
+  const tabs = blogs.categories ?? [];
+  const updates = blogs.updates ?? [];
+  const posts = blogs.posts ?? [];
+  const featured = blogs.featured;
 
+  const tabList = listHelpers(tabs, (next) => change("blogs.categories", next));
+  const updateList = listHelpers(updates, (next) => change("blogs.updates", next));
+  const postList = listHelpers(posts, (next) => change("blogs.posts", next));
+
+  /** A story picks its category from the tabs; the first tab ("All") is not a category. */
+  function categoryOptions(current: string) {
+    const options = tabs.slice(1);
+    return current && !options.some((option) => option.trim().toLowerCase() === current.trim().toLowerCase()) ? [current, ...options] : options;
+  }
+
+  /** Renaming a tab keeps the stories filed under it attached to it. */
+  function renameTab(index: number, next: string) {
+    const previous = tabs[index];
+    updates.forEach((update, position) => {
+      if (update.category.trim().toLowerCase() === previous.trim().toLowerCase()) change(`blogs.updates.${position}.category`, next);
+    });
+    change(`blogs.categories.${index}`, next);
+  }
+
+  return (
+    <>
+      <SectionHead eyebrow="BLOGS & NEWS" title="Blogs page" description="Everything on the public blogs page is edited here: the tabs, the featured story with its headline figure, and every story card. A story's Read more opens its own article page. Changes appear on open pages the moment you publish." />
+      <div className="editor-card-body">
+        <div className="field-grid">
+          <TextField label="Eyebrow" value={value("blogs.eyebrow")} onChange={(v) => change("blogs.eyebrow", v)} />
+          <TextField label="Main title" value={value("blogs.title")} onChange={(v) => change("blogs.title", v)} />
+          <TextField label="Highlighted words" value={value("blogs.highlight")} onChange={(v) => change("blogs.highlight", v)} />
+          <div className="field full"><TextArea label="Intro body" value={value("blogs.body")} onChange={(v) => change("blogs.body", v)} /></div>
+          <AP_ImageField label="Hero image" value={value("blogs.heroImage")} onChange={(v) => change("blogs.heroImage", v)} hint="Leave blank to use the built-in artwork." />
+          <TextField label="Hero image alt" value={value("blogs.heroImageAlt")} onChange={(v) => change("blogs.heroImageAlt", v)} />
+          <TextField label="Subscribe title" value={value("blogs.subscribeTitle")} onChange={(v) => change("blogs.subscribeTitle", v)} />
+          <TextArea label="Subscribe body" value={value("blogs.subscribeBody")} onChange={(v) => change("blogs.subscribeBody", v)} />
+          <TextField label="Subscribe placeholder" value={value("blogs.subscribePlaceholder")} onChange={(v) => change("blogs.subscribePlaceholder", v)} />
+          <TextField label="Subscribe button" value={value("blogs.subscribeCta")} onChange={(v) => change("blogs.subscribeCta", v)} />
+          <TextField label="Empty-state title" value={value("blogs.emptyTitle")} onChange={(v) => change("blogs.emptyTitle", v)} />
+          <div className="field full"><TextArea label="Empty-state body" value={value("blogs.emptyBody")} onChange={(v) => change("blogs.emptyBody", v)} rows={2} /></div>
+        </div>
+
+        {/* ---------------------------------------------------------- tabs */}
+        <div className="form-divider" />
+        <div className="subcard-head">
+          <div><strong>Tabs</strong><span style={{ display: "block" }}>The filter buttons above the story cards. The first tab shows every story; each other tab shows the stories filed under its name.</span></div>
+          <button className="ap-button ap-button-soft" type="button" onClick={() => tabList.add(tabs.length ? "New tab" : "All Updates")}>Add tab</button>
+        </div>
+        <div className="array-stack">
+          {tabs.map((tab, index) => (
+            <div className="subcard" key={`tab-${index}`}>
+              <div className="subcard-head"><strong>{index === 0 ? "First tab (shows everything)" : `Tab ${index + 1}`}</strong><ListControls index={index} length={tabs.length} onMove={tabList.move} onRemove={tabList.remove} /></div>
+              <div className="field-grid"><TextField label="Tab name" value={tab} onChange={(v) => renameTab(index, v)} /></div>
+            </div>
+          ))}
+        </div>
+
+        {/* ------------------------------------------------------ featured */}
+        <div className="form-divider" />
+        <div className="subcard-head">
+          <div><strong>Featured story</strong><span style={{ display: "block" }}>The large card at the top, with the headline figure shown over its picture.</span></div>
+          {!featured ? <button className="ap-button ap-button-primary" type="button" onClick={() => change("blogs.featured", { label: "FEATURED", title: "New featured story", body: "", cta: "Read more", statValue: "", statLabel: "", badge: "", image: "", date: "", author: "", content: "" })}>Add featured story</button> : <button className="ap-button ap-button-soft" type="button" onClick={() => change("blogs.featured", undefined)}>Remove featured story</button>}
+        </div>
+        {featured ? (
+          <div className="subcard">
+            <div className="field-grid">
+              <TextField label="Label" value={featured.label ?? ""} onChange={(v) => change("blogs.featured.label", v)} />
+              <TextField label="Title" value={featured.title ?? ""} onChange={(v) => change("blogs.featured.title", v)} />
+              <TextField label="Headline figure" value={featured.statValue ?? ""} onChange={(v) => change("blogs.featured.statValue", v)} hint="The big number over the picture, for example $250M." />
+              <TextField label="Figure caption" value={featured.statLabel ?? ""} onChange={(v) => change("blogs.featured.statLabel", v)} hint="For example ANNUAL RECURRING REVENUE." />
+              <TextField label="Badge" value={featured.badge ?? ""} onChange={(v) => change("blogs.featured.badge", v)} />
+              <TextField label="Button text" value={featured.cta ?? ""} onChange={(v) => change("blogs.featured.cta", v)} />
+              <TextField label="Date" value={featured.date ?? ""} onChange={(v) => change("blogs.featured.date", v)} />
+              <TextField label="Author" value={featured.author ?? ""} onChange={(v) => change("blogs.featured.author", v)} />
+              <div className="field full"><TextArea label="Summary (shown on the card)" value={featured.body ?? ""} onChange={(v) => change("blogs.featured.body", v)} rows={3} /></div>
+              <div className="field full"><TextArea label="Full article (shown on its own page — leave a blank line between paragraphs)" value={featured.content ?? ""} onChange={(v) => change("blogs.featured.content", v)} rows={9} /></div>
+              <div className="field full"><AP_ImageField label="Picture" value={featured.image ?? ""} onChange={(v) => change("blogs.featured.image", v)} hint="Leave blank to use the built-in artwork." /></div>
+              <TextField label="Custom link (optional)" value={featured.href ?? ""} onChange={(v) => change("blogs.featured.href", v)} hint="Leave blank to open the story's own page." />
+            </div>
+          </div>
+        ) : null}
+
+        {/* ------------------------------------------------------- updates */}
+        <div className="form-divider" />
+        <div className="subcard-head">
+          <div><strong>Stories</strong><span style={{ display: "block" }}>{updates.length ? `${updates.length} shown as cards under the tabs.` : "None yet — the page shows the empty state."}</span></div>
+          <button className="ap-button ap-button-primary" type="button" onClick={() => updateList.add({ category: tabs[1] ?? "", date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }), title: "New story", body: "", cta: "Read more", image: "", author: "", content: "" })}><AP_AdminIcon name="check" /> Add story</button>
+        </div>
+        <div className="array-stack">
+          {updates.map((update, index) => (
+            <div className="subcard" key={`update-${index}`}>
+              <div className="subcard-head"><strong>{update.title || `Story ${index + 1}`}</strong><ListControls index={index} length={updates.length} onMove={updateList.move} onRemove={updateList.remove} /></div>
+              <div className="field-grid">
+                <TextField label="Title" value={update.title} onChange={(v) => change(`blogs.updates.${index}.title`, v)} />
+                <SelectField label="Tab (category)" value={update.category} options={categoryOptions(update.category)} onChange={(v) => change(`blogs.updates.${index}.category`, v)} />
+                <TextField label="Date" value={update.date} onChange={(v) => change(`blogs.updates.${index}.date`, v)} />
+                <TextField label="Author" value={update.author ?? ""} onChange={(v) => change(`blogs.updates.${index}.author`, v)} />
+                <TextField label="Button text" value={update.cta ?? ""} onChange={(v) => change(`blogs.updates.${index}.cta`, v)} />
+                <TextField label="Custom link (optional)" value={update.href ?? ""} onChange={(v) => change(`blogs.updates.${index}.href`, v)} hint="Leave blank to open the story's own page." />
+                <div className="field full"><TextArea label="Summary (shown on the card)" value={update.body} onChange={(v) => change(`blogs.updates.${index}.body`, v)} rows={2} /></div>
+                <div className="field full"><TextArea label="Full article (shown on its own page — leave a blank line between paragraphs)" value={update.content ?? ""} onChange={(v) => change(`blogs.updates.${index}.content`, v)} rows={8} /></div>
+                <div className="field full"><AP_ImageField label="Image" value={update.image ?? ""} onChange={(v) => change(`blogs.updates.${index}.image`, v)} hint="Leave blank to use the built-in artwork." /></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ------------------------------------------------------- insights */}
+        <div className="form-divider" />
+        <div className="field-grid">
+          <TextField label="Insights eyebrow" value={value("blogs.insightsEyebrow")} onChange={(v) => change("blogs.insightsEyebrow", v)} />
+          <TextField label="Insights title" value={value("blogs.insightsTitle")} onChange={(v) => change("blogs.insightsTitle", v)} />
+          <TextField label="Insights button" value={value("blogs.insightsCta")} onChange={(v) => change("blogs.insightsCta", v)} />
+          <div className="field full"><TextArea label="Insights intro" value={value("blogs.insightsBody")} onChange={(v) => change("blogs.insightsBody", v)} rows={2} /></div>
+        </div>
+        <div className="subcard-head">
+          <div><strong>Insight posts</strong><span style={{ display: "block" }}>The articles in the Insights strip shown on the home page.</span></div>
+          <button className="ap-button ap-button-soft" type="button" onClick={() => postList.add({ category: "INSIGHTS", title: "New insight", body: "", date: new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }), readTime: "5 min read", image: "", author: "", content: "" })}>Add insight</button>
+        </div>
+        <div className="array-stack">
+          {posts.map((post, index) => (
+            <div className="subcard" key={`post-${index}`}>
+              <div className="subcard-head"><strong>{post.title || `Insight ${index + 1}`}</strong><ListControls index={index} length={posts.length} onMove={postList.move} onRemove={postList.remove} /></div>
+              <div className="field-grid">
+                <TextField label="Title" value={post.title} onChange={(v) => change(`blogs.posts.${index}.title`, v)} />
+                <TextField label="Category" value={post.category} onChange={(v) => change(`blogs.posts.${index}.category`, v)} />
+                <TextField label="Date" value={post.date} onChange={(v) => change(`blogs.posts.${index}.date`, v)} />
+                <TextField label="Read time" value={post.readTime} onChange={(v) => change(`blogs.posts.${index}.readTime`, v)} />
+                <TextField label="Author" value={post.author ?? ""} onChange={(v) => change(`blogs.posts.${index}.author`, v)} />
+                <TextField label="Custom link (optional)" value={post.href ?? ""} onChange={(v) => change(`blogs.posts.${index}.href`, v)} />
+                <div className="field full"><TextArea label="Summary (shown on the card)" value={post.body} onChange={(v) => change(`blogs.posts.${index}.body`, v)} rows={2} /></div>
+                <div className="field full"><TextArea label="Full article (leave a blank line between paragraphs)" value={post.content ?? ""} onChange={(v) => change(`blogs.posts.${index}.content`, v)} rows={8} /></div>
+                <div className="field full"><AP_ImageField label="Image" value={post.image ?? ""} onChange={(v) => change(`blogs.posts.${index}.image`, v)} hint="Leave blank to use the built-in artwork." /></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
 
 function renderCareers(content: SiteContent, change: (path: string, value: unknown) => void, value: (path: string) => string) {
   const careers = content.careers;

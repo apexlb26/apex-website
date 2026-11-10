@@ -1,10 +1,11 @@
 import { getCmsContent } from "@/shared/content";
-import { localizedPath, slugifySeo } from "@/shared/seo";
+import { blogEntries } from "@/shared/blog";
 import type { BlogMilestone, BlogUpdate, Locale } from "@/shared/types";
 import AP_Icon from "@/app/components/AP_Icon";
 import AP_SubscribeForm from "@/app/components/AP_SubscribeForm";
 import AP_BlogNetwork from "@/app/components/AP_BlogNetwork";
 import AP_BlogCover from "@/app/components/AP_BlogCover";
+import AP_BlogFeed, { type BlogCard } from "@/app/components/AP_BlogFeed";
 import { sizedImage, imageSrcSet } from "@/shared/images";
 
 /*
@@ -25,6 +26,19 @@ export default async function AP_BlogsSections({ embedded = false, locale = "en"
   const updates: BlogUpdate[] = page.updates ?? [];
   const milestones: BlogMilestone[] = page.milestones ?? [];
   const categories = page.categories ?? [];
+  const entries = blogEntries(page, locale);
+  const cards: BlogCard[] = entries
+    .filter((entry) => entry.kind === "update")
+    .map((entry) => ({
+      title: entry.title,
+      body: entry.body,
+      category: entry.category ?? "",
+      date: entry.date ?? "",
+      image: entry.image,
+      href: entry.href,
+      cta: entry.cta || (locale === "ar" ? "اقرأ المزيد" : "Read more"),
+    }));
+  const featuredHref = entries.find((entry) => entry.kind === "featured")?.href;
 
   return (
     <>
@@ -62,7 +76,7 @@ export default async function AP_BlogsSections({ embedded = false, locale = "en"
                   <span className={eyebrow}>{featured.label}</span>
                   <h2 className="mt-2.5 text-[clamp(18px,1.7vw,23px)] font-bold leading-[1.25] tracking-[-0.02em] text-hx-ink">{featured.title}</h2>
                   <p className="mt-2.5 max-w-[380px] text-[11px] leading-[1.55] text-hx-copy">{featured.body}</p>
-                  <span className={`${readMore} mt-3`}>{featured.cta}<AP_Icon name="arrow-right" className="h-3 w-3" /></span>
+                  <a href={featuredHref} className={`${readMore} mt-3`}>{featured.cta}<AP_Icon name="arrow-right" className="h-3 w-3" /></a>
                 </div>
                 <div className="relative min-h-[190px] min-w-[min(260px,100%)] flex-1 basis-[54%] self-stretch overflow-hidden bg-hx-tint">
                   <div className="absolute inset-0 [&>img]:h-full [&>img]:w-full [&>img]:object-cover [&>svg]:h-full [&>svg]:w-full">
@@ -77,46 +91,14 @@ export default async function AP_BlogsSections({ embedded = false, locale = "en"
               </article>
             )}
 
-            {/* category filters */}
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category, index) => (
-                <span
-                  key={category}
-                  className={index === 0
-                    ? "rounded-md bg-hx-cyan2 px-3.5 py-2 text-[10.5px] font-bold text-white"
-                    : "rounded-md border border-hx-line bg-white px-3.5 py-2 text-[10.5px] font-bold text-hx-copy"}
-                >{category}</span>
-              ))}
-            </div>
-
-            {/* update cards */}
-            <div className="flex flex-wrap gap-4">
-              {updates.length ? updates.map((update, index) => (
-                <article key={update.title} className="flex min-w-[min(132px,100%)] flex-1 basis-[calc(20%-13px)] flex-col overflow-hidden rounded-xl border border-hx-line bg-white transition hover:-translate-y-0.5 hover:border-[#bcdff2] hover:shadow-[0_14px_30px_rgba(11,34,51,.08)]">
-                  <div className="h-[84px] w-full shrink-0 overflow-hidden bg-hx-tint">
-                    {update.image ? <img src={sizedImage(update.image, 480)} srcSet={imageSrcSet(update.image, [480, 800])} sizes="240px" alt={update.title} loading="lazy" decoding="async" className="h-full w-full object-cover" /> : <AP_BlogCover variant={index} />}
-                  </div>
-                  <div className="flex flex-1 flex-col p-3.5">
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-2">
-                      <span className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-hx-cyanInk">{update.category}</span>
-                      <span className="text-[10px] text-hx-muted">{update.date}</span>
-                    </div>
-                    <h3 className="mt-2 text-[12px] font-bold leading-[1.3] text-hx-ink">{update.title}</h3>
-                    <p className="mt-1.5 text-[10px] leading-[1.5] text-hx-copy">{update.body}</p>
-                    <a href={update.href || localizedPath(`/blogs/${slugifySeo(update.title)}`, locale)} className={readMore}>{update.cta || "Read more"}<AP_Icon name="arrow-right" className="h-3 w-3" /></a>
-                  </div>
-                </article>
-              )) : (
-                <div className="flex w-full flex-wrap items-center justify-center gap-4 rounded-xl border border-dashed border-[#bcdde6] bg-hx-band p-7">
-                  <AP_Icon name="layers" className="h-8 w-8 shrink-0 text-hx-cyan" />
-                  <div className="min-w-[min(280px,100%)]">
-                    <strong className="block text-sm text-hx-ink">{page.emptyTitle}</strong>
-                    <p className="mt-1 max-w-[540px] text-[11.5px] leading-[1.55] text-hx-copy">{page.emptyBody}</p>
-                  </div>
-                </div>
-              )}
-              {Array.from({ length: 4 }).map((_, ghost) => <span key={`ghost-${ghost}`} aria-hidden="true" className="h-0 min-w-[min(132px,100%)] flex-1 basis-[calc(20%-13px)]" />)}
-            </div>
+            {/* category tabs + update cards (filtering happens client-side) */}
+            <AP_BlogFeed
+              categories={categories}
+              cards={cards}
+              emptyTitle={page.emptyTitle ?? ""}
+              emptyBody={page.emptyBody ?? ""}
+              noMatchText={locale === "ar" ? "لا توجد مقالات في هذا القسم بعد." : "Nothing has been published in this category yet."}
+            />
           </div>
 
           {/* sidebar */}

@@ -237,6 +237,8 @@ export type InsightPost = {
   readTime: string;
   image?: string;
   href?: string;
+  author?: string;
+  content?: string;
 };
 
 export type ProductHighlight = {
@@ -351,6 +353,13 @@ export type BlogFeatured = {
   statLabel?: string;
   badge?: string;
   image?: string;
+  /** Shown on the article page. */
+  date?: string;
+  author?: string;
+  /** Full article text; blank lines separate paragraphs. */
+  content?: string;
+  /** Overrides the generated /blogs/<slug> link. */
+  href?: string;
 };
 
 export type BlogMilestone = {
@@ -368,6 +377,9 @@ export type BlogUpdate = {
   cta?: string;
   image?: string;
   href?: string;
+  author?: string;
+  /** Full article text; blank lines separate paragraphs. */
+  content?: string;
 };
 
 export type BlogsPageContent = {

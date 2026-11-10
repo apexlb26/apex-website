@@ -3,45 +3,13 @@ import { notFound } from "next/navigation";
 import AP_Header from "@/app/components/AP_Header";
 import AP_Footer from "@/app/components/AP_Footer";
 import { getCmsContent } from "@/shared/content";
-import { absoluteUrl, buildPageMetadata, slugifySeo } from "@/shared/seo";
+import { blogEntries, findBlogEntry, paragraphs } from "@/shared/blog";
 import { sizedImage, imageSrcSet } from "@/shared/images";
+import { absoluteUrl, buildPageMetadata } from "@/shared/seo";
 
 export const dynamic = "force-dynamic";
 
 type RouteProps = { params: Promise<{ slug: string }> };
-
-type CitablePost = {
-  title: string;
-  body: string;
-  date?: string;
-  category?: string;
-  image?: string;
-  author?: string;
-};
-
-function blogEntries(data: Awaited<ReturnType<typeof getCmsContent>>["data"]): CitablePost[] {
-  const updates = (data.blogs.updates ?? []).map((item) => ({
-    title: item.title,
-    body: item.body,
-    date: item.date,
-    category: item.category,
-    image: item.image,
-    author: (item as typeof item & { author?: string }).author,
-  }));
-  const posts = (data.blogs.posts ?? []).map((item) => ({
-    title: item.title,
-    body: item.body,
-    date: item.date,
-    category: item.category,
-    image: item.image,
-    author: (item as typeof item & { author?: string }).author,
-  }));
-  return [...updates, ...posts];
-}
-
-function findPost(entries: CitablePost[], slug: string) {
-  return entries.find((entry) => slugifySeo(entry.title) === slug);
-}
 
 function absoluteMedia(value: string) {
   return /^https?:\/\//i.test(value) ? value : absoluteUrl(value);
@@ -56,7 +24,7 @@ function isoDate(value?: string) {
 export async function generateMetadata({ params }: RouteProps): Promise<Metadata> {
   const { slug } = await params;
   const { data } = await getCmsContent("en");
-  const post = findPost(blogEntries(data), slug);
+  const post = findBlogEntry(blogEntries(data.blogs, "en"), slug);
   if (!post) return {};
   return buildPageMetadata({
     title: post.title,
@@ -69,8 +37,9 @@ export async function generateMetadata({ params }: RouteProps): Promise<Metadata
 export default async function BlogPostPage({ params }: RouteProps) {
   const { slug } = await params;
   const { data } = await getCmsContent("en");
-  const post = findPost(blogEntries(data), slug);
+  const post = findBlogEntry(blogEntries(data.blogs, "en"), slug);
   if (!post) notFound();
+  const others = blogEntries(data.blogs, "en").filter((entry) => entry.slug !== post.slug).slice(0, 3);
 
   const url = absoluteUrl(`/blogs/${slug}`);
   const published = isoDate(post.date);
@@ -115,10 +84,30 @@ export default async function BlogPostPage({ params }: RouteProps) {
           </div>
           <h1 className="mt-4 max-w-[850px] text-[clamp(34px,6vw,68px)] font-bold leading-[1.02] tracking-[-0.045em] text-hx-ink">{post.title}</h1>
           <p className="mt-7 max-w-[760px] text-[clamp(17px,2vw,21px)] leading-[1.75] text-hx-copy">{post.body}</p>
+          {paragraphs(post.content).length ? (
+            <div className="mt-8 flex max-w-[760px] flex-col gap-5 text-[16px] leading-[1.85] text-hx-copy">
+              {paragraphs(post.content).map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+            </div>
+          ) : null}
           {post.image ? <img src={sizedImage(post.image, 1200)} srcSet={imageSrcSet(post.image)} sizes="(min-width:1024px) 900px, 100vw" alt={post.title} decoding="async" fetchPriority="high" className="mt-10 h-auto w-full rounded-[22px] border border-hx-line object-cover" /> : null}
           <div className="mt-12 border-t border-hx-line pt-7 text-[12px] leading-[1.7] text-hx-muted">
             Published by {author || "APEX"}. This page is the canonical, indexable version of this update.
           </div>
+          {others.length ? (
+            <section className="mt-14 border-t border-hx-line pt-8">
+              <h2 className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-hx-cyanInk">More stories</h2>
+              <ul className="mt-4 flex list-none flex-col gap-3 p-0">
+                {others.map((other) => (
+                  <li key={other.slug}>
+                    <a href={other.href} className="group block rounded-xl border border-hx-line p-4 transition hover:border-[#bcdff2]">
+                      <span className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-hx-muted">{other.category}{other.category && other.date ? " • " : ""}{other.date}</span>
+                      <strong className="mt-1 block text-[15px] text-hx-ink group-hover:text-hx-cyanInk">{other.title}</strong>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
         </article>
       </main>
       <AP_Footer labels={data.meta.labels} logo={data.meta.logo} logoAlt={data.meta.logoAlt} nav={data.nav} content={data.footer} social={data.social} />

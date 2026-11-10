@@ -24,6 +24,8 @@ export type MailMessage = {
   subject: string;
   text: string;
   replyTo?: string;
+  /** Send here instead of the configured notification recipients. */
+  to?: string[];
   attachments?: MailAttachment[];
 };
 
@@ -39,7 +41,8 @@ async function sendViaResend(message: MailMessage): Promise<void> {
   const settings = await getEffectiveMailSettings();
   if (!settings.resendApiKey) throw new Error("RESEND_API_KEY is not configured.");
   if (!settings.from) throw new Error("SMTP_FROM/APEX_MAIL_FROM is not configured.");
-  if (!settings.recipients.length) throw new Error("No notification recipient is configured.");
+  const recipients = message.to?.length ? message.to : settings.recipients;
+  if (!recipients.length) throw new Error("No notification recipient is configured.");
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -49,7 +52,7 @@ async function sendViaResend(message: MailMessage): Promise<void> {
     },
     body: JSON.stringify({
       from: settings.from,
-      to: settings.recipients,
+      to: recipients,
       subject: message.subject,
       text: message.text,
       ...(message.replyTo ? { reply_to: message.replyTo } : {}),
@@ -71,7 +74,8 @@ async function sendViaResend(message: MailMessage): Promise<void> {
 
 async function sendViaSmtp(message: MailMessage): Promise<void> {
   const settings = await getEffectiveMailSettings();
-  if (!settings.recipients.length) throw new Error("No notification recipient is configured.");
+  const recipients = message.to?.length ? message.to : settings.recipients;
+  if (!recipients.length) throw new Error("No notification recipient is configured.");
   if (!settings.from) throw new Error("SMTP_FROM/APEX_MAIL_FROM is not configured.");
 
   const { createTransport } = await import("nodemailer");
@@ -106,7 +110,7 @@ async function sendViaSmtp(message: MailMessage): Promise<void> {
 
   await transport.sendMail({
     from: settings.from,
-    to: settings.recipients,
+    to: recipients,
     subject: message.subject,
     text: message.text,
     replyTo: message.replyTo,
@@ -123,17 +127,18 @@ export async function sendAdminEmail(message: MailMessage): Promise<MailResult> 
 
   if (settings.smtpUrl || settings.host) {
     await sendViaSmtp(message);
-    return { delivered: true, transport: "smtp", recipients: settings.recipients };
+    return { delivered: true, transport: "smtp", recipients: message.to?.length ? message.to : settings.recipients };
   }
 
   if (settings.resendApiKey) {
     await sendViaResend(message);
-    return { delivered: true, transport: "resend", recipients: settings.recipients };
+    return { delivered: true, transport: "resend", recipients: message.to?.length ? message.to : settings.recipients };
   }
 
   const files = message.attachments?.map((f) => `${f.filename} (${f.content.length} bytes)`).join(", ");
+  const intended = message.to?.length ? message.to : settings.recipients;
   console.log(
-    `[mail:not-configured] to=${settings.recipients.join(",") || "none"} subject=${message.subject}${files ? ` attachments=${files}` : ""}\n${message.text}`,
+    `[mail:not-configured] to=${intended.join(",") || "none"} subject=${message.subject}${files ? ` attachments=${files}` : ""}\n${message.text}`,
   );
-  return { delivered: false, transport: "log", recipients: settings.recipients };
+  return { delivered: false, transport: "log", recipients: intended };
 }
