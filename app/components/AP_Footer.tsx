@@ -49,7 +49,7 @@ export default function AP_Footer({ nav, content, social, logo = "/api/assets/lo
           <strong className="block text-[10px] font-extrabold uppercase tracking-[0.15em] text-hx-ink/70">{content.newsletterTitle ?? ""}</strong>
           <span aria-hidden="true" className="mt-3 block h-px w-8 bg-hx-cyan2/45" />
           <p className="mt-4 max-w-[300px] text-[11.5px] leading-[1.6] text-hx-copy">{content.newsletterBody ?? ""}</p>
-          <div className="ap-footer-subscribe mt-4 max-w-[320px]"><AP_SubscribeForm placeholder={content.subscribePlaceholder} cta={content.subscribeCta} sending={content.subscribeSending} error={labels?.subscribeError} /></div>
+          <div className="ap-footer-subscribe mt-4 max-w-[320px]"><AP_SubscribeForm placeholder={content.subscribePlaceholder} cta={content.subscribeCta} sending={content.subscribeSending} success={content.subscribeSuccess} error={labels?.subscribeError} /></div>
         </div>
       </div>
 

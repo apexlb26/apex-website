@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import type { SubscribeRequest, SubscribeResponse } from "@/shared/types";
 import { AP_TextBox } from "@/app/components/AP_TextBox";
 
-export default function AP_SubscribeForm({ placeholder, cta, sending, error, className = "" }: { placeholder?: string; cta?: string; sending?: string; error?: string; className?: string } = {}) {
+export default function AP_SubscribeForm({ placeholder, cta, sending, success, error, className = "" }: { placeholder?: string; cta?: string; sending?: string; success?: string; error?: string; className?: string } = {}) {
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -30,7 +30,12 @@ export default function AP_SubscribeForm({ placeholder, cta, sending, error, cla
       const data = (await response.json()) as SubscribeResponse;
       if (!response.ok || !data.ok) throw new Error(data.ok ? (error ?? "") : data.error);
       setState("sent");
-      setMessage(data.message);
+      /*
+       * The route answers in English. Prefer the CMS confirmation so an
+       * Arabic reader is not thanked in the wrong language; the route's text
+       * remains the fallback when no label is authored.
+       */
+      setMessage(success || data.message);
       formEl.reset();
     } catch (reason) {
       setState("error");

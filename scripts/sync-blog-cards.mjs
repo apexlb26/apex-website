@@ -39,7 +39,18 @@ const LOCALES = ["en", "ar"];
  * under a tab that has to exist for the filter to find it - and `milestones`
  * is the sidebar list.
  */
-const SYNCED_FIELDS = ["featured", "categories", "milestones", "subscribeSending"];
+const SYNCED_FIELDS = [
+  "blogs.featured",
+  "blogs.categories",
+  "blogs.milestones",
+  "blogs.subscribeSending",
+  "blogs.subscribeSuccess",
+  // The footer's newsletter form is on every page, so its confirmation has to
+  // travel with the blog page's.
+  "footer.subscribeSuccess",
+];
+
+const at = (value, path) => path.split(".").reduce((node, key) => (node === undefined || node === null ? node : node[key]), value);
 
 if (!uri) {
   console.error("MONGODB_URI is required. Take it from Render -> apex-website -> Environment.");
@@ -72,11 +83,11 @@ async function main() {
       /* -------------------------------------------- content-document fields */
       const fieldUpdates = {};
       for (const key of SYNCED_FIELDS) {
-        const next = snapshot.blogs[key];
+        const next = at(snapshot, key);
         if (next === undefined) continue;
         // Deep compare: `featured` and `categories` are a document and a list.
-        if (JSON.stringify(doc.data?.blogs?.[key]) === JSON.stringify(next)) continue;
-        fieldUpdates[`data.blogs.${key}`] = next;
+        if (JSON.stringify(at(doc.data, key)) === JSON.stringify(next)) continue;
+        fieldUpdates[`data.${key}`] = next;
         const shown = typeof next === "string" ? `"${next}"`
           : Array.isArray(next) ? next.map((item) => (typeof item === "string" ? item : item.title)).join(" | ")
           : `"${next.title ?? "(updated)"}"`;

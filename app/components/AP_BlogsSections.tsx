@@ -53,7 +53,7 @@ export default async function AP_BlogsSections({ embedded = false, locale = "en"
               </Title>
               <p className="mt-4 max-w-[480px] text-[12.5px] leading-[1.7] text-hx-copy">{page.body}</p>
               <div className="mt-5 max-w-[420px]">
-                <AP_SubscribeForm placeholder={page.subscribePlaceholder} cta={page.subscribeCta} sending={page.subscribeSending} error={data.meta.labels?.subscribeError} />
+                <AP_SubscribeForm placeholder={page.subscribePlaceholder} cta={page.subscribeCta} sending={page.subscribeSending} success={page.subscribeSuccess} error={data.meta.labels?.subscribeError} />
               </div>
               <p className="mt-3 flex items-center gap-2 text-[10.5px] text-hx-muted">
                 <AP_Icon name="shield-check" className="h-3.5 w-3.5 shrink-0 text-hx-cyan" />{page.privacyNote}
@@ -124,7 +124,7 @@ export default async function AP_BlogsSections({ embedded = false, locale = "en"
                   <p className="mt-1.5 text-[10.5px] leading-[1.5] text-hx-copy">{page.subscribeBody}</p>
                 </div>
               </div>
-              <div className="mt-4"><AP_SubscribeForm placeholder={page.subscribePlaceholder} cta={page.subscribeCta} sending={page.subscribeSending} error={data.meta.labels?.subscribeError} /></div>
+              <div className="mt-4"><AP_SubscribeForm placeholder={page.subscribePlaceholder} cta={page.subscribeCta} sending={page.subscribeSending} success={page.subscribeSuccess} error={data.meta.labels?.subscribeError} /></div>
               <p className="mt-2.5 flex items-center gap-2 text-[10px] text-hx-muted">
                 <AP_Icon name="shield-check" className="h-3 w-3 shrink-0 text-hx-cyan" />{page.privacyNote}
               </p>
@@ -141,7 +141,7 @@ export default async function AP_BlogsSections({ embedded = false, locale = "en"
               <p className="mt-2 text-[11px] leading-[1.55] text-hx-copy">{page.bottomBody}</p>
             </div>
             <div className="min-w-[min(300px,100%)] flex-1">
-              <AP_SubscribeForm placeholder={page.subscribePlaceholder} cta={page.subscribeCta} sending={page.subscribeSending} error={data.meta.labels?.subscribeError} />
+              <AP_SubscribeForm placeholder={page.subscribePlaceholder} cta={page.subscribeCta} sending={page.subscribeSending} success={page.subscribeSuccess} error={data.meta.labels?.subscribeError} />
               <p className="mt-2.5 flex items-center justify-center gap-2 text-[10px] text-hx-muted">
                 <AP_Icon name="shield-check" className="h-3 w-3 shrink-0 text-hx-cyan" />{page.privacyNote}
               </p>

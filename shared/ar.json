@@ -888,7 +888,8 @@
     ],
     "subscribePlaceholder": "أدخل بريدك المهني",
     "subscribeCta": "اشترك",
-    "subscribeSending": "جارٍ الإرسال…"
+    "subscribeSending": "جارٍ الإرسال…",
+    "subscribeSuccess": "تمّ تسجيلك في القائمة."
   },
   "products": {
     "eyebrow": "منتجات APEX",
@@ -1235,6 +1236,7 @@
     "subscribePlaceholder": "أدخل بريد العمل",
     "subscribeCta": "اشترك",
     "subscribeSending": "جارٍ الاشتراك…",
+    "subscribeSuccess": "تمّ تسجيلك في القائمة.",
     "privacyNote": "نحترم خصوصيتك. يمكنك إلغاء الاشتراك في أي وقت.",
     "featured": {
       "label": "مميّز",

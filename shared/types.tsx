@@ -220,6 +220,8 @@ export type FooterContent = {
   subscribePlaceholder?: string;
   subscribeCta?: string;
   subscribeSending?: string;
+  /** Confirmation shown once the signup is accepted. */
+  subscribeSuccess?: string;
   legal: string;
   tagline?: string;
   body?: string;
@@ -390,6 +392,8 @@ export type BlogsPageContent = {
   subscribeCta?: string;
   /** Label while the signup is in flight. */
   subscribeSending?: string;
+  /** Confirmation shown once the signup is accepted. */
+  subscribeSuccess?: string;
   privacyNote?: string;
   featured?: BlogFeatured;
   updates?: BlogUpdate[];

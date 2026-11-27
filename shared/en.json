@@ -888,7 +888,8 @@
     ],
     "subscribePlaceholder": "Enter your work email",
     "subscribeCta": "Subscribe",
-    "subscribeSending": "Sending…"
+    "subscribeSending": "Sending…",
+    "subscribeSuccess": "You’re on the list."
   },
   "products": {
     "eyebrow": "APEX PRODUCTS",
@@ -1235,6 +1236,7 @@
     "subscribePlaceholder": "Enter your work email",
     "subscribeCta": "Subscribe",
     "subscribeSending": "Subscribing…",
+    "subscribeSuccess": "You’re on the list.",
     "privacyNote": "We respect your privacy. Unsubscribe anytime.",
     "featured": {
       "label": "FEATURED",
