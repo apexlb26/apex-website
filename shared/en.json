@@ -1295,12 +1295,6 @@
     "milestonesCta": "View all milestones",
     "milestones": [
       {
-        "date": "MAY 20, 2024",
-        "title": "APEX Reaches $250M ARR",
-        "body": "A major milestone in our growth journey.",
-        "icon": "trend-up"
-      },
-      {
         "date": "APR 10, 2024",
         "title": "APEX AI Automation Layer Launch",
         "body": "Introducing the next generation of intelligent automation.",

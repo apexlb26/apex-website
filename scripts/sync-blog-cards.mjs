@@ -35,10 +35,11 @@ const write = process.argv.includes("--yes");
 const LOCALES = ["en", "ar"];
 /*
  * Fields on the content document this sync owns. `featured` is the story the
- * panel shows by default, and `categories` is the tab row - the first card
- * files under a tab that has to exist for the filter to find it.
+ * panel shows by default, `categories` is the tab row - the first card files
+ * under a tab that has to exist for the filter to find it - and `milestones`
+ * is the sidebar list.
  */
-const SYNCED_FIELDS = ["featured", "categories"];
+const SYNCED_FIELDS = ["featured", "categories", "milestones"];
 
 /** The cards this sync owns, by display order (0-based). */
 const CARD_ORDERS = [0, 1, 2, 3];
@@ -80,7 +81,7 @@ async function main() {
         if (JSON.stringify(doc.data?.blogs?.[key]) === JSON.stringify(next)) continue;
         fieldUpdates[`data.blogs.${key}`] = next;
         const shown = typeof next === "string" ? `"${next}"`
-          : Array.isArray(next) ? next.join(" | ")
+          : Array.isArray(next) ? next.map((item) => (typeof item === "string" ? item : item.title)).join(" | ")
           : `"${next.title ?? "(updated)"}"`;
         console.log(`   field  ${key} -> ${shown}`);
       }
