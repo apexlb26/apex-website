@@ -13,7 +13,8 @@
     "dev:next": "next dev",
     "start:next": "next start",
     "mail:test": "node scripts/send-test-email.mjs",
-    "db:migrate": "node scripts/migrate-to-mongo.mjs"
+    "db:migrate": "node scripts/migrate-to-mongo.mjs",
+    "db:sync-blog": "node scripts/sync-blog-cards.mjs"
   },
   "dependencies": {
     "mongodb": "^6.21.0",

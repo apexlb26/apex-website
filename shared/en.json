@@ -1195,6 +1195,7 @@
     "emptyBody": "The editorial layout is ready. Real APEX updates will appear here as they are published.",
     "categories": [
       "All Updates",
+      "Case Studies",
       "Milestones",
       "Product Updates",
       "Partnerships",
@@ -1236,46 +1237,50 @@
     "privacyNote": "We respect your privacy. Unsubscribe anytime.",
     "featured": {
       "label": "FEATURED",
-      "title": "APEX Reaches $250M ARR and Accelerates Global Impact",
-      "body": "A major milestone in our journey—driven by our customers, our team, and our mission to build intelligent systems that power progress.",
+      "title": "TutWithUs — building a clearer tutoring experience",
+      "body": "APEX collaborated with TutWithUs to redesign the platform, improve booking and support flows, and give the team stronger operational visibility.",
       "cta": "Read more",
-      "statValue": "$250M",
-      "statLabel": "ANNUAL RECURRING REVENUE",
-      "badge": "A Milestone. A Movement.",
-      "image": ""
+      "statValue": "",
+      "statLabel": "",
+      "badge": "Previous APEX collaboration",
+      "image": "/api/assets/blog/tutwithus-platform.png"
     },
     "updates": [
       {
-        "category": "MILESTONES",
-        "date": "May 20, 2024",
-        "title": "APEX Reaches $250M ARR",
-        "body": "A look at the people, customers, and innovation behind this major milestone.",
+        "category": "Case Studies",
+        "date": "",
+        "title": "TutWithUs: a clearer tutoring platform",
+        "body": "The platform experience, AI support, booking journey, and admin system APEX rebuilt for TutWithUs.",
         "cta": "Read more",
-        "image": ""
+        "image": "/api/assets/blog/tutwithus-platform.png",
+        "content": "APEX collaborated with TutWithUs to elevate the digital tutoring experience — redesigning the platform, improving booking and support flows, and creating stronger operational visibility for students, tutors, and administrators.\n\nWhat APEX delivered:\n\n— A platform redesign built around clearer choices, pricing, and scheduling\n\n— An AI chatbot carrying the routine support load\n\n— Booking and scheduling logic for students and tutors\n\n— An admin system for managing tutors and content\n\n— Analytics for better day-to-day decisions\n\nThe brief was clarity. A tutoring experience needed clearer choices, pricing, scheduling, and service expectations on the front, and stronger visibility and control behind it.\n\nWhat that produced is a cleaner user journey, better tutor discovery, and a foundation that scales with the platform's growing community.\n\nThe platform is live at tutwithus.com."
       },
       {
-        "category": "PRODUCT UPDATES",
-        "date": "Apr 10, 2024",
-        "title": "Introducing the AI Automation Layer",
-        "body": "A new layer of intelligence to orchestrate, automate, and optimize operations.",
+        "category": "Product Updates",
+        "date": "Sep 18, 2026",
+        "title": "A booking and loyalty app for VIA Barber House",
+        "body": "Book an artist, scan at the chair to collect a stamp, and shop the shelf — in one app.",
         "cta": "Read more",
-        "image": ""
+        "image": "/api/assets/blog/via-barber-app.png",
+        "content": "VIA Barber House is a barbershop app APEX designed and built end to end: clients pick their artist and service, check in at the chair with a QR scan, collect stamps toward a free cut, and buy the products their barber actually uses.\n\nWhat the app does:\n\n— Book by artist, service, and day, with prices and durations shown up front\n\n— QR check-in at the chair, with a code that rotates so a screenshot cannot be reused\n\n— A loyalty card where every eight check-ins earns a free haircut\n\n— An in-app shop stocked with what the artists use at the chair\n\n— A profile holding visits, appointments, orders, and haircut history\n\nThe loyalty card is the part that had to be exactly right. One stamp per visit, confirmed by the artist, with the eighth turning into a free cut and resetting the card — simple enough to explain at the chair, and tight enough that it cannot be farmed.\n\nEverything a client sees is driven by what the shop configures: artists, services, prices, products, and the reward itself. The shop changes its own offering without waiting on a release."
       },
       {
-        "category": "PARTNERSHIPS",
-        "date": "Mar 18, 2024",
-        "title": "Strategic Partnership with Microsoft",
-        "body": "Together, we're delivering secure, scalable cloud and AI solutions.",
+        "category": "Product Updates",
+        "date": "Oct 23, 2026",
+        "title": "Meet the APEX AI Receptionist",
+        "body": "An assistant that answers enquiries, books the appointment, and hands a person the thread when it should.",
         "cta": "Read more",
-        "image": ""
+        "image": "/api/assets/blog/ai-receptionist.svg",
+        "content": "Most enquiries arrive outside opening hours, and the ones that wait are the ones that go elsewhere. The APEX AI Receptionist picks them up as they land — on the phone and in chat — answers what it can, books what it should, and passes anything delicate to a person with the whole conversation attached.\n\nWhat it does:\n\n— Answers calls and messages outside working hours, not just during them\n\n— Books, reschedules, and cancels straight into the calendar the team already uses\n\n— Answers the questions people actually ask: hours, location, pricing, availability\n\n— Hands the conversation to a human with its full context, rather than restarting it\n\n— Works in English and Arabic\n\nIt is built to know its limits. Anything it is not confident about becomes a handover rather than a guess, because a wrong answer delivered quickly costs more than a slow one.\n\nEvery conversation is kept, so the team can see what was asked, what was promised, and what was booked."
       },
       {
-        "category": "EVENTS",
-        "date": "Feb 22, 2024",
-        "title": "APEX Momentum 2024 Recap",
-        "body": "Key highlights, announcements, and customer stories from our flagship event.",
+        "category": "Company News",
+        "date": "Nov 10, 2026",
+        "title": "APEX Internships: build real systems with us",
+        "body": "A mentored program where interns ship work on live APEX projects, not side exercises.",
         "cta": "Read more",
-        "image": ""
+        "image": "/api/assets/blog/apex-internships.svg",
+        "content": "The APEX internship puts you on a live project from the first week. You are given real scope, a mentor who reviews your work, and the same standards the rest of the team is held to — because the only way to learn how systems are actually built is to build one that someone depends on.\n\nWhat the program gives you:\n\n— A mentor assigned to you, with regular one-to-one reviews\n\n— Work on a live project that ships, not a sandbox exercise\n\n— Code and design review on everything you produce\n\n— Exposure to the full path: discovery, build, deployment, and what happens after\n\n— A route into a role at APEX for interns who are ready for one\n\nWe keep intakes small on purpose. Mentorship is the part that makes an internship worth doing, and it does not scale past the number of people who can genuinely give it.\n\nApplications go through the careers page. Tell us what you have built, in whatever form that takes."
       },
       {
         "category": "COMPANY NEWS",

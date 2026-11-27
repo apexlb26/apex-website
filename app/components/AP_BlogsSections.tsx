@@ -70,31 +70,22 @@ export default async function AP_BlogsSections({ embedded = false, locale = "en"
         {/* ---------- featured + sidebar ---------- */}
         <section className={`${shell} flex flex-wrap items-start gap-x-6 gap-y-6 pb-[clamp(1.5rem,3vw,2.5rem)]`}>
           <div className="flex min-w-[min(560px,100%)] flex-[2.6] basis-[68%] flex-col gap-5">
-            {featured && (
-              <article className="flex flex-wrap overflow-hidden rounded-xl border border-hx-line bg-white">
-                <div className="flex min-w-[min(280px,100%)] flex-1 basis-[42%] flex-col justify-center p-5">
-                  <span className={eyebrow}>{featured.label}</span>
-                  <h2 className="mt-2.5 text-[clamp(18px,1.7vw,23px)] font-bold leading-[1.25] tracking-[-0.02em] text-hx-ink">{featured.title}</h2>
-                  <p className="mt-2.5 max-w-[380px] text-[11px] leading-[1.55] text-hx-copy">{featured.body}</p>
-                  <a href={featuredHref} className={`${readMore} mt-3`}>{featured.cta}<AP_Icon name="arrow-right" className="h-3 w-3" /></a>
-                </div>
-                <div className="relative min-h-[190px] min-w-[min(260px,100%)] flex-1 basis-[54%] self-stretch overflow-hidden bg-hx-tint">
-                  <div className="absolute inset-0 [&>img]:h-full [&>img]:w-full [&>img]:object-cover [&>svg]:h-full [&>svg]:w-full">
-                    {featured.image ? <img src={sizedImage(featured.image, 800)} srcSet={imageSrcSet(featured.image)} sizes="(min-width:1024px) 480px, 100vw" alt={featured.title} loading="lazy" decoding="async" /> : <AP_BlogCover variant="feature" />}
-                  </div>
-                  <div className="absolute inset-y-0 right-0 flex w-[52%] flex-col items-center justify-center gap-2 px-4 text-center">
-                    <strong className="text-[clamp(24px,2.6vw,38px)] font-bold leading-none tracking-[-0.03em] text-hx-cyanInk">{featured.statValue}</strong>
-                    <small className="text-[10px] font-bold uppercase tracking-[0.12em] text-hx-ink">{featured.statLabel}</small>
-                    {featured.badge && <span className="mt-1 rounded-full bg-[#0b2233] px-3 py-1.5 text-[10px] font-semibold text-white">{featured.badge}</span>}
-                  </div>
-                </div>
-              </article>
-            )}
-
-            {/* category tabs + update cards (filtering happens client-side) */}
+            {/* featured panel, category tabs and update cards: the panel
+                previews whichever card is hovered, so they live together */}
             <AP_BlogFeed
               categories={categories}
               cards={cards}
+              featured={featured ? {
+                label: featured.label,
+                title: featured.title,
+                body: featured.body,
+                cta: featured.cta,
+                image: featured.image,
+                statValue: featured.statValue,
+                statLabel: featured.statLabel,
+                badge: featured.badge,
+                href: featuredHref ?? "",
+              } : undefined}
               emptyTitle={page.emptyTitle ?? ""}
               emptyBody={page.emptyBody ?? ""}
               noMatchText={locale === "ar" ? "لا توجد مقالات في هذا القسم بعد." : "Nothing has been published in this category yet."}

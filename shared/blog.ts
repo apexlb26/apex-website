@@ -82,7 +82,19 @@ export function blogEntries(blogs: BlogsPageContent, locale: Locale = "en"): Blo
 }
 
 export function findBlogEntry(entries: BlogEntry[], slug: string) {
-  return entries.find((entry) => entry.slug === slug);
+  /*
+   * A route param arrives percent-encoded. That is invisible for an English
+   * slug, which is already ASCII, but an Arabic one reaches us as
+   * "%d8%b6%d9%85..." and matches nothing - so every Arabic article 404'd.
+   * Decode before comparing; a malformed escape falls back to the raw value.
+   */
+  let wanted = slug;
+  try {
+    wanted = decodeURIComponent(slug);
+  } catch {
+    /* not valid percent-encoding: compare what we were given */
+  }
+  return entries.find((entry) => entry.slug === wanted);
 }
 
 /** Split stored article text into paragraphs. */
