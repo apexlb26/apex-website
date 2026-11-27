@@ -25,7 +25,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const uri = process.env.MONGODB_URI;
@@ -40,9 +40,6 @@ const LOCALES = ["en", "ar"];
  * is the sidebar list.
  */
 const SYNCED_FIELDS = ["featured", "categories", "milestones"];
-
-/** The cards this sync owns, by display order (0-based). */
-const CARD_ORDERS = [0, 1, 2, 3];
 
 if (!uri) {
   console.error("MONGODB_URI is required. Take it from Render -> apex-website -> Environment.");
@@ -91,21 +88,33 @@ async function main() {
       const existing = await items.find({ locale, kind: "update" }).sort({ order: 1 }).toArray();
       const snapshotCards = snapshot.blogs.updates ?? [];
 
-      if (existing.length !== snapshotCards.length) {
-        throw new Error(
-          `${locale}: the database holds ${existing.length} update cards but the snapshot has ${snapshotCards.length}. ` +
-          "Reconcile them in /admin first - this script will not guess which card is which.",
-        );
+      /*
+       * Reconcile the whole list by position, the way the CMS itself does:
+       * update the card already at each slot, insert what is new, delete the
+       * surplus. Matching by position rather than by title means retitling a
+       * card edits it instead of replacing it.
+       */
+      const cardWrites = [];
+      const now = new Date();
+
+      snapshotCards.forEach((next, order) => {
+        const target = existing[order];
+        if (target) {
+          if (JSON.stringify(target.data) === JSON.stringify(next)) return;
+          console.log(`   card ${order + 1}  "${target.data?.title ?? "?"}"\n           -> ${describe(next)}`);
+          cardWrites.push({ updateOne: { filter: { _id: target._id }, update: { $set: { data: next, updatedAt: now } } } });
+        } else {
+          console.log(`   card ${order + 1}  (new) -> ${describe(next)}`);
+          cardWrites.push({ insertOne: { document: { _id: new ObjectId(), kind: "update", locale, order, data: next, createdAt: now, updatedAt: now } } });
+        }
+      });
+
+      for (const surplus of existing.slice(snapshotCards.length)) {
+        console.log(`   card ${surplus.order + 1}  "${surplus.data?.title ?? "?"}" -> removed`);
+        cardWrites.push({ deleteOne: { filter: { _id: surplus._id } } });
       }
 
-      const cardWrites = [];
-      for (const order of CARD_ORDERS) {
-        const target = existing[order];
-        const next = snapshotCards[order];
-        if (!target || !next) throw new Error(`${locale}: no card at position ${order + 1}.`);
-        console.log(`   card ${order + 1}  "${target.data?.title ?? "?"}"\n           -> ${describe(next)}`);
-        cardWrites.push({ updateOne: { filter: { _id: target._id }, update: { $set: { data: next, updatedAt: new Date() } } } });
-      }
+      if (!cardWrites.length) console.log("   cards  (already current)");
 
       if (!write) continue;
 
