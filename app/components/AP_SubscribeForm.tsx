@@ -41,7 +41,9 @@ export default function AP_SubscribeForm({ placeholder, cta, sending, error, cla
   return (
     <form className={`subscribe-form ${className}`.trim()} onSubmit={submit}>
       <AP_TextBox type="email" name="email" required placeholder={placeholder ?? ""} aria-label={placeholder ?? ""} />
-      <button className="button button-primary" disabled={state === "sending"}>{state === "sending" ? (sending ?? "") : (cta ?? "")}</button>
+      {/* Fall back to the idle label while sending: an unset `sending` label
+          used to blank the button out mid-request. */}
+      <button className="button button-primary" disabled={state === "sending"}>{state === "sending" ? (sending || cta || "") : (cta ?? "")}</button>
       {message && <p className={`subscribe-status ${state}`}>{message}</p>}
     </form>
   );

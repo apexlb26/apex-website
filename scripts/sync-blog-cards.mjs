@@ -39,7 +39,7 @@ const LOCALES = ["en", "ar"];
  * under a tab that has to exist for the filter to find it - and `milestones`
  * is the sidebar list.
  */
-const SYNCED_FIELDS = ["featured", "categories", "milestones"];
+const SYNCED_FIELDS = ["featured", "categories", "milestones", "subscribeSending"];
 
 if (!uri) {
   console.error("MONGODB_URI is required. Take it from Render -> apex-website -> Environment.");

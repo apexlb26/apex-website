@@ -388,6 +388,8 @@ export type BlogsPageContent = {
   heroImageAlt?: string;
   subscribePlaceholder?: string;
   subscribeCta?: string;
+  /** Label while the signup is in flight. */
+  subscribeSending?: string;
   privacyNote?: string;
   featured?: BlogFeatured;
   updates?: BlogUpdate[];

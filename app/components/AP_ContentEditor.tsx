@@ -587,6 +587,7 @@ function renderBlogs(content: SiteContent, change: (path: string, value: unknown
           <TextArea label="Subscribe body" value={value("blogs.subscribeBody")} onChange={(v) => change("blogs.subscribeBody", v)} />
           <TextField label="Subscribe placeholder" value={value("blogs.subscribePlaceholder")} onChange={(v) => change("blogs.subscribePlaceholder", v)} />
           <TextField label="Subscribe button" value={value("blogs.subscribeCta")} onChange={(v) => change("blogs.subscribeCta", v)} />
+          <TextField label="Subscribe button while sending" value={value("blogs.subscribeSending")} onChange={(v) => change("blogs.subscribeSending", v)} hint="Leave blank to keep showing the button label." />
           <TextField label="Empty-state title" value={value("blogs.emptyTitle")} onChange={(v) => change("blogs.emptyTitle", v)} />
           <div className="field full"><TextArea label="Empty-state body" value={value("blogs.emptyBody")} onChange={(v) => change("blogs.emptyBody", v)} rows={2} /></div>
         </div>
