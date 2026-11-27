@@ -10,8 +10,14 @@ export default function AP_SubscribeForm({ placeholder, cta, sending, error, cla
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const payload: SubscribeRequest = { email: String(form.get("email") ?? "") };
+    /*
+     * Hold the form element. React clears `event.currentTarget` once the
+     * handler yields, so reading it after the await below threw - and the
+     * catch then showed that raw "null is not an object" where the
+     * confirmation belongs, on a signup the server had already accepted.
+     */
+    const formEl = event.currentTarget;
+    const payload: SubscribeRequest = { email: String(new FormData(formEl).get("email") ?? "") };
     setState("sending");
     setMessage("");
 
@@ -25,7 +31,7 @@ export default function AP_SubscribeForm({ placeholder, cta, sending, error, cla
       if (!response.ok || !data.ok) throw new Error(data.ok ? (error ?? "") : data.error);
       setState("sent");
       setMessage(data.message);
-      event.currentTarget.reset();
+      formEl.reset();
     } catch (reason) {
       setState("error");
       setMessage(reason instanceof Error ? reason.message : (error ?? ""));
